@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block body_class %}page page-login{% endblock %}
+
+{% block content %}
+    <h1>Вход на сайт</h1>
+
+    <p>
+        Авторизация доступна только через Steam.
+    </p>
+
+    <a class="button steam-login-button" href="{{ url_for('auth.steam_login') }}">
+        Войти через Steam
+    </a>
+{% endblock %}

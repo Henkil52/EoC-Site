@@ -1,0 +1,283 @@
+"""
+groups/routes.py
+
+Раздел группировок. Данные берутся из локальной БД.
+Состав и чат видят только члены группировки и администрация.
+"""
+
+from flask import (
+    Blueprint,
+    render_template,
+    session,
+    request,
+    jsonify,
+    url_for,
+)
+
+from auth.decorators import login_required
+from auth.roles import has_role
+from database.models import (
+    db,
+    Faction,
+    FactionMember,
+    FactionRank,
+    Player,
+    SiteUser,
+    SitePlayerAvatar,
+    SiteFactionRole,
+    SiteFactionMessage,
+)
+
+
+from playtime import weekly_hours
+bp = Blueprint(
+    "groups",
+    __name__,
+    url_prefix="/groups",
+    template_folder="templates",
+)
+
+
+# Подписи для ролей в группировке
+ROLE_LABELS = {
+    'faction_leader': '👑 Глава группировки',
+    'faction_deputy': '🔸 Заместитель',
+    'faction_member': '🔹 Участник',
+}
+
+
+def color_from_int(color_int):
+    """Конвертирует integer цвет в HEX."""
+    if color_int is None or color_int == 0:
+        return "#888888"
+    try:
+        color_int = int(color_int)
+        if color_int < 0:
+            color_int += 2**32
+        return f"#{color_int:06X}"
+    except Exception:
+        return "#888888"
+
+
+def _current_sid():
+    return session.get("user", {}).get("steam_id")
+
+
+def _is_admin(sid):
+    try:
+        return bool(sid and has_role(sid, "admin"))
+    except Exception:
+        return False
+
+
+def _is_member(faction_id, sid):
+    if not sid:
+        return False
+    return (
+        FactionMember.query
+        .filter_by(FACTION_ID=faction_id, MEMBER_ID=sid)
+        .first() is not None
+    )
+
+
+def _can_access(faction_id, sid):
+    """Состав и чат видят члены группировки и администрация."""
+    return _is_member(faction_id, sid) or _is_admin(sid)
+
+
+def _nickname(steam_id):
+    p = Player.query.get(steam_id)
+    if p and p.Nickname:
+        return p.Nickname
+    try:
+        u = SiteUser.query.get(steam_id)
+        if u and u.nickname:
+            return u.nickname
+    except Exception:
+        pass
+    return "Игрок"
+
+
+def _avatar(steam_id):
+    try:
+        rec = SitePlayerAvatar.query.get(steam_id)
+        if rec:
+            return url_for("static", filename="avatars/" + rec.filename)
+    except Exception:
+        pass
+    try:
+        su = SiteUser.query.get(steam_id)
+        if su and su.avatar_url:
+            return su.avatar_url
+    except Exception:
+        pass
+    try:
+        from steam_utils import fetch_steam_avatar
+        return fetch_steam_avatar(steam_id)
+    except Exception:
+        return None
+
+
+_role_cache = {}
+
+
+def _user_role_tag(steam_id):
+    """Возвращает 'admin', 'vip' или None (кэш 60 сек)."""
+    import time
+    now = time.time()
+    cached = _role_cache.get(steam_id)
+    if cached and now - cached[1] < 60:
+        return cached[0]
+    tag = None
+    try:
+        from auth.roles import has_role, get_user_special_roles
+        if has_role(steam_id, "admin"):
+            tag = "admin"
+        elif any(
+            getattr(r, "role_code", "") == "vip"
+            for r in get_user_special_roles(steam_id)
+        ):
+            tag = "vip"
+    except Exception:
+        tag = None
+    _role_cache[steam_id] = (tag, now)
+    return tag
+
+
+def _msg_dict(m):
+    return {
+        "id": m.id,
+        "author": m.author_steam_id,
+        "nickname": _nickname(m.author_steam_id),
+        "avatar": _avatar(m.author_steam_id),
+        "text": m.text,
+        "time": m.created_at.strftime("%d.%m %H:%M"),
+        "own": m.author_steam_id == _current_sid(),
+        "role": _user_role_tag(m.author_steam_id),
+    }
+
+
+@bp.route("/")
+def index():
+    """Список группировок."""
+    from flask import redirect
+
+    user = session.get("user")
+    if not user or not user.get("steam_id"):
+        return redirect("auth.login")
+
+    factions = Faction.query.order_by(Faction.Name).all()
+
+    groups_data = []
+    for faction in factions:
+        groups_data.append({
+            "faction": faction,
+            "color": f"#{(faction.Color or 0) & 0xFFFFFF:06x}",
+            "members_count": FactionMember.query.filter_by(FACTION_ID=faction.ID).count(),
+        })
+
+    return render_template("groups/index.html", groups_data=groups_data)
+
+
+@bp.route("/<int:faction_id>")
+def detail(faction_id):
+    """Страница группировки: состав видят только члены и администрация."""
+    from flask import redirect, url_for as _url_for
+
+    user = session.get("user")
+    if not user or not user.get("steam_id"):
+        return redirect(_url_for("auth.login"))
+
+    faction = Faction.query.get_or_404(faction_id)
+    sid = _current_sid()
+    can_view = _can_access(faction_id, sid)
+
+    members_count = FactionMember.query.filter_by(FACTION_ID=faction_id).count()
+
+    members_data = []
+    if can_view:
+        members = (
+            db.session.query(FactionMember, FactionRank, Player)
+            .join(FactionRank, FactionMember.RankID == FactionRank.RankID)
+            .join(Player, FactionMember.MEMBER_ID == Player.SteamID)
+            .filter(FactionMember.FACTION_ID == faction_id)
+            .order_by(FactionRank.Permissions.desc(), Player.Nickname.asc())
+            .all()
+        )
+
+        for member, rank, player in members:
+            site_role = (
+                SiteFactionRole.query
+                .filter_by(steam_id=player.SteamID, faction_id=faction_id)
+                .first()
+            )
+
+            members_data.append({
+                'player': player,
+                'week_hours': weekly_hours(player.SteamID),
+                'rank': rank,
+                'role_code': site_role.role_code if site_role else None,
+                'role_label': ROLE_LABELS.get(
+                    site_role.role_code,
+                    '🔹 Участник'
+                ) if site_role else '🔹 Участник',
+            })
+
+    return render_template(
+        "groups/detail.html",
+        faction=faction,
+        color=color_from_int(faction.Color),
+        members_data=members_data,
+        members_count=members_count,
+        can_view_members=can_view,
+        can_chat=can_view,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ЧАТ ГРУППИРОВКИ
+# ═══════════════════════════════════════════════════════════════════
+
+@bp.route("/api/chat/<int:faction_id>")
+@login_required
+def api_faction_chat(faction_id):
+    """Сообщения чата группировки (только для членов и администрации)."""
+    sid = _current_sid()
+    if not _can_access(faction_id, sid):
+        return jsonify({"error": "forbidden"}), 403
+
+    since = request.args.get("since_id", 0, type=int)
+    msgs = (
+        SiteFactionMessage.query
+        .filter(
+            SiteFactionMessage.faction_id == faction_id,
+            SiteFactionMessage.id > since,
+            SiteFactionMessage.is_deleted == False,
+        )
+        .order_by(SiteFactionMessage.id)
+        .limit(100)
+        .all()
+    )
+    return jsonify({"messages": [_msg_dict(m) for m in msgs]})
+
+
+@bp.route("/api/chat/<int:faction_id>", methods=["POST"])
+@login_required
+def api_faction_chat_send(faction_id):
+    """Отправка сообщения в чат группировки."""
+    sid = _current_sid()
+    if not _can_access(faction_id, sid):
+        return jsonify({"error": "forbidden"}), 403
+
+    text = (request.get_json(silent=True) or {}).get("text", "").strip()
+    if not text:
+        return jsonify({"error": "empty"}), 400
+
+    m = SiteFactionMessage(
+        faction_id=faction_id,
+        author_steam_id=sid,
+        text=text[:1000],
+    )
+    db.session.add(m)
+    db.session.commit()
+    return jsonify({"message": _msg_dict(m)})

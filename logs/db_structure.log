@@ -1,0 +1,1205 @@
+2026-08-07 12:36:31,607 | INFO | ============================================================
+2026-08-07 12:36:31,607 | INFO | НАЧАЛО АНАЛИЗА БАЗЫ ДАННЫХ
+2026-08-07 12:36:31,608 | INFO | Время: 2026-08-07 12:36:31
+2026-08-07 12:36:31,608 | INFO | Подключение к: 37.9.13.191:3306/MAIN
+2026-08-07 12:36:31,608 | INFO | ============================================================
+2026-08-07 12:36:31,638 | ERROR | Ошибка подключения к БД: No module named 'pymysql'
+2026-08-07 12:36:31,638 | ERROR | Проверь переменные DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME в .env
+2026-08-07 12:41:48,994 | INFO | ============================================================
+2026-08-07 12:41:48,994 | INFO | НАЧАЛО АНАЛИЗА БАЗЫ ДАННЫХ
+2026-08-07 12:41:48,994 | INFO | Время: 2026-08-07 12:41:48
+2026-08-07 12:41:48,994 | INFO | Подключение к: 37.9.13.191:3306/MAIN
+2026-08-07 12:41:48,995 | INFO | ============================================================
+2026-08-07 12:41:49,511 | ERROR | Ошибка подключения к БД: (pymysql.err.OperationalError) (1044, "Access denied for user 'Avanguard'@'%' to database 'main'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-07 12:41:49,512 | ERROR | Проверь переменные DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME в .env
+2026-08-07 12:42:44,657 | INFO | ============================================================
+2026-08-07 12:42:44,657 | INFO | НАЧАЛО АНАЛИЗА БАЗЫ ДАННЫХ
+2026-08-07 12:42:44,657 | INFO | Время: 2026-08-07 12:42:44
+2026-08-07 12:42:44,657 | INFO | Подключение к: 37.9.13.191:3306/instance_main
+2026-08-07 12:42:44,658 | INFO | ============================================================
+2026-08-07 12:42:45,284 | INFO | Всего таблиц в БД: 42
+2026-08-07 12:42:45,284 | INFO | ------------------------------------------------------------
+2026-08-07 12:42:45,284 | INFO | 
+2026-08-07 12:42:45,285 | INFO | ТАБЛИЦА: db_info
+2026-08-07 12:42:45,285 | INFO | ----------------------------------------
+2026-08-07 12:42:45,324 | INFO |   Столбцы (1):
+2026-08-07 12:42:45,324 | INFO |     - version                        CHAR(50)             NULL
+2026-08-07 12:42:45,376 | INFO |   Количество записей: ~1
+2026-08-07 12:42:45,388 | INFO | 
+2026-08-07 12:42:45,389 | INFO | ТАБЛИЦА: donate_respawn_players
+2026-08-07 12:42:45,389 | INFO | ----------------------------------------
+2026-08-07 12:42:45,415 | INFO |   Столбцы (5):
+2026-08-07 12:42:45,415 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:45,416 | INFO |     - SetID                          INTEGER              NOT NULL
+2026-08-07 12:42:45,416 | INFO |     - WipePlayer                     TINYINT              NOT NULL, default=0
+2026-08-07 12:42:45,416 | INFO |     - RespawnCount                   INTEGER              NULL, default=1
+2026-08-07 12:42:45,416 | INFO |     - SpawnPos                       CHAR(50)             NULL
+2026-08-07 12:42:45,442 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:45,442 | INFO |     - SteamID -> players(SteamID)
+2026-08-07 12:42:45,455 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:45,455 | INFO |     - FK_donate_respawn_players_players (SteamID) 
+2026-08-07 12:42:45,468 | INFO |   Количество записей: ~0
+2026-08-07 12:42:45,481 | INFO | 
+2026-08-07 12:42:45,482 | INFO | ТАБЛИЦА: donate_respawn_sets
+2026-08-07 12:42:45,482 | INFO | ----------------------------------------
+2026-08-07 12:42:45,507 | INFO |   Столбцы (2):
+2026-08-07 12:42:45,508 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:45,508 | INFO |     - Items                          TEXT                 NULL
+2026-08-07 12:42:45,546 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:45,546 | INFO |     - ID (ID) 
+2026-08-07 12:42:45,560 | INFO |   Количество записей: ~0
+2026-08-07 12:42:45,573 | INFO | 
+2026-08-07 12:42:45,574 | INFO | ТАБЛИЦА: economics_anomaly_loot
+2026-08-07 12:42:45,574 | INFO | ----------------------------------------
+2026-08-07 12:42:45,600 | INFO |   Столбцы (3):
+2026-08-07 12:42:45,600 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:45,600 | INFO |     - anomaly_id                     INTEGER              NULL
+2026-08-07 12:42:45,600 | INFO |     - type                           CHAR(50)             NULL
+2026-08-07 12:42:45,613 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:45,626 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:45,629 | INFO |     - anomaly_id -> economics_location_anomaly(ID)
+2026-08-07 12:42:45,642 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:45,642 | INFO |     - anomaly_id (anomaly_id) 
+2026-08-07 12:42:45,656 | INFO |   Количество записей: ~0
+2026-08-07 12:42:45,668 | INFO | 
+2026-08-07 12:42:45,668 | INFO | ТАБЛИЦА: economics_item_aliases
+2026-08-07 12:42:45,668 | INFO | ----------------------------------------
+2026-08-07 12:42:45,694 | INFO |   Столбцы (2):
+2026-08-07 12:42:45,694 | INFO |     - Allias                         CHAR(50)             NULL
+2026-08-07 12:42:45,694 | INFO |     - Type                           CHAR(50)             NULL
+2026-08-07 12:42:45,745 | INFO |   Количество записей: ~73
+2026-08-07 12:42:45,758 | INFO | 
+2026-08-07 12:42:45,758 | INFO | ТАБЛИЦА: economics_location_anomaly
+2026-08-07 12:42:45,758 | INFO | ----------------------------------------
+2026-08-07 12:42:45,785 | INFO |   Столбцы (10):
+2026-08-07 12:42:45,785 | INFO |     - loc_id                         INTEGER              NULL
+2026-08-07 12:42:45,785 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:45,785 | INFO |     - type                           CHAR(50)             NOT NULL, default='NH_AnomalyGravi'
+2026-08-07 12:42:45,786 | INFO |     - chance                         INTEGER              NOT NULL, default=100
+2026-08-07 12:42:45,786 | INFO |     - amount_min                     INTEGER              NOT NULL, default=1
+2026-08-07 12:42:45,786 | INFO |     - amount_max                     INTEGER              NOT NULL, default=1
+2026-08-07 12:42:45,786 | INFO |     - loot_chance                    INTEGER              NOT NULL, default=100
+2026-08-07 12:42:45,786 | INFO |     - cooldown_min                   INTEGER              NOT NULL, default=7
+2026-08-07 12:42:45,786 | INFO |     - cooldown_max                   INTEGER              NOT NULL, default=10
+2026-08-07 12:42:45,786 | INFO |     - spawn_limit                    INTEGER              NOT NULL, default=20
+2026-08-07 12:42:45,799 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:45,812 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:45,813 | INFO |     - loc_id -> economics_locations(ID)
+2026-08-07 12:42:45,826 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:45,826 | INFO |     - LOCATION_ID (loc_id) 
+2026-08-07 12:42:45,839 | INFO |   Количество записей: ~0
+2026-08-07 12:42:45,852 | INFO | 
+2026-08-07 12:42:45,852 | INFO | ТАБЛИЦА: economics_location_mutants
+2026-08-07 12:42:45,852 | INFO | ----------------------------------------
+2026-08-07 12:42:45,878 | INFO |   Столбцы (9):
+2026-08-07 12:42:45,879 | INFO |     - loc_id                         INTEGER              NULL
+2026-08-07 12:42:45,879 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:45,879 | INFO |     - type                           CHAR(50)             NULL
+2026-08-07 12:42:45,879 | INFO |     - amount_min                     INTEGER              NULL
+2026-08-07 12:42:45,879 | INFO |     - amount_max                     INTEGER              NULL
+2026-08-07 12:42:45,879 | INFO |     - cooldown_min                   INTEGER              NULL, default=7
+2026-08-07 12:42:45,879 | INFO |     - cooldown_max                   INTEGER              NULL, default=10
+2026-08-07 12:42:45,879 | INFO |     - chance                         INTEGER              NULL, default=100
+2026-08-07 12:42:45,880 | INFO |     - spawn_limit                    INTEGER              NULL, default=10
+2026-08-07 12:42:45,892 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:45,905 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:45,905 | INFO |     - loc_id -> economics_locations(ID)
+2026-08-07 12:42:45,918 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:45,918 | INFO |     - loc_id (loc_id) 
+2026-08-07 12:42:45,931 | INFO |   Количество записей: ~269
+2026-08-07 12:42:45,944 | INFO | 
+2026-08-07 12:42:45,944 | INFO | ТАБЛИЦА: economics_locations
+2026-08-07 12:42:45,944 | INFO | ----------------------------------------
+2026-08-07 12:42:45,970 | INFO |   Столбцы (4):
+2026-08-07 12:42:45,971 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:45,971 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-07 12:42:45,971 | INFO |     - Radius                         INTEGER              NOT NULL, default=50
+2026-08-07 12:42:45,972 | INFO |     - Position                       CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-07 12:42:45,985 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:46,023 | INFO |   Количество записей: ~72
+2026-08-07 12:42:46,036 | INFO | 
+2026-08-07 12:42:46,036 | INFO | ТАБЛИЦА: economics_treasure
+2026-08-07 12:42:46,036 | INFO | ----------------------------------------
+2026-08-07 12:42:46,062 | INFO |   Столбцы (3):
+2026-08-07 12:42:46,062 | INFO |     - Tier                           INTEGER              NOT NULL
+2026-08-07 12:42:46,062 | INFO |     - SpawnPool                      FLOAT                NOT NULL, default=0.3
+2026-08-07 12:42:46,062 | INFO |     - Name                           CHAR(50) COLLATE "utf8mb4_general_ci" NULL
+2026-08-07 12:42:46,075 | INFO |   PRIMARY KEY: Tier
+2026-08-07 12:42:46,114 | INFO |   Количество записей: ~24
+2026-08-07 12:42:46,126 | INFO | 
+2026-08-07 12:42:46,126 | INFO | ТАБЛИЦА: economics_treasure_loot
+2026-08-07 12:42:46,127 | INFO | ----------------------------------------
+2026-08-07 12:42:46,152 | INFO |   Столбцы (7):
+2026-08-07 12:42:46,153 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:46,153 | INFO |     - Category_ID                    INTEGER              NULL
+2026-08-07 12:42:46,153 | INFO |     - Parent_ID                      INTEGER              NULL
+2026-08-07 12:42:46,153 | INFO |     - Weight                         FLOAT                NOT NULL, default=1
+2026-08-07 12:42:46,153 | INFO |     - Classname                      CHAR(50)             NULL
+2026-08-07 12:42:46,153 | INFO |     - Slot_ID                        INTEGER              NULL
+2026-08-07 12:42:46,153 | INFO |     - Params                         TEXT                 NOT NULL, default='{}'
+2026-08-07 12:42:46,166 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:46,179 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,179 | INFO |     - Parent_ID -> economics_treasure_loot(ID)
+2026-08-07 12:42:46,179 | INFO |     - Category_ID -> economics_treasure_loot_categories(ID)
+2026-08-07 12:42:46,192 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,192 | INFO |     - FK_economics_treasure_loot_economics_treasure_loot (Parent_ID) 
+2026-08-07 12:42:46,192 | INFO |     - cat_id (Category_ID) 
+2026-08-07 12:42:46,206 | INFO |   Количество записей: ~2955
+2026-08-07 12:42:46,219 | INFO | 
+2026-08-07 12:42:46,220 | INFO | ТАБЛИЦА: economics_treasure_loot_categories
+2026-08-07 12:42:46,220 | INFO | ----------------------------------------
+2026-08-07 12:42:46,246 | INFO |   Столбцы (5):
+2026-08-07 12:42:46,246 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:46,247 | INFO |     - Tier                           INTEGER              NULL
+2026-08-07 12:42:46,247 | INFO |     - Name                           CHAR(50)             NOT NULL, default='Cache Category'
+2026-08-07 12:42:46,247 | INFO |     - ItemsCount                     INTEGER              NOT NULL, default=-1
+2026-08-07 12:42:46,247 | INFO |     - ItemsRepeat                    TINYINT              NOT NULL, default=1
+2026-08-07 12:42:46,260 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:46,273 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,273 | INFO |     - Tier -> economics_treasure(Tier)
+2026-08-07 12:42:46,286 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,286 | INFO |     - FK_economics_treasure_loot_categories_economics_treasure (Tier) 
+2026-08-07 12:42:46,300 | INFO |   Количество записей: ~22
+2026-08-07 12:42:46,312 | INFO | 
+2026-08-07 12:42:46,313 | INFO | ТАБЛИЦА: economics_treasure_pos
+2026-08-07 12:42:46,313 | INFO | ----------------------------------------
+2026-08-07 12:42:46,339 | INFO |   Столбцы (5):
+2026-08-07 12:42:46,339 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:46,339 | INFO |     - Tier                           INTEGER              NOT NULL
+2026-08-07 12:42:46,339 | INFO |     - Container                      CHAR(250)            NOT NULL, default='NH_loot_treausre_type_3'
+2026-08-07 12:42:46,339 | INFO |     - Position                       CHAR(250)            NOT NULL, default='0 0 0'
+2026-08-07 12:42:46,340 | INFO |     - Orientation                    CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-07 12:42:46,353 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:46,366 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,366 | INFO |     - Tier -> economics_treasure(Tier)
+2026-08-07 12:42:46,379 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,379 | INFO |     - FK_economics_treasure_pos_new_economics_treasure_new (Tier) 
+2026-08-07 12:42:46,393 | INFO |   Количество записей: ~9685
+2026-08-07 12:42:46,406 | INFO | 
+2026-08-07 12:42:46,406 | INFO | ТАБЛИЦА: faction_members
+2026-08-07 12:42:46,406 | INFO | ----------------------------------------
+2026-08-07 12:42:46,432 | INFO |   Столбцы (3):
+2026-08-07 12:42:46,433 | INFO |     - FACTION_ID                     INTEGER              NOT NULL
+2026-08-07 12:42:46,433 | INFO |     - RankID                         INTEGER              NOT NULL
+2026-08-07 12:42:46,433 | INFO |     - MEMBER_ID                      CHAR(50)             NOT NULL
+2026-08-07 12:42:46,459 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,459 | INFO |     - RankID -> faction_ranks(RankID)
+2026-08-07 12:42:46,459 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-07 12:42:46,459 | INFO |     - MEMBER_ID -> players(SteamID)
+2026-08-07 12:42:46,472 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,472 | INFO |     - FK_faction_members_faction_ranks (RankID) 
+2026-08-07 12:42:46,472 | INFO |     - FK_faction_members_factions (FACTION_ID) 
+2026-08-07 12:42:46,472 | INFO |     - FK_faction_members_players (MEMBER_ID) 
+2026-08-07 12:42:46,486 | INFO |   Количество записей: ~1
+2026-08-07 12:42:46,499 | INFO | 
+2026-08-07 12:42:46,499 | INFO | ТАБЛИЦА: faction_ranks
+2026-08-07 12:42:46,499 | INFO | ----------------------------------------
+2026-08-07 12:42:46,525 | INFO |   Столбцы (4):
+2026-08-07 12:42:46,526 | INFO |     - FACTION_ID                     INTEGER              NOT NULL
+2026-08-07 12:42:46,526 | INFO |     - RankID                         INTEGER              NOT NULL
+2026-08-07 12:42:46,526 | INFO |     - Name                           CHAR(50)             NOT NULL, default='New faction rank'
+2026-08-07 12:42:46,526 | INFO |     - Permissions                    BIGINT               NOT NULL, default=1023
+2026-08-07 12:42:46,539 | INFO |   PRIMARY KEY: RankID
+2026-08-07 12:42:46,552 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,552 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-07 12:42:46,565 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,566 | INFO |     - FK_faction_ranks_factions (FACTION_ID) 
+2026-08-07 12:42:46,579 | INFO |   Количество записей: ~10
+2026-08-07 12:42:46,592 | INFO | 
+2026-08-07 12:42:46,592 | INFO | ТАБЛИЦА: faction_respawn_items
+2026-08-07 12:42:46,592 | INFO | ----------------------------------------
+2026-08-07 12:42:46,618 | INFO |   Столбцы (2):
+2026-08-07 12:42:46,619 | INFO |     - FACTION_ID                     INTEGER              NULL
+2026-08-07 12:42:46,619 | INFO |     - Item                           LONGTEXT             NULL
+2026-08-07 12:42:46,644 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,644 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-07 12:42:46,658 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,658 | INFO |     - FRACTION_ID (FACTION_ID) 
+2026-08-07 12:42:46,672 | INFO |   Количество записей: ~0
+2026-08-07 12:42:46,685 | INFO | 
+2026-08-07 12:42:46,685 | INFO | ТАБЛИЦА: factions
+2026-08-07 12:42:46,685 | INFO | ----------------------------------------
+2026-08-07 12:42:46,711 | INFO |   Столбцы (7):
+2026-08-07 12:42:46,711 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:46,711 | INFO |     - Name                           CHAR(50)             NOT NULL, default='New fraction'
+2026-08-07 12:42:46,711 | INFO |     - SpawnPos                       CHAR(50)             NULL
+2026-08-07 12:42:46,711 | INFO |     - MaxMembers                     INTEGER              NOT NULL, default=10
+2026-08-07 12:42:46,711 | INFO |     - Abilities                      INTEGER              NOT NULL, default=0
+2026-08-07 12:42:46,712 | INFO |     - Color                          BIGINT               NOT NULL, default=0
+2026-08-07 12:42:46,712 | INFO |     - Icon                           CHAR(50)             NOT NULL, default='set:nh_faction_icons image:loner'
+2026-08-07 12:42:46,724 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:46,763 | INFO |   Количество записей: ~12
+2026-08-07 12:42:46,776 | INFO | 
+2026-08-07 12:42:46,777 | INFO | ТАБЛИЦА: factions_bank
+2026-08-07 12:42:46,777 | INFO | ----------------------------------------
+2026-08-07 12:42:46,803 | INFO |   Столбцы (3):
+2026-08-07 12:42:46,803 | INFO |     - FACTION_ID                     INTEGER              NOT NULL
+2026-08-07 12:42:46,803 | INFO |     - Limit                          INTEGER              NOT NULL, default=0
+2026-08-07 12:42:46,804 | INFO |     - Balance                        INTEGER              NOT NULL, default=0
+2026-08-07 12:42:46,829 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:46,829 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-07 12:42:46,842 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:46,842 | INFO |     - FACTION_ID (FACTION_ID) UNIQUE
+2026-08-07 12:42:46,856 | INFO |   Количество записей: ~0
+2026-08-07 12:42:46,868 | INFO | 
+2026-08-07 12:42:46,869 | INFO | ТАБЛИЦА: fields_data
+2026-08-07 12:42:46,869 | INFO | ----------------------------------------
+2026-08-07 12:42:46,895 | INFO |   Столбцы (9):
+2026-08-07 12:42:46,896 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:46,896 | INFO |     - Name                           CHAR(50)             NULL, default='Custom Location'
+2026-08-07 12:42:46,896 | INFO |     - Type                           INTEGER              NOT NULL, default=1
+2026-08-07 12:42:46,896 | INFO |     - Strenght                       FLOAT                NULL
+2026-08-07 12:42:46,896 | INFO |     - Position                       CHAR(50)             NOT NULL, default='1000 0 1000'
+2026-08-07 12:42:46,897 | INFO |     - Radius                         INTEGER              NOT NULL, default=100
+2026-08-07 12:42:46,897 | INFO |     - NegativeHeight                 FLOAT                NOT NULL, default=10
+2026-08-07 12:42:46,897 | INFO |     - PositiveHeight                 FLOAT                NOT NULL, default=70
+2026-08-07 12:42:46,897 | INFO |     - FullDamageDistance             FLOAT                NULL
+2026-08-07 12:42:46,910 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:46,949 | INFO |   Количество записей: ~560
+2026-08-07 12:42:46,961 | INFO | 
+2026-08-07 12:42:46,962 | INFO | ТАБЛИЦА: gameplay_config
+2026-08-07 12:42:46,962 | INFO | ----------------------------------------
+2026-08-07 12:42:46,988 | INFO |   Столбцы (4):
+2026-08-07 12:42:46,988 | INFO |     - key                            TEXT COLLATE "utf32_general_ci" NULL
+2026-08-07 12:42:46,988 | INFO |     - value                          TEXT COLLATE "utf32_general_ci" NULL
+2026-08-07 12:42:46,988 | INFO |     - server_only                    TINYINT              NOT NULL, default=0
+2026-08-07 12:42:46,988 | INFO |     - GM_displayType                 ENUM                 NOT NULL, default='Float'
+2026-08-07 12:42:47,040 | INFO |   Количество записей: ~64
+2026-08-07 12:42:47,052 | INFO | 
+2026-08-07 12:42:47,052 | INFO | ТАБЛИЦА: npc_bank
+2026-08-07 12:42:47,053 | INFO | ----------------------------------------
+2026-08-07 12:42:47,078 | INFO |   Столбцы (3):
+2026-08-07 12:42:47,078 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-07 12:42:47,078 | INFO |     - Commission                     INTEGER              NULL
+2026-08-07 12:42:47,079 | INFO |     - MaxAmount                      INTEGER              NULL
+2026-08-07 12:42:47,104 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,105 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:47,117 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,118 | INFO |     - FK__npcs (NPC_ID) 
+2026-08-07 12:42:47,131 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,144 | INFO | 
+2026-08-07 12:42:47,144 | INFO | ТАБЛИЦА: npc_bank_player_data
+2026-08-07 12:42:47,144 | INFO | ----------------------------------------
+2026-08-07 12:42:47,170 | INFO |   Столбцы (3):
+2026-08-07 12:42:47,170 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-07 12:42:47,170 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:47,170 | INFO |     - Balance                        INTEGER              NOT NULL, default=0
+2026-08-07 12:42:47,196 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,196 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:47,196 | INFO |     - SteamID -> players(SteamID)
+2026-08-07 12:42:47,208 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,208 | INFO |     - FK_npc_bank_player_data_npcs (NPC_ID) 
+2026-08-07 12:42:47,209 | INFO |     - FK_npc_bank_player_data_players (SteamID) 
+2026-08-07 12:42:47,221 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,234 | INFO | 
+2026-08-07 12:42:47,235 | INFO | ТАБЛИЦА: npc_barter_lot_required_items
+2026-08-07 12:42:47,235 | INFO | ----------------------------------------
+2026-08-07 12:42:47,261 | INFO |   Столбцы (3):
+2026-08-07 12:42:47,261 | INFO |     - LOT_ID                         INTEGER              NULL
+2026-08-07 12:42:47,261 | INFO |     - Item                           CHAR(50)             NULL
+2026-08-07 12:42:47,262 | INFO |     - Condition                      LONGTEXT             NOT NULL, default='{}'
+2026-08-07 12:42:47,287 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,287 | INFO |     - LOT_ID -> npc_barter_lots(ID)
+2026-08-07 12:42:47,300 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,300 | INFO |     - FK__npc_barter_lots (LOT_ID) 
+2026-08-07 12:42:47,313 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,326 | INFO | 
+2026-08-07 12:42:47,326 | INFO | ТАБЛИЦА: npc_barter_lots
+2026-08-07 12:42:47,326 | INFO | ----------------------------------------
+2026-08-07 12:42:47,352 | INFO |   Столбцы (3):
+2026-08-07 12:42:47,353 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-07 12:42:47,353 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:47,353 | INFO |     - Item                           TEXT COLLATE "utf8mb4_general_ci" NOT NULL
+2026-08-07 12:42:47,366 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:47,379 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,379 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:47,392 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,392 | INFO |     - FK___npcs (NPC_ID) 
+2026-08-07 12:42:47,406 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,418 | INFO | 
+2026-08-07 12:42:47,419 | INFO | ТАБЛИЦА: npc_fast_travel_destinations
+2026-08-07 12:42:47,419 | INFO | ----------------------------------------
+2026-08-07 12:42:47,445 | INFO |   Столбцы (6):
+2026-08-07 12:42:47,445 | INFO |     - id                             INTEGER              NOT NULL
+2026-08-07 12:42:47,446 | INFO |     - service_id                     VARCHAR(64)          NOT NULL
+2026-08-07 12:42:47,446 | INFO |     - name                           CHAR(50)             NOT NULL
+2026-08-07 12:42:47,446 | INFO |     - position                       VARCHAR(50)          NOT NULL
+2026-08-07 12:42:47,446 | INFO |     - price                          INTEGER              NOT NULL
+2026-08-07 12:42:47,446 | INFO |     - enabled                        TINYINT              NOT NULL, default=1
+2026-08-07 12:42:47,460 | INFO |   PRIMARY KEY: id
+2026-08-07 12:42:47,473 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,473 | INFO |     - service_id -> npc_fast_travel_services(service_id)
+2026-08-07 12:42:47,486 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,486 | INFO |     - FK_npc_fast_travel_destinations_npc_fast_travel_services (service_id) 
+2026-08-07 12:42:47,500 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,513 | INFO | 
+2026-08-07 12:42:47,513 | INFO | ТАБЛИЦА: npc_fast_travel_services
+2026-08-07 12:42:47,513 | INFO | ----------------------------------------
+2026-08-07 12:42:47,539 | INFO |   Столбцы (2):
+2026-08-07 12:42:47,540 | INFO |     - id                             INTEGER              NOT NULL
+2026-08-07 12:42:47,540 | INFO |     - service_id                     VARCHAR(64)          NOT NULL
+2026-08-07 12:42:47,553 | INFO |   PRIMARY KEY: id
+2026-08-07 12:42:47,578 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,578 | INFO |     - service_id (service_id) UNIQUE
+2026-08-07 12:42:47,591 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,604 | INFO | 
+2026-08-07 12:42:47,604 | INFO | ТАБЛИЦА: npc_stash
+2026-08-07 12:42:47,604 | INFO | ----------------------------------------
+2026-08-07 12:42:47,631 | INFO |   Столбцы (3):
+2026-08-07 12:42:47,631 | INFO |     - NPC_ID                         INTEGER              NOT NULL
+2026-08-07 12:42:47,631 | INFO |     - MaxRows                        INTEGER              NOT NULL, default=10
+2026-08-07 12:42:47,631 | INFO |     - MaxNextRowPrice                INTEGER              NOT NULL, default=10000
+2026-08-07 12:42:47,657 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,657 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:47,670 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,670 | INFO |     - FK_npc_stash_npcs (NPC_ID) 
+2026-08-07 12:42:47,683 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,696 | INFO | 
+2026-08-07 12:42:47,696 | INFO | ТАБЛИЦА: npc_stash_ban_global
+2026-08-07 12:42:47,696 | INFO | ----------------------------------------
+2026-08-07 12:42:47,722 | INFO |   Столбцы (1):
+2026-08-07 12:42:47,722 | INFO |     - item                           CHAR(50) COLLATE "utf8mb4_unicode_ci" NULL
+2026-08-07 12:42:47,774 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,787 | INFO | 
+2026-08-07 12:42:47,787 | INFO | ТАБЛИЦА: npc_stash_items
+2026-08-07 12:42:47,787 | INFO | ----------------------------------------
+2026-08-07 12:42:47,814 | INFO |   Столбцы (5):
+2026-08-07 12:42:47,814 | INFO |     - Stash_ID                       INTEGER              NOT NULL
+2026-08-07 12:42:47,814 | INFO |     - Item_UUID                      BINARY(16)           NOT NULL
+2026-08-07 12:42:47,814 | INFO |     - Parent_UUID                    BINARY(16)           NULL
+2026-08-07 12:42:47,814 | INFO |     - Item                           CHAR(50)             NOT NULL
+2026-08-07 12:42:47,814 | INFO |     - Data                           TEXT                 NOT NULL
+2026-08-07 12:42:47,827 | INFO |   PRIMARY KEY: Item_UUID
+2026-08-07 12:42:47,840 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,840 | INFO |     - Parent_UUID, Stash_ID -> npc_stash_items(Item_UUID, Stash_ID)
+2026-08-07 12:42:47,840 | INFO |     - Stash_ID -> npc_stash_players(ID)
+2026-08-07 12:42:47,853 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,853 | INFO |     - FK_npc_stash_items_npc_stash_players (Stash_ID) 
+2026-08-07 12:42:47,853 | INFO |     - ix_parent_uuid_stash (Parent_UUID, Stash_ID) 
+2026-08-07 12:42:47,853 | INFO |     - uk_item_uuid_stash (Item_UUID, Stash_ID) UNIQUE
+2026-08-07 12:42:47,866 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,879 | INFO | 
+2026-08-07 12:42:47,880 | INFO | ТАБЛИЦА: npc_stash_players
+2026-08-07 12:42:47,880 | INFO | ----------------------------------------
+2026-08-07 12:42:47,906 | INFO |   Столбцы (4):
+2026-08-07 12:42:47,907 | INFO |     - NPC_ID                         INTEGER              NOT NULL
+2026-08-07 12:42:47,907 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:47,907 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:47,907 | INFO |     - OpenedRows                     INTEGER              NOT NULL, default=2
+2026-08-07 12:42:47,920 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:47,933 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:47,933 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:47,933 | INFO |     - SteamID -> players(SteamID)
+2026-08-07 12:42:47,946 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:47,947 | INFO |     - FK_npc_stash_players_npcs (NPC_ID) 
+2026-08-07 12:42:47,947 | INFO |     - FK_npc_stash_players_players (SteamID) 
+2026-08-07 12:42:47,960 | INFO |   Количество записей: ~0
+2026-08-07 12:42:47,972 | INFO | 
+2026-08-07 12:42:47,973 | INFO | ТАБЛИЦА: npc_trade_categories
+2026-08-07 12:42:47,973 | INFO | ----------------------------------------
+2026-08-07 12:42:47,999 | INFO |   Столбцы (3):
+2026-08-07 12:42:47,999 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-07 12:42:48,000 | INFO |     - Category_ID                    INTEGER              NOT NULL
+2026-08-07 12:42:48,000 | INFO |     - Name                           CHAR(50)             NOT NULL, default='Прочее'
+2026-08-07 12:42:48,013 | INFO |   PRIMARY KEY: Category_ID
+2026-08-07 12:42:48,026 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,026 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:48,039 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,039 | INFO |     - FK_npc_trader_npcs (NPC_ID) 
+2026-08-07 12:42:48,053 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,065 | INFO | 
+2026-08-07 12:42:48,066 | INFO | ТАБЛИЦА: npc_trade_items
+2026-08-07 12:42:48,066 | INFO | ----------------------------------------
+2026-08-07 12:42:48,092 | INFO |   Столбцы (8):
+2026-08-07 12:42:48,093 | INFO |     - Category_ID                    INTEGER              NOT NULL
+2026-08-07 12:42:48,093 | INFO |     - Item_ID                        INTEGER              NOT NULL
+2026-08-07 12:42:48,093 | INFO |     - Item                           CHAR(50)             NOT NULL, default='Paper'
+2026-08-07 12:42:48,093 | INFO |     - PriceBuy                       INTEGER              NULL
+2026-08-07 12:42:48,094 | INFO |     - PriceSell                      INTEGER              NULL
+2026-08-07 12:42:48,094 | INFO |     - StockBuy                       INTEGER              NULL
+2026-08-07 12:42:48,094 | INFO |     - StockSell                      INTEGER              NULL
+2026-08-07 12:42:48,094 | INFO |     - SellCondition                  LONGTEXT             NOT NULL
+2026-08-07 12:42:48,107 | INFO |   PRIMARY KEY: Item_ID
+2026-08-07 12:42:48,120 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,120 | INFO |     - Category_ID -> npc_trade_categories(Category_ID)
+2026-08-07 12:42:48,133 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,133 | INFO |     - FK__npc_trader_categories (Category_ID) 
+2026-08-07 12:42:48,147 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,160 | INFO | 
+2026-08-07 12:42:48,160 | INFO | ТАБЛИЦА: npc_wear
+2026-08-07 12:42:48,160 | INFO | ----------------------------------------
+2026-08-07 12:42:48,186 | INFO |   Столбцы (3):
+2026-08-07 12:42:48,186 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,187 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-07 12:42:48,187 | INFO |     - Item                           CHAR(50)             NULL
+2026-08-07 12:42:48,200 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,212 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,213 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-07 12:42:48,225 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,226 | INFO |     - FK_npc_wear_npcs (NPC_ID) 
+2026-08-07 12:42:48,239 | INFO |   Количество записей: ~10
+2026-08-07 12:42:48,251 | INFO | 
+2026-08-07 12:42:48,251 | INFO | ТАБЛИЦА: npcs
+2026-08-07 12:42:48,252 | INFO | ----------------------------------------
+2026-08-07 12:42:48,278 | INFO |   Столбцы (8):
+2026-08-07 12:42:48,278 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,278 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-07 12:42:48,278 | INFO |     - Model                          CHAR(50)             NULL
+2026-08-07 12:42:48,278 | INFO |     - Fraction                       INTEGER              NOT NULL, default=-1
+2026-08-07 12:42:48,279 | INFO |     - StartPos                       CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-07 12:42:48,279 | INFO |     - StartOrientation               CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-07 12:42:48,279 | INFO |     - FastTravelServiceId            VARCHAR(64)          NULL
+2026-08-07 12:42:48,279 | INFO |     - IsPublic                       TINYINT              NOT NULL, default=1
+2026-08-07 12:42:48,292 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,305 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,305 | INFO |     - FastTravelServiceId -> npc_fast_travel_services(service_id)
+2026-08-07 12:42:48,318 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,318 | INFO |     - FK_npcs_fractions (Fraction) 
+2026-08-07 12:42:48,318 | INFO |     - FK_npcs_npc_fast_travel_services (FastTravelServiceId) 
+2026-08-07 12:42:48,331 | INFO |   Количество записей: ~11
+2026-08-07 12:42:48,344 | INFO | 
+2026-08-07 12:42:48,344 | INFO | ТАБЛИЦА: pda_accounts
+2026-08-07 12:42:48,344 | INFO | ----------------------------------------
+2026-08-07 12:42:48,370 | INFO |   Столбцы (4):
+2026-08-07 12:42:48,371 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,371 | INFO |     - Login                          CHAR(50)             NOT NULL
+2026-08-07 12:42:48,371 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:48,371 | INFO |     - LastActivity                   DATETIME             NOT NULL, default=current_timestamp()
+2026-08-07 12:42:48,384 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,396 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,397 | INFO |     - SteamID -> players(SteamID)
+2026-08-07 12:42:48,409 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,409 | INFO |     - FK_pda_accounts_players (SteamID) 
+2026-08-07 12:42:48,410 | INFO |     - ix_accounts_lastactivity (LastActivity) 
+2026-08-07 12:42:48,410 | INFO |     - ix_accounts_steamid (SteamID) 
+2026-08-07 12:42:48,423 | INFO |   Количество записей: ~5
+2026-08-07 12:42:48,436 | INFO | 
+2026-08-07 12:42:48,436 | INFO | ТАБЛИЦА: pda_chat_messages
+2026-08-07 12:42:48,437 | INFO | ----------------------------------------
+2026-08-07 12:42:48,463 | INFO |   Столбцы (6):
+2026-08-07 12:42:48,463 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,463 | INFO |     - ChatID                         INTEGER              NOT NULL
+2026-08-07 12:42:48,464 | INFO |     - SenderID                       INTEGER              NOT NULL
+2026-08-07 12:42:48,464 | INFO |     - Message                        TEXT                 NOT NULL
+2026-08-07 12:42:48,464 | INFO |     - Attachments                    LONGTEXT             NOT NULL
+2026-08-07 12:42:48,464 | INFO |     - Date                           TIMESTAMP            NOT NULL, default=current_timestamp()
+2026-08-07 12:42:48,477 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,490 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,490 | INFO |     - SenderID -> pda_accounts(ID)
+2026-08-07 12:42:48,490 | INFO |     - ChatID -> pda_chats(ID)
+2026-08-07 12:42:48,503 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,503 | INFO |     - FK_pda_chat_messages_pda_accounts (SenderID) 
+2026-08-07 12:42:48,503 | INFO |     - FK_pda_chat_messages_pda_chats (ChatID) 
+2026-08-07 12:42:48,503 | INFO |     - ix_messages_chat_date_id (ChatID, Date, ID) 
+2026-08-07 12:42:48,517 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,529 | INFO | 
+2026-08-07 12:42:48,530 | INFO | ТАБЛИЦА: pda_chat_participants
+2026-08-07 12:42:48,530 | INFO | ----------------------------------------
+2026-08-07 12:42:48,556 | INFO |   Столбцы (5):
+2026-08-07 12:42:48,557 | INFO |     - ChatID                         INTEGER              NOT NULL
+2026-08-07 12:42:48,557 | INFO |     - AccountID                      INTEGER              NOT NULL
+2026-08-07 12:42:48,557 | INFO |     - ContactAccountID               INTEGER              NOT NULL
+2026-08-07 12:42:48,557 | INFO |     - LastReadMessageDate            INTEGER              NOT NULL, default=-1
+2026-08-07 12:42:48,557 | INFO |     - Muted                          TINYINT              NOT NULL, default=0
+2026-08-07 12:42:48,583 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,583 | INFO |     - AccountID -> pda_accounts(ID)
+2026-08-07 12:42:48,583 | INFO |     - ContactAccountID -> pda_accounts(ID)
+2026-08-07 12:42:48,584 | INFO |     - ChatID -> pda_chats(ID)
+2026-08-07 12:42:48,597 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,597 | INFO |     - FK_pda_chat_participants_pda_accounts (AccountID) 
+2026-08-07 12:42:48,597 | INFO |     - FK_pda_chat_participants_pda_accounts_2 (ContactAccountID) 
+2026-08-07 12:42:48,597 | INFO |     - FK_pda_chat_participants_pda_chats (ChatID) 
+2026-08-07 12:42:48,597 | INFO |     - ix_participants_acc (AccountID, ContactAccountID) 
+2026-08-07 12:42:48,597 | INFO |     - ix_participants_chat (ChatID) 
+2026-08-07 12:42:48,610 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,623 | INFO | 
+2026-08-07 12:42:48,623 | INFO | ТАБЛИЦА: pda_chats
+2026-08-07 12:42:48,623 | INFO | ----------------------------------------
+2026-08-07 12:42:48,649 | INFO |   Столбцы (3):
+2026-08-07 12:42:48,650 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,650 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-07 12:42:48,650 | INFO |     - Type                           ENUM                 NOT NULL, default='GLOBAL'
+2026-08-07 12:42:48,663 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,701 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,714 | INFO | 
+2026-08-07 12:42:48,714 | INFO | ТАБЛИЦА: pda_map_fields
+2026-08-07 12:42:48,714 | INFO | ----------------------------------------
+2026-08-07 12:42:48,740 | INFO |   Столбцы (7):
+2026-08-07 12:42:48,740 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,740 | INFO |     - AccountID                      INTEGER              NOT NULL
+2026-08-07 12:42:48,741 | INFO |     - Position                       CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-07 12:42:48,741 | INFO |     - Name                           CHAR(50)             NOT NULL
+2026-08-07 12:42:48,741 | INFO |     - Description                    TEXT                 NULL
+2026-08-07 12:42:48,741 | INFO |     - Radius                         FLOAT                NOT NULL, default=10
+2026-08-07 12:42:48,741 | INFO |     - Color                          INTEGER              NOT NULL, default=-15204608
+2026-08-07 12:42:48,754 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,767 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,768 | INFO |     - AccountID -> pda_accounts(ID)
+2026-08-07 12:42:48,781 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,781 | INFO |     - FK__pda_accounts (AccountID) 
+2026-08-07 12:42:48,781 | INFO |     - ix_fields_account (AccountID) 
+2026-08-07 12:42:48,794 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,808 | INFO | 
+2026-08-07 12:42:48,808 | INFO | ТАБЛИЦА: pda_map_markers
+2026-08-07 12:42:48,808 | INFO | ----------------------------------------
+2026-08-07 12:42:48,834 | INFO |   Столбцы (7):
+2026-08-07 12:42:48,835 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-07 12:42:48,835 | INFO |     - AccountID                      INTEGER              NULL
+2026-08-07 12:42:48,835 | INFO |     - Position                       CHAR(50) COLLATE "utf8mb4_general_ci" NOT NULL
+2026-08-07 12:42:48,835 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-07 12:42:48,835 | INFO |     - Description                    TEXT                 NULL
+2026-08-07 12:42:48,836 | INFO |     - Icon                           CHAR(50) COLLATE "utf8mb4_general_ci" NULL
+2026-08-07 12:42:48,836 | INFO |     - Color                          INTEGER              NULL
+2026-08-07 12:42:48,849 | INFO |   PRIMARY KEY: ID
+2026-08-07 12:42:48,861 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,862 | INFO |     - AccountID -> pda_accounts(ID)
+2026-08-07 12:42:48,875 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,875 | INFO |     - FK_pda_map_markers_pda_accounts (AccountID) 
+2026-08-07 12:42:48,875 | INFO |     - ix_markers_account (AccountID) 
+2026-08-07 12:42:48,888 | INFO |   Количество записей: ~0
+2026-08-07 12:42:48,901 | INFO | 
+2026-08-07 12:42:48,901 | INFO | ТАБЛИЦА: player_achievements
+2026-08-07 12:42:48,901 | INFO | ----------------------------------------
+2026-08-07 12:42:48,927 | INFO |   Столбцы (5):
+2026-08-07 12:42:48,927 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:48,928 | INFO |     - AchievementID                  INTEGER              NOT NULL
+2026-08-07 12:42:48,928 | INFO |     - IsAchieved                     TINYINT              NOT NULL, default=0
+2026-08-07 12:42:48,928 | INFO |     - AchievedAt                     TIMESTAMP            NULL
+2026-08-07 12:42:48,928 | INFO |     - Progress                       LONGTEXT             NOT NULL, default='{}'
+2026-08-07 12:42:48,954 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:48,954 | INFO |     - SteamID -> players(SteamID)
+2026-08-07 12:42:48,967 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:48,967 | INFO |     - AchievementID (AchievementID) 
+2026-08-07 12:42:48,967 | INFO |     - FK_player_achievements_players (SteamID) 
+2026-08-07 12:42:48,980 | INFO |   Количество записей: ~21
+2026-08-07 12:42:48,993 | INFO | 
+2026-08-07 12:42:48,993 | INFO | ТАБЛИЦА: player_stats
+2026-08-07 12:42:48,993 | INFO | ----------------------------------------
+2026-08-07 12:42:49,019 | INFO |   Столбцы (6):
+2026-08-07 12:42:49,020 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:49,020 | INFO |     - EmissionSurvived               INTEGER              NOT NULL, default=0
+2026-08-07 12:42:49,020 | INFO |     - MutantsKills                   INTEGER              NOT NULL, default=0
+2026-08-07 12:42:49,020 | INFO |     - PlayerKills                    INTEGER              NOT NULL, default=0
+2026-08-07 12:42:49,020 | INFO |     - StashesFound                   INTEGER              NOT NULL, default=0
+2026-08-07 12:42:49,020 | INFO |     - ArtefactFound                  INTEGER              NOT NULL, default=0
+2026-08-07 12:42:49,033 | INFO |   PRIMARY KEY: SteamID
+2026-08-07 12:42:49,046 | INFO |   FOREIGN KEYS:
+2026-08-07 12:42:49,046 | INFO |     - SteamID -> players(SteamID)
+2026-08-07 12:42:49,071 | INFO |   Количество записей: ~9
+2026-08-07 12:42:49,084 | INFO | 
+2026-08-07 12:42:49,084 | INFO | ТАБЛИЦА: players
+2026-08-07 12:42:49,085 | INFO | ----------------------------------------
+2026-08-07 12:42:49,111 | INFO |   Столбцы (4):
+2026-08-07 12:42:49,111 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-07 12:42:49,111 | INFO |     - Nickname                       CHAR(50)             NULL
+2026-08-07 12:42:49,111 | INFO |     - RegistrationDate               TIMESTAMP            NOT NULL, default=current_timestamp()
+2026-08-07 12:42:49,111 | INFO |     - LastLogonDate                  TIMESTAMP            NOT NULL, default=current_timestamp()
+2026-08-07 12:42:49,124 | INFO |   PRIMARY KEY: SteamID
+2026-08-07 12:42:49,149 | INFO |   ИНДЕКСЫ:
+2026-08-07 12:42:49,149 | INFO |     - SteamID (SteamID) UNIQUE
+2026-08-07 12:42:49,162 | INFO |   Количество записей: ~9
+2026-08-07 12:42:49,175 | INFO | 
+2026-08-07 12:42:49,175 | INFO | ============================================================
+2026-08-07 12:42:49,176 | INFO | АНАЛИЗ БАЗЫ ДАННЫХ ЗАВЕРШЁН
+2026-08-07 12:42:49,176 | INFO | Лог сохранён: C:\Users\Администратор\Documents\EoC Site\logs\db_structure.log
+2026-08-07 12:42:49,176 | INFO | ============================================================
+2026-08-09 10:34:04,809 | INFO | ============================================================
+2026-08-09 10:34:04,814 | INFO | НАЧАЛО АНАЛИЗА БАЗЫ ДАННЫХ
+2026-08-09 10:34:04,815 | INFO | Время: 2026-08-09 10:34:04
+2026-08-09 10:34:04,815 | INFO | Подключение к: 37.9.13.191:3306/instance_main
+2026-08-09 10:34:04,815 | INFO | ============================================================
+2026-08-09 10:34:05,261 | INFO | Всего таблиц в БД: 42
+2026-08-09 10:34:05,261 | INFO | ------------------------------------------------------------
+2026-08-09 10:34:05,261 | INFO | 
+2026-08-09 10:34:05,262 | INFO | ТАБЛИЦА: db_info
+2026-08-09 10:34:05,262 | INFO | ----------------------------------------
+2026-08-09 10:34:05,310 | INFO |   Столбцы (1):
+2026-08-09 10:34:05,310 | INFO |     - version                        CHAR(50)             NULL
+2026-08-09 10:34:05,363 | INFO |   Количество записей: ~1
+2026-08-09 10:34:05,376 | INFO | 
+2026-08-09 10:34:05,376 | INFO | ТАБЛИЦА: donate_respawn_players
+2026-08-09 10:34:05,376 | INFO | ----------------------------------------
+2026-08-09 10:34:05,403 | INFO |   Столбцы (5):
+2026-08-09 10:34:05,403 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:05,404 | INFO |     - SetID                          INTEGER              NOT NULL
+2026-08-09 10:34:05,404 | INFO |     - WipePlayer                     TINYINT              NOT NULL, default=0
+2026-08-09 10:34:05,404 | INFO |     - RespawnCount                   INTEGER              NULL, default=1
+2026-08-09 10:34:05,404 | INFO |     - SpawnPos                       CHAR(50)             NULL
+2026-08-09 10:34:05,429 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:05,430 | INFO |     - SteamID -> players(SteamID)
+2026-08-09 10:34:05,442 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:05,443 | INFO |     - FK_donate_respawn_players_players (SteamID) 
+2026-08-09 10:34:05,456 | INFO |   Количество записей: ~0
+2026-08-09 10:34:05,469 | INFO | 
+2026-08-09 10:34:05,469 | INFO | ТАБЛИЦА: donate_respawn_sets
+2026-08-09 10:34:05,469 | INFO | ----------------------------------------
+2026-08-09 10:34:05,495 | INFO |   Столбцы (2):
+2026-08-09 10:34:05,495 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:05,495 | INFO |     - Items                          TEXT                 NULL
+2026-08-09 10:34:05,534 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:05,534 | INFO |     - ID (ID) 
+2026-08-09 10:34:05,548 | INFO |   Количество записей: ~0
+2026-08-09 10:34:05,561 | INFO | 
+2026-08-09 10:34:05,561 | INFO | ТАБЛИЦА: economics_anomaly_loot
+2026-08-09 10:34:05,561 | INFO | ----------------------------------------
+2026-08-09 10:34:05,587 | INFO |   Столбцы (3):
+2026-08-09 10:34:05,587 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:05,587 | INFO |     - anomaly_id                     INTEGER              NULL
+2026-08-09 10:34:05,587 | INFO |     - type                           CHAR(50)             NULL
+2026-08-09 10:34:05,600 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:05,614 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:05,614 | INFO |     - anomaly_id -> economics_location_anomaly(ID)
+2026-08-09 10:34:05,627 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:05,627 | INFO |     - anomaly_id (anomaly_id) 
+2026-08-09 10:34:05,640 | INFO |   Количество записей: ~472
+2026-08-09 10:34:05,653 | INFO | 
+2026-08-09 10:34:05,654 | INFO | ТАБЛИЦА: economics_item_aliases
+2026-08-09 10:34:05,654 | INFO | ----------------------------------------
+2026-08-09 10:34:05,680 | INFO |   Столбцы (2):
+2026-08-09 10:34:05,680 | INFO |     - Allias                         CHAR(50)             NULL
+2026-08-09 10:34:05,680 | INFO |     - Type                           CHAR(50)             NULL
+2026-08-09 10:34:05,732 | INFO |   Количество записей: ~85
+2026-08-09 10:34:05,745 | INFO | 
+2026-08-09 10:34:05,745 | INFO | ТАБЛИЦА: economics_location_anomaly
+2026-08-09 10:34:05,745 | INFO | ----------------------------------------
+2026-08-09 10:34:05,771 | INFO |   Столбцы (10):
+2026-08-09 10:34:05,771 | INFO |     - loc_id                         INTEGER              NULL
+2026-08-09 10:34:05,772 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:05,772 | INFO |     - type                           CHAR(50)             NOT NULL, default='NH_AnomalyGravi'
+2026-08-09 10:34:05,772 | INFO |     - chance                         INTEGER              NOT NULL, default=100
+2026-08-09 10:34:05,772 | INFO |     - amount_min                     INTEGER              NOT NULL, default=1
+2026-08-09 10:34:05,772 | INFO |     - amount_max                     INTEGER              NOT NULL, default=1
+2026-08-09 10:34:05,772 | INFO |     - loot_chance                    INTEGER              NOT NULL, default=100
+2026-08-09 10:34:05,772 | INFO |     - cooldown_min                   INTEGER              NOT NULL, default=7
+2026-08-09 10:34:05,772 | INFO |     - cooldown_max                   INTEGER              NOT NULL, default=10
+2026-08-09 10:34:05,772 | INFO |     - spawn_limit                    INTEGER              NOT NULL, default=20
+2026-08-09 10:34:05,785 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:05,799 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:05,799 | INFO |     - loc_id -> economics_locations(ID)
+2026-08-09 10:34:05,811 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:05,812 | INFO |     - LOCATION_ID (loc_id) 
+2026-08-09 10:34:05,825 | INFO |   Количество записей: ~1252
+2026-08-09 10:34:05,841 | INFO | 
+2026-08-09 10:34:05,842 | INFO | ТАБЛИЦА: economics_location_mutants
+2026-08-09 10:34:05,842 | INFO | ----------------------------------------
+2026-08-09 10:34:05,868 | INFO |   Столбцы (9):
+2026-08-09 10:34:05,868 | INFO |     - loc_id                         INTEGER              NULL
+2026-08-09 10:34:05,869 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:05,869 | INFO |     - type                           CHAR(50)             NULL
+2026-08-09 10:34:05,869 | INFO |     - amount_min                     INTEGER              NULL
+2026-08-09 10:34:05,869 | INFO |     - amount_max                     INTEGER              NULL
+2026-08-09 10:34:05,869 | INFO |     - cooldown_min                   INTEGER              NULL, default=7
+2026-08-09 10:34:05,869 | INFO |     - cooldown_max                   INTEGER              NULL, default=10
+2026-08-09 10:34:05,869 | INFO |     - chance                         INTEGER              NULL, default=100
+2026-08-09 10:34:05,869 | INFO |     - spawn_limit                    INTEGER              NULL, default=10
+2026-08-09 10:34:05,882 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:05,895 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:05,895 | INFO |     - loc_id -> economics_locations(ID)
+2026-08-09 10:34:05,908 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:05,909 | INFO |     - loc_id (loc_id) 
+2026-08-09 10:34:05,922 | INFO |   Количество записей: ~311
+2026-08-09 10:34:05,935 | INFO | 
+2026-08-09 10:34:05,935 | INFO | ТАБЛИЦА: economics_locations
+2026-08-09 10:34:05,935 | INFO | ----------------------------------------
+2026-08-09 10:34:05,961 | INFO |   Столбцы (4):
+2026-08-09 10:34:05,962 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:05,962 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-09 10:34:05,962 | INFO |     - Radius                         INTEGER              NOT NULL, default=50
+2026-08-09 10:34:05,962 | INFO |     - Position                       CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-09 10:34:05,976 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:06,014 | INFO |   Количество записей: ~146
+2026-08-09 10:34:06,027 | INFO | 
+2026-08-09 10:34:06,027 | INFO | ТАБЛИЦА: economics_treasure
+2026-08-09 10:34:06,027 | INFO | ----------------------------------------
+2026-08-09 10:34:06,053 | INFO |   Столбцы (3):
+2026-08-09 10:34:06,053 | INFO |     - Tier                           INTEGER              NOT NULL
+2026-08-09 10:34:06,054 | INFO |     - SpawnPool                      FLOAT                NOT NULL, default=0.3
+2026-08-09 10:34:06,054 | INFO |     - Name                           CHAR(50) COLLATE "utf8mb4_general_ci" NULL
+2026-08-09 10:34:06,067 | INFO |   PRIMARY KEY: Tier
+2026-08-09 10:34:06,105 | INFO |   Количество записей: ~24
+2026-08-09 10:34:06,118 | INFO | 
+2026-08-09 10:34:06,118 | INFO | ТАБЛИЦА: economics_treasure_loot
+2026-08-09 10:34:06,119 | INFO | ----------------------------------------
+2026-08-09 10:34:06,145 | INFO |   Столбцы (7):
+2026-08-09 10:34:06,146 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:06,146 | INFO |     - Category_ID                    INTEGER              NULL
+2026-08-09 10:34:06,146 | INFO |     - Parent_ID                      INTEGER              NULL
+2026-08-09 10:34:06,146 | INFO |     - Weight                         FLOAT                NOT NULL, default=1
+2026-08-09 10:34:06,146 | INFO |     - Classname                      CHAR(50)             NULL
+2026-08-09 10:34:06,146 | INFO |     - Slot_ID                        INTEGER              NULL
+2026-08-09 10:34:06,146 | INFO |     - Params                         TEXT                 NOT NULL, default='{}'
+2026-08-09 10:34:06,159 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:06,172 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,172 | INFO |     - Parent_ID -> economics_treasure_loot(ID)
+2026-08-09 10:34:06,172 | INFO |     - Category_ID -> economics_treasure_loot_categories(ID)
+2026-08-09 10:34:06,185 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,185 | INFO |     - FK_economics_treasure_loot_economics_treasure_loot (Parent_ID) 
+2026-08-09 10:34:06,185 | INFO |     - cat_id (Category_ID) 
+2026-08-09 10:34:06,199 | INFO |   Количество записей: ~2955
+2026-08-09 10:34:06,212 | INFO | 
+2026-08-09 10:34:06,212 | INFO | ТАБЛИЦА: economics_treasure_loot_categories
+2026-08-09 10:34:06,212 | INFO | ----------------------------------------
+2026-08-09 10:34:06,239 | INFO |   Столбцы (5):
+2026-08-09 10:34:06,239 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:06,239 | INFO |     - Tier                           INTEGER              NULL
+2026-08-09 10:34:06,239 | INFO |     - Name                           CHAR(50)             NOT NULL, default='Cache Category'
+2026-08-09 10:34:06,239 | INFO |     - ItemsCount                     INTEGER              NOT NULL, default=-1
+2026-08-09 10:34:06,239 | INFO |     - ItemsRepeat                    TINYINT              NOT NULL, default=1
+2026-08-09 10:34:06,252 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:06,265 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,265 | INFO |     - Tier -> economics_treasure(Tier)
+2026-08-09 10:34:06,278 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,278 | INFO |     - FK_economics_treasure_loot_categories_economics_treasure (Tier) 
+2026-08-09 10:34:06,291 | INFO |   Количество записей: ~22
+2026-08-09 10:34:06,304 | INFO | 
+2026-08-09 10:34:06,304 | INFO | ТАБЛИЦА: economics_treasure_pos
+2026-08-09 10:34:06,304 | INFO | ----------------------------------------
+2026-08-09 10:34:06,330 | INFO |   Столбцы (5):
+2026-08-09 10:34:06,331 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:06,331 | INFO |     - Tier                           INTEGER              NOT NULL
+2026-08-09 10:34:06,331 | INFO |     - Container                      CHAR(250)            NOT NULL, default='NH_loot_treausre_type_3'
+2026-08-09 10:34:06,331 | INFO |     - Position                       CHAR(250)            NOT NULL, default='0 0 0'
+2026-08-09 10:34:06,331 | INFO |     - Orientation                    CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-09 10:34:06,345 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:06,358 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,358 | INFO |     - Tier -> economics_treasure(Tier)
+2026-08-09 10:34:06,371 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,371 | INFO |     - FK_economics_treasure_pos_new_economics_treasure_new (Tier) 
+2026-08-09 10:34:06,385 | INFO |   Количество записей: ~9685
+2026-08-09 10:34:06,398 | INFO | 
+2026-08-09 10:34:06,398 | INFO | ТАБЛИЦА: faction_members
+2026-08-09 10:34:06,398 | INFO | ----------------------------------------
+2026-08-09 10:34:06,425 | INFO |   Столбцы (3):
+2026-08-09 10:34:06,425 | INFO |     - FACTION_ID                     INTEGER              NOT NULL
+2026-08-09 10:34:06,425 | INFO |     - RankID                         INTEGER              NOT NULL
+2026-08-09 10:34:06,426 | INFO |     - MEMBER_ID                      CHAR(50)             NOT NULL
+2026-08-09 10:34:06,451 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,451 | INFO |     - RankID -> faction_ranks(RankID)
+2026-08-09 10:34:06,452 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-09 10:34:06,452 | INFO |     - MEMBER_ID -> players(SteamID)
+2026-08-09 10:34:06,465 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,465 | INFO |     - FK_faction_members_faction_ranks (RankID) 
+2026-08-09 10:34:06,465 | INFO |     - FK_faction_members_factions (FACTION_ID) 
+2026-08-09 10:34:06,465 | INFO |     - FK_faction_members_players (MEMBER_ID) 
+2026-08-09 10:34:06,478 | INFO |   Количество записей: ~2
+2026-08-09 10:34:06,491 | INFO | 
+2026-08-09 10:34:06,491 | INFO | ТАБЛИЦА: faction_ranks
+2026-08-09 10:34:06,492 | INFO | ----------------------------------------
+2026-08-09 10:34:06,518 | INFO |   Столбцы (4):
+2026-08-09 10:34:06,518 | INFO |     - FACTION_ID                     INTEGER              NOT NULL
+2026-08-09 10:34:06,518 | INFO |     - RankID                         INTEGER              NOT NULL
+2026-08-09 10:34:06,518 | INFO |     - Name                           CHAR(50)             NOT NULL, default='New faction rank'
+2026-08-09 10:34:06,518 | INFO |     - Permissions                    BIGINT               NOT NULL, default=1023
+2026-08-09 10:34:06,531 | INFO |   PRIMARY KEY: RankID
+2026-08-09 10:34:06,545 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,545 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-09 10:34:06,558 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,558 | INFO |     - FK_faction_ranks_factions (FACTION_ID) 
+2026-08-09 10:34:06,572 | INFO |   Количество записей: ~15
+2026-08-09 10:34:06,585 | INFO | 
+2026-08-09 10:34:06,585 | INFO | ТАБЛИЦА: faction_respawn_items
+2026-08-09 10:34:06,585 | INFO | ----------------------------------------
+2026-08-09 10:34:06,612 | INFO |   Столбцы (2):
+2026-08-09 10:34:06,612 | INFO |     - FACTION_ID                     INTEGER              NULL
+2026-08-09 10:34:06,612 | INFO |     - Item                           LONGTEXT             NULL
+2026-08-09 10:34:06,638 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,638 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-09 10:34:06,651 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,651 | INFO |     - FRACTION_ID (FACTION_ID) 
+2026-08-09 10:34:06,665 | INFO |   Количество записей: ~0
+2026-08-09 10:34:06,678 | INFO | 
+2026-08-09 10:34:06,678 | INFO | ТАБЛИЦА: factions
+2026-08-09 10:34:06,678 | INFO | ----------------------------------------
+2026-08-09 10:34:06,705 | INFO |   Столбцы (7):
+2026-08-09 10:34:06,705 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:06,705 | INFO |     - Name                           CHAR(50)             NOT NULL, default='New fraction'
+2026-08-09 10:34:06,706 | INFO |     - SpawnPos                       CHAR(50)             NULL
+2026-08-09 10:34:06,706 | INFO |     - MaxMembers                     INTEGER              NOT NULL, default=10
+2026-08-09 10:34:06,706 | INFO |     - Abilities                      INTEGER              NOT NULL, default=0
+2026-08-09 10:34:06,706 | INFO |     - Color                          BIGINT               NOT NULL, default=0
+2026-08-09 10:34:06,706 | INFO |     - Icon                           CHAR(50)             NOT NULL, default='set:nh_faction_icons image:loner'
+2026-08-09 10:34:06,719 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:06,758 | INFO |   Количество записей: ~10
+2026-08-09 10:34:06,771 | INFO | 
+2026-08-09 10:34:06,771 | INFO | ТАБЛИЦА: factions_bank
+2026-08-09 10:34:06,772 | INFO | ----------------------------------------
+2026-08-09 10:34:06,798 | INFO |   Столбцы (3):
+2026-08-09 10:34:06,799 | INFO |     - FACTION_ID                     INTEGER              NOT NULL
+2026-08-09 10:34:06,799 | INFO |     - Limit                          INTEGER              NOT NULL, default=0
+2026-08-09 10:34:06,799 | INFO |     - Balance                        INTEGER              NOT NULL, default=0
+2026-08-09 10:34:06,825 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:06,825 | INFO |     - FACTION_ID -> factions(ID)
+2026-08-09 10:34:06,838 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:06,838 | INFO |     - FACTION_ID (FACTION_ID) UNIQUE
+2026-08-09 10:34:06,851 | INFO |   Количество записей: ~0
+2026-08-09 10:34:06,864 | INFO | 
+2026-08-09 10:34:06,864 | INFO | ТАБЛИЦА: fields_data
+2026-08-09 10:34:06,864 | INFO | ----------------------------------------
+2026-08-09 10:34:06,890 | INFO |   Столбцы (9):
+2026-08-09 10:34:06,890 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:06,890 | INFO |     - Name                           CHAR(50)             NULL, default='Custom Location'
+2026-08-09 10:34:06,890 | INFO |     - Type                           INTEGER              NOT NULL, default=1
+2026-08-09 10:34:06,891 | INFO |     - Strenght                       FLOAT                NULL
+2026-08-09 10:34:06,891 | INFO |     - Position                       CHAR(50)             NOT NULL, default='1000 0 1000'
+2026-08-09 10:34:06,891 | INFO |     - Radius                         INTEGER              NOT NULL, default=100
+2026-08-09 10:34:06,891 | INFO |     - NegativeHeight                 FLOAT                NOT NULL, default=10
+2026-08-09 10:34:06,891 | INFO |     - PositiveHeight                 FLOAT                NOT NULL, default=70
+2026-08-09 10:34:06,891 | INFO |     - FullDamageDistance             FLOAT                NULL
+2026-08-09 10:34:06,904 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:06,943 | INFO |   Количество записей: ~560
+2026-08-09 10:34:06,956 | INFO | 
+2026-08-09 10:34:06,956 | INFO | ТАБЛИЦА: gameplay_config
+2026-08-09 10:34:06,956 | INFO | ----------------------------------------
+2026-08-09 10:34:06,982 | INFO |   Столбцы (4):
+2026-08-09 10:34:06,983 | INFO |     - key                            TEXT COLLATE "utf32_general_ci" NULL
+2026-08-09 10:34:06,983 | INFO |     - value                          TEXT COLLATE "utf32_general_ci" NULL
+2026-08-09 10:34:06,983 | INFO |     - server_only                    TINYINT              NOT NULL, default=0
+2026-08-09 10:34:06,983 | INFO |     - GM_displayType                 ENUM                 NOT NULL, default='Float'
+2026-08-09 10:34:07,034 | INFO |   Количество записей: ~64
+2026-08-09 10:34:07,047 | INFO | 
+2026-08-09 10:34:07,047 | INFO | ТАБЛИЦА: npc_bank
+2026-08-09 10:34:07,048 | INFO | ----------------------------------------
+2026-08-09 10:34:07,074 | INFO |   Столбцы (3):
+2026-08-09 10:34:07,074 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-09 10:34:07,074 | INFO |     - Commission                     INTEGER              NULL
+2026-08-09 10:34:07,074 | INFO |     - MaxAmount                      INTEGER              NULL
+2026-08-09 10:34:07,099 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,100 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:07,112 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,113 | INFO |     - FK__npcs (NPC_ID) 
+2026-08-09 10:34:07,126 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,138 | INFO | 
+2026-08-09 10:34:07,138 | INFO | ТАБЛИЦА: npc_bank_player_data
+2026-08-09 10:34:07,138 | INFO | ----------------------------------------
+2026-08-09 10:34:07,164 | INFO |   Столбцы (3):
+2026-08-09 10:34:07,164 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-09 10:34:07,165 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:07,165 | INFO |     - Balance                        INTEGER              NOT NULL, default=0
+2026-08-09 10:34:07,190 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,191 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:07,191 | INFO |     - SteamID -> players(SteamID)
+2026-08-09 10:34:07,204 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,204 | INFO |     - FK_npc_bank_player_data_npcs (NPC_ID) 
+2026-08-09 10:34:07,204 | INFO |     - FK_npc_bank_player_data_players (SteamID) 
+2026-08-09 10:34:07,218 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,231 | INFO | 
+2026-08-09 10:34:07,231 | INFO | ТАБЛИЦА: npc_barter_lot_required_items
+2026-08-09 10:34:07,231 | INFO | ----------------------------------------
+2026-08-09 10:34:07,258 | INFO |   Столбцы (3):
+2026-08-09 10:34:07,258 | INFO |     - LOT_ID                         INTEGER              NULL
+2026-08-09 10:34:07,258 | INFO |     - Item                           CHAR(50)             NULL
+2026-08-09 10:34:07,258 | INFO |     - Condition                      LONGTEXT             NOT NULL, default='{}'
+2026-08-09 10:34:07,284 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,284 | INFO |     - LOT_ID -> npc_barter_lots(ID)
+2026-08-09 10:34:07,297 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,298 | INFO |     - FK__npc_barter_lots (LOT_ID) 
+2026-08-09 10:34:07,311 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,324 | INFO | 
+2026-08-09 10:34:07,324 | INFO | ТАБЛИЦА: npc_barter_lots
+2026-08-09 10:34:07,324 | INFO | ----------------------------------------
+2026-08-09 10:34:07,351 | INFO |   Столбцы (3):
+2026-08-09 10:34:07,352 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-09 10:34:07,352 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:07,352 | INFO |     - Item                           TEXT COLLATE "utf8mb4_general_ci" NOT NULL
+2026-08-09 10:34:07,365 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:07,378 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,378 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:07,391 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,392 | INFO |     - FK___npcs (NPC_ID) 
+2026-08-09 10:34:07,405 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,418 | INFO | 
+2026-08-09 10:34:07,418 | INFO | ТАБЛИЦА: npc_fast_travel_destinations
+2026-08-09 10:34:07,418 | INFO | ----------------------------------------
+2026-08-09 10:34:07,445 | INFO |   Столбцы (6):
+2026-08-09 10:34:07,445 | INFO |     - id                             INTEGER              NOT NULL
+2026-08-09 10:34:07,446 | INFO |     - service_id                     VARCHAR(64)          NOT NULL
+2026-08-09 10:34:07,446 | INFO |     - name                           CHAR(50)             NOT NULL
+2026-08-09 10:34:07,446 | INFO |     - position                       VARCHAR(50)          NOT NULL
+2026-08-09 10:34:07,446 | INFO |     - price                          INTEGER              NOT NULL
+2026-08-09 10:34:07,447 | INFO |     - enabled                        TINYINT              NOT NULL, default=1
+2026-08-09 10:34:07,459 | INFO |   PRIMARY KEY: id
+2026-08-09 10:34:07,473 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,473 | INFO |     - service_id -> npc_fast_travel_services(service_id)
+2026-08-09 10:34:07,486 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,486 | INFO |     - FK_npc_fast_travel_destinations_npc_fast_travel_services (service_id) 
+2026-08-09 10:34:07,499 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,512 | INFO | 
+2026-08-09 10:34:07,512 | INFO | ТАБЛИЦА: npc_fast_travel_services
+2026-08-09 10:34:07,512 | INFO | ----------------------------------------
+2026-08-09 10:34:07,538 | INFO |   Столбцы (2):
+2026-08-09 10:34:07,538 | INFO |     - id                             INTEGER              NOT NULL
+2026-08-09 10:34:07,539 | INFO |     - service_id                     VARCHAR(64)          NOT NULL
+2026-08-09 10:34:07,551 | INFO |   PRIMARY KEY: id
+2026-08-09 10:34:07,577 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,577 | INFO |     - service_id (service_id) UNIQUE
+2026-08-09 10:34:07,591 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,603 | INFO | 
+2026-08-09 10:34:07,604 | INFO | ТАБЛИЦА: npc_stash
+2026-08-09 10:34:07,604 | INFO | ----------------------------------------
+2026-08-09 10:34:07,630 | INFO |   Столбцы (3):
+2026-08-09 10:34:07,631 | INFO |     - NPC_ID                         INTEGER              NOT NULL
+2026-08-09 10:34:07,631 | INFO |     - MaxRows                        INTEGER              NOT NULL, default=10
+2026-08-09 10:34:07,631 | INFO |     - MaxNextRowPrice                INTEGER              NOT NULL, default=10000
+2026-08-09 10:34:07,657 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,657 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:07,670 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,670 | INFO |     - FK_npc_stash_npcs (NPC_ID) 
+2026-08-09 10:34:07,684 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,697 | INFO | 
+2026-08-09 10:34:07,697 | INFO | ТАБЛИЦА: npc_stash_ban_global
+2026-08-09 10:34:07,698 | INFO | ----------------------------------------
+2026-08-09 10:34:07,724 | INFO |   Столбцы (1):
+2026-08-09 10:34:07,724 | INFO |     - item                           CHAR(50) COLLATE "utf8mb4_unicode_ci" NULL
+2026-08-09 10:34:07,776 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,789 | INFO | 
+2026-08-09 10:34:07,789 | INFO | ТАБЛИЦА: npc_stash_items
+2026-08-09 10:34:07,789 | INFO | ----------------------------------------
+2026-08-09 10:34:07,816 | INFO |   Столбцы (5):
+2026-08-09 10:34:07,816 | INFO |     - Stash_ID                       INTEGER              NOT NULL
+2026-08-09 10:34:07,816 | INFO |     - Item_UUID                      BINARY(16)           NOT NULL
+2026-08-09 10:34:07,817 | INFO |     - Parent_UUID                    BINARY(16)           NULL
+2026-08-09 10:34:07,817 | INFO |     - Item                           CHAR(50)             NOT NULL
+2026-08-09 10:34:07,817 | INFO |     - Data                           TEXT                 NOT NULL
+2026-08-09 10:34:07,830 | INFO |   PRIMARY KEY: Item_UUID
+2026-08-09 10:34:07,843 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,844 | INFO |     - Parent_UUID, Stash_ID -> npc_stash_items(Item_UUID, Stash_ID)
+2026-08-09 10:34:07,844 | INFO |     - Stash_ID -> npc_stash_players(ID)
+2026-08-09 10:34:07,857 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,857 | INFO |     - FK_npc_stash_items_npc_stash_players (Stash_ID) 
+2026-08-09 10:34:07,857 | INFO |     - ix_parent_uuid_stash (Parent_UUID, Stash_ID) 
+2026-08-09 10:34:07,857 | INFO |     - uk_item_uuid_stash (Item_UUID, Stash_ID) UNIQUE
+2026-08-09 10:34:07,870 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,883 | INFO | 
+2026-08-09 10:34:07,883 | INFO | ТАБЛИЦА: npc_stash_players
+2026-08-09 10:34:07,883 | INFO | ----------------------------------------
+2026-08-09 10:34:07,909 | INFO |   Столбцы (4):
+2026-08-09 10:34:07,910 | INFO |     - NPC_ID                         INTEGER              NOT NULL
+2026-08-09 10:34:07,910 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:07,910 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:07,910 | INFO |     - OpenedRows                     INTEGER              NOT NULL, default=2
+2026-08-09 10:34:07,923 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:07,936 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:07,937 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:07,937 | INFO |     - SteamID -> players(SteamID)
+2026-08-09 10:34:07,949 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:07,950 | INFO |     - FK_npc_stash_players_npcs (NPC_ID) 
+2026-08-09 10:34:07,950 | INFO |     - FK_npc_stash_players_players (SteamID) 
+2026-08-09 10:34:07,963 | INFO |   Количество записей: ~0
+2026-08-09 10:34:07,976 | INFO | 
+2026-08-09 10:34:07,976 | INFO | ТАБЛИЦА: npc_trade_categories
+2026-08-09 10:34:07,976 | INFO | ----------------------------------------
+2026-08-09 10:34:08,002 | INFO |   Столбцы (3):
+2026-08-09 10:34:08,002 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-09 10:34:08,002 | INFO |     - Category_ID                    INTEGER              NOT NULL
+2026-08-09 10:34:08,003 | INFO |     - Name                           CHAR(50)             NOT NULL, default='Прочее'
+2026-08-09 10:34:08,016 | INFO |   PRIMARY KEY: Category_ID
+2026-08-09 10:34:08,029 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,029 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:08,042 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,042 | INFO |     - FK_npc_trader_npcs (NPC_ID) 
+2026-08-09 10:34:08,056 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,068 | INFO | 
+2026-08-09 10:34:08,069 | INFO | ТАБЛИЦА: npc_trade_items
+2026-08-09 10:34:08,069 | INFO | ----------------------------------------
+2026-08-09 10:34:08,095 | INFO |   Столбцы (8):
+2026-08-09 10:34:08,095 | INFO |     - Category_ID                    INTEGER              NOT NULL
+2026-08-09 10:34:08,095 | INFO |     - Item_ID                        INTEGER              NOT NULL
+2026-08-09 10:34:08,095 | INFO |     - Item                           CHAR(50)             NOT NULL, default='Paper'
+2026-08-09 10:34:08,096 | INFO |     - PriceBuy                       INTEGER              NULL
+2026-08-09 10:34:08,096 | INFO |     - PriceSell                      INTEGER              NULL
+2026-08-09 10:34:08,096 | INFO |     - StockBuy                       INTEGER              NULL
+2026-08-09 10:34:08,096 | INFO |     - StockSell                      INTEGER              NULL
+2026-08-09 10:34:08,096 | INFO |     - SellCondition                  LONGTEXT             NOT NULL
+2026-08-09 10:34:08,109 | INFO |   PRIMARY KEY: Item_ID
+2026-08-09 10:34:08,122 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,122 | INFO |     - Category_ID -> npc_trade_categories(Category_ID)
+2026-08-09 10:34:08,135 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,135 | INFO |     - FK__npc_trader_categories (Category_ID) 
+2026-08-09 10:34:08,149 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,162 | INFO | 
+2026-08-09 10:34:08,162 | INFO | ТАБЛИЦА: npc_wear
+2026-08-09 10:34:08,162 | INFO | ----------------------------------------
+2026-08-09 10:34:08,189 | INFO |   Столбцы (3):
+2026-08-09 10:34:08,189 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,189 | INFO |     - NPC_ID                         INTEGER              NULL
+2026-08-09 10:34:08,190 | INFO |     - Item                           CHAR(50)             NULL
+2026-08-09 10:34:08,203 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,216 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,216 | INFO |     - NPC_ID -> npcs(ID)
+2026-08-09 10:34:08,229 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,229 | INFO |     - FK_npc_wear_npcs (NPC_ID) 
+2026-08-09 10:34:08,242 | INFO |   Количество записей: ~10
+2026-08-09 10:34:08,255 | INFO | 
+2026-08-09 10:34:08,256 | INFO | ТАБЛИЦА: npcs
+2026-08-09 10:34:08,256 | INFO | ----------------------------------------
+2026-08-09 10:34:08,283 | INFO |   Столбцы (8):
+2026-08-09 10:34:08,283 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,283 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-09 10:34:08,283 | INFO |     - Model                          CHAR(50)             NULL
+2026-08-09 10:34:08,283 | INFO |     - Fraction                       INTEGER              NOT NULL, default=-1
+2026-08-09 10:34:08,283 | INFO |     - StartPos                       CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-09 10:34:08,284 | INFO |     - StartOrientation               CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-09 10:34:08,284 | INFO |     - FastTravelServiceId            VARCHAR(64)          NULL
+2026-08-09 10:34:08,284 | INFO |     - IsPublic                       TINYINT              NOT NULL, default=1
+2026-08-09 10:34:08,297 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,310 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,310 | INFO |     - FastTravelServiceId -> npc_fast_travel_services(service_id)
+2026-08-09 10:34:08,323 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,323 | INFO |     - FK_npcs_fractions (Fraction) 
+2026-08-09 10:34:08,323 | INFO |     - FK_npcs_npc_fast_travel_services (FastTravelServiceId) 
+2026-08-09 10:34:08,336 | INFO |   Количество записей: ~11
+2026-08-09 10:34:08,349 | INFO | 
+2026-08-09 10:34:08,349 | INFO | ТАБЛИЦА: pda_accounts
+2026-08-09 10:34:08,349 | INFO | ----------------------------------------
+2026-08-09 10:34:08,376 | INFO |   Столбцы (4):
+2026-08-09 10:34:08,376 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,376 | INFO |     - Login                          CHAR(50)             NOT NULL
+2026-08-09 10:34:08,376 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:08,376 | INFO |     - LastActivity                   DATETIME             NOT NULL, default=current_timestamp()
+2026-08-09 10:34:08,390 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,403 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,403 | INFO |     - SteamID -> players(SteamID)
+2026-08-09 10:34:08,416 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,416 | INFO |     - FK_pda_accounts_players (SteamID) 
+2026-08-09 10:34:08,416 | INFO |     - ix_accounts_lastactivity (LastActivity) 
+2026-08-09 10:34:08,416 | INFO |     - ix_accounts_steamid (SteamID) 
+2026-08-09 10:34:08,430 | INFO |   Количество записей: ~5
+2026-08-09 10:34:08,443 | INFO | 
+2026-08-09 10:34:08,443 | INFO | ТАБЛИЦА: pda_chat_messages
+2026-08-09 10:34:08,443 | INFO | ----------------------------------------
+2026-08-09 10:34:08,470 | INFO |   Столбцы (6):
+2026-08-09 10:34:08,470 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,470 | INFO |     - ChatID                         INTEGER              NOT NULL
+2026-08-09 10:34:08,470 | INFO |     - SenderID                       INTEGER              NOT NULL
+2026-08-09 10:34:08,471 | INFO |     - Message                        TEXT                 NOT NULL
+2026-08-09 10:34:08,471 | INFO |     - Attachments                    LONGTEXT             NOT NULL
+2026-08-09 10:34:08,471 | INFO |     - Date                           TIMESTAMP            NOT NULL, default=current_timestamp()
+2026-08-09 10:34:08,484 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,497 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,497 | INFO |     - SenderID -> pda_accounts(ID)
+2026-08-09 10:34:08,497 | INFO |     - ChatID -> pda_chats(ID)
+2026-08-09 10:34:08,510 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,510 | INFO |     - FK_pda_chat_messages_pda_accounts (SenderID) 
+2026-08-09 10:34:08,510 | INFO |     - FK_pda_chat_messages_pda_chats (ChatID) 
+2026-08-09 10:34:08,510 | INFO |     - ix_messages_chat_date_id (ChatID, Date, ID) 
+2026-08-09 10:34:08,523 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,536 | INFO | 
+2026-08-09 10:34:08,536 | INFO | ТАБЛИЦА: pda_chat_participants
+2026-08-09 10:34:08,536 | INFO | ----------------------------------------
+2026-08-09 10:34:08,562 | INFO |   Столбцы (5):
+2026-08-09 10:34:08,562 | INFO |     - ChatID                         INTEGER              NOT NULL
+2026-08-09 10:34:08,562 | INFO |     - AccountID                      INTEGER              NOT NULL
+2026-08-09 10:34:08,562 | INFO |     - ContactAccountID               INTEGER              NOT NULL
+2026-08-09 10:34:08,563 | INFO |     - LastReadMessageDate            INTEGER              NOT NULL, default=-1
+2026-08-09 10:34:08,563 | INFO |     - Muted                          TINYINT              NOT NULL, default=0
+2026-08-09 10:34:08,588 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,588 | INFO |     - AccountID -> pda_accounts(ID)
+2026-08-09 10:34:08,588 | INFO |     - ContactAccountID -> pda_accounts(ID)
+2026-08-09 10:34:08,588 | INFO |     - ChatID -> pda_chats(ID)
+2026-08-09 10:34:08,601 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,602 | INFO |     - FK_pda_chat_participants_pda_accounts (AccountID) 
+2026-08-09 10:34:08,602 | INFO |     - FK_pda_chat_participants_pda_accounts_2 (ContactAccountID) 
+2026-08-09 10:34:08,602 | INFO |     - FK_pda_chat_participants_pda_chats (ChatID) 
+2026-08-09 10:34:08,602 | INFO |     - ix_participants_acc (AccountID, ContactAccountID) 
+2026-08-09 10:34:08,602 | INFO |     - ix_participants_chat (ChatID) 
+2026-08-09 10:34:08,616 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,628 | INFO | 
+2026-08-09 10:34:08,629 | INFO | ТАБЛИЦА: pda_chats
+2026-08-09 10:34:08,629 | INFO | ----------------------------------------
+2026-08-09 10:34:08,655 | INFO |   Столбцы (3):
+2026-08-09 10:34:08,655 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,655 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-09 10:34:08,655 | INFO |     - Type                           ENUM                 NOT NULL, default='GLOBAL'
+2026-08-09 10:34:08,668 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,707 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,720 | INFO | 
+2026-08-09 10:34:08,720 | INFO | ТАБЛИЦА: pda_map_fields
+2026-08-09 10:34:08,720 | INFO | ----------------------------------------
+2026-08-09 10:34:08,747 | INFO |   Столбцы (7):
+2026-08-09 10:34:08,747 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,747 | INFO |     - AccountID                      INTEGER              NOT NULL
+2026-08-09 10:34:08,747 | INFO |     - Position                       CHAR(50)             NOT NULL, default='0 0 0'
+2026-08-09 10:34:08,747 | INFO |     - Name                           CHAR(50)             NOT NULL
+2026-08-09 10:34:08,747 | INFO |     - Description                    TEXT                 NULL
+2026-08-09 10:34:08,747 | INFO |     - Radius                         FLOAT                NOT NULL, default=10
+2026-08-09 10:34:08,747 | INFO |     - Color                          INTEGER              NOT NULL, default=-15204608
+2026-08-09 10:34:08,760 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,773 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,773 | INFO |     - AccountID -> pda_accounts(ID)
+2026-08-09 10:34:08,786 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,786 | INFO |     - FK__pda_accounts (AccountID) 
+2026-08-09 10:34:08,786 | INFO |     - ix_fields_account (AccountID) 
+2026-08-09 10:34:08,800 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,812 | INFO | 
+2026-08-09 10:34:08,813 | INFO | ТАБЛИЦА: pda_map_markers
+2026-08-09 10:34:08,813 | INFO | ----------------------------------------
+2026-08-09 10:34:08,840 | INFO |   Столбцы (7):
+2026-08-09 10:34:08,840 | INFO |     - ID                             INTEGER              NOT NULL
+2026-08-09 10:34:08,840 | INFO |     - AccountID                      INTEGER              NULL
+2026-08-09 10:34:08,840 | INFO |     - Position                       CHAR(50) COLLATE "utf8mb4_general_ci" NOT NULL
+2026-08-09 10:34:08,840 | INFO |     - Name                           CHAR(50)             NULL
+2026-08-09 10:34:08,840 | INFO |     - Description                    TEXT                 NULL
+2026-08-09 10:34:08,841 | INFO |     - Icon                           CHAR(50) COLLATE "utf8mb4_general_ci" NULL
+2026-08-09 10:34:08,841 | INFO |     - Color                          INTEGER              NULL
+2026-08-09 10:34:08,854 | INFO |   PRIMARY KEY: ID
+2026-08-09 10:34:08,867 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,867 | INFO |     - AccountID -> pda_accounts(ID)
+2026-08-09 10:34:08,880 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,881 | INFO |     - FK_pda_map_markers_pda_accounts (AccountID) 
+2026-08-09 10:34:08,881 | INFO |     - ix_markers_account (AccountID) 
+2026-08-09 10:34:08,894 | INFO |   Количество записей: ~0
+2026-08-09 10:34:08,907 | INFO | 
+2026-08-09 10:34:08,908 | INFO | ТАБЛИЦА: player_achievements
+2026-08-09 10:34:08,908 | INFO | ----------------------------------------
+2026-08-09 10:34:08,935 | INFO |   Столбцы (5):
+2026-08-09 10:34:08,935 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:08,935 | INFO |     - AchievementID                  INTEGER              NOT NULL
+2026-08-09 10:34:08,935 | INFO |     - IsAchieved                     TINYINT              NOT NULL, default=0
+2026-08-09 10:34:08,936 | INFO |     - AchievedAt                     TIMESTAMP            NULL
+2026-08-09 10:34:08,936 | INFO |     - Progress                       LONGTEXT             NOT NULL, default='{}'
+2026-08-09 10:34:08,962 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:08,962 | INFO |     - SteamID -> players(SteamID)
+2026-08-09 10:34:08,975 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:08,975 | INFO |     - AchievementID (AchievementID) 
+2026-08-09 10:34:08,975 | INFO |     - FK_player_achievements_players (SteamID) 
+2026-08-09 10:34:08,988 | INFO |   Количество записей: ~22
+2026-08-09 10:34:09,001 | INFO | 
+2026-08-09 10:34:09,001 | INFO | ТАБЛИЦА: player_stats
+2026-08-09 10:34:09,001 | INFO | ----------------------------------------
+2026-08-09 10:34:09,028 | INFO |   Столбцы (6):
+2026-08-09 10:34:09,028 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:09,028 | INFO |     - EmissionSurvived               INTEGER              NOT NULL, default=0
+2026-08-09 10:34:09,028 | INFO |     - MutantsKills                   INTEGER              NOT NULL, default=0
+2026-08-09 10:34:09,028 | INFO |     - PlayerKills                    INTEGER              NOT NULL, default=0
+2026-08-09 10:34:09,028 | INFO |     - StashesFound                   INTEGER              NOT NULL, default=0
+2026-08-09 10:34:09,029 | INFO |     - ArtefactFound                  INTEGER              NOT NULL, default=0
+2026-08-09 10:34:09,041 | INFO |   PRIMARY KEY: SteamID
+2026-08-09 10:34:09,054 | INFO |   FOREIGN KEYS:
+2026-08-09 10:34:09,055 | INFO |     - SteamID -> players(SteamID)
+2026-08-09 10:34:09,080 | INFO |   Количество записей: ~9
+2026-08-09 10:34:09,093 | INFO | 
+2026-08-09 10:34:09,093 | INFO | ТАБЛИЦА: players
+2026-08-09 10:34:09,093 | INFO | ----------------------------------------
+2026-08-09 10:34:09,120 | INFO |   Столбцы (4):
+2026-08-09 10:34:09,120 | INFO |     - SteamID                        CHAR(50)             NOT NULL
+2026-08-09 10:34:09,120 | INFO |     - Nickname                       CHAR(50)             NULL
+2026-08-09 10:34:09,120 | INFO |     - RegistrationDate               TIMESTAMP            NOT NULL, default=current_timestamp()
+2026-08-09 10:34:09,120 | INFO |     - LastLogonDate                  TIMESTAMP            NOT NULL, default=current_timestamp()
+2026-08-09 10:34:09,133 | INFO |   PRIMARY KEY: SteamID
+2026-08-09 10:34:09,159 | INFO |   ИНДЕКСЫ:
+2026-08-09 10:34:09,159 | INFO |     - SteamID (SteamID) UNIQUE
+2026-08-09 10:34:09,173 | INFO |   Количество записей: ~9
+2026-08-09 10:34:09,185 | INFO | 
+2026-08-09 10:34:09,186 | INFO | ============================================================
+2026-08-09 10:34:09,186 | INFO | АНАЛИЗ БАЗЫ ДАННЫХ ЗАВЕРШЁН
+2026-08-09 10:34:09,186 | INFO | Лог сохранён: C:\Users\Администратор\Documents\EoC Site\logs\db_structure.log
+2026-08-09 10:34:09,186 | INFO | ============================================================
+2026-08-09 10:34:25,093 | INFO | ============================================================
+2026-08-09 10:34:25,093 | INFO | НАЧАЛО АНАЛИЗА БАЗЫ ДАННЫХ
+2026-08-09 10:34:25,094 | INFO | Время: 2026-08-09 10:34:25
+2026-08-09 10:34:25,094 | INFO | Подключение к: 37.9.13.191:3306/instance_main1
+2026-08-09 10:34:25,094 | INFO | ============================================================
+2026-08-09 10:34:25,495 | ERROR | Ошибка подключения к БД: (pymysql.err.OperationalError) (1044, "Access denied for user 'HenkilFTP'@'%' to database 'instance_main1'")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-08-09 10:34:25,496 | ERROR | Проверь переменные DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME в .env

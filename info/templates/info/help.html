@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Справка — Echo of Chernobyl{% endblock %}
+
+{% block body_class %}page page-info page-info-help{% endblock %}
+
+{% block content %}
+    <h1>📚 Справка</h1>
+
+    <section class="settings-card">
+        <h2>👤 Для пользователей</h2>
+        <ul class="info-list">
+            <li><strong>Вход:</strong> нажми «Войти через Steam» и подтверди вход.</li>
+            <li><strong>Профиль:</strong> кликни по нику сверху → «Мой профиль». Там можно сменить аватар и баннер.</li>
+            <li><strong>Приватность:</strong> в настройках профиля можно запретить писать тебе личные сообщения.</li>
+            <li><strong>Сообщения:</strong> ник сверху → «💬 Сообщения». Enter — отправить, Shift+Enter — новая строка.</li>
+            <li><strong>Обращение:</strong> «Обращения» → «Создать». Опиши проблему — администрация ответит в диалоге.</li>
+        </ul>
+    </section>
+
+    <section class="settings-card">
+        <h2>🛡️ Для администрации</h2>
+        <ul class="info-list">
+            <li><strong>Игроки:</strong> Админка → «Игроки». Роли сайта, спецроли, бан и предупреждения.</li>
+            <li><strong>Обращения:</strong> Админка → «Обращения». Кнопка «Принять» берёт обращение в работу.</li>
+            <li><strong>Новости:</strong> Админка → «Новости». Редактор с оформлением и публикацией.</li>
+            <li><strong>Правила:</strong> публикуются автоматически при изменениях на сервере.</li>
+        </ul>
+    </section>
+
+    <section class="settings-card">
+        <h2>❓ Частые вопросы</h2>
+        <ul class="info-list">
+            <li><strong>Почему не обновляется статистика?</strong> — данные обновляются каждые 15 минут, немного подожди.</li>
+            <li><strong>Не могу написать сообщение?</strong> — возможно, пользователь запретил сообщения в настройках приватности.</li>
+            <li><strong>Где мой профиль?</strong> — кликни по своему нику в шапке сайта.</li>
+        </ul>
+    </section>
+{% endblock %}

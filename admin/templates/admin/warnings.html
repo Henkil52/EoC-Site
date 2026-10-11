@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Предупреждения{% endblock %}
+
+{% block body_class %}page page-admin page-admin-warnings{% endblock %}
+
+{% block content %}
+    <h1>Предупреждения</h1>
+
+    <a class="back-link" href="{{ url_for('admin.dashboard') }}">← Вернуться в админку</a>
+
+    {# ── Форма добавления предупреждения ──────────────────── #}
+    <section class="add-warning-form">
+        <h2>Добавить предупреждение</h2>
+
+        <form method="POST" action="{{ url_for('admin.add_warning') }}">
+            <label>
+                Steam ID:
+                <input type="text" name="steam_id" required placeholder="76561198160108755">
+            </label>
+
+            <label>
+                Причина:
+                <textarea name="reason" required placeholder="Опишите причину предупреждения"></textarea>
+            </label>
+
+            <button type="submit">Добавить предупреждение</button>
+        </form>
+    </section>
+
+    {# ── Список активных предупреждений ───────────────────── #}
+    <section class="warnings-list">
+        <h2>Активные предупреждения</h2>
+
+        {% if active_warnings %}
+            <table class="warnings-table">
+                <thead>
+                    <tr>
+                        <th>Steam ID</th>
+                        <th>Кто дал</th>
+                        <th>Причина</th>
+                        <th>Дата</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for warning in active_warnings %}
+                        <tr>
+                            <td>{{ warning.steam_id }}</td>
+                            <td>{{ warning.given_by }}</td>
+                            <td>{{ warning.reason }}</td>
+                            <td>{{ warning.given_at.strftime("%d.%m.%Y %H:%M") }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('admin.remove_warning', warning_id=warning.id) }}" style="display:inline;">
+                                    <button type="submit" onclick="return confirm('Снять предупреждение?')">Снять</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Активных предупреждений нет.</p>
+        {% endif %}
+    </section>
+{% endblock %}

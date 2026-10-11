@@ -1,0 +1,420 @@
+"""
+news/routes.py
+
+Раздел новостей: список, просмотр, создание, редактирование,
+удаление, закрепление и комментарии.
+"""
+
+from datetime import datetime
+
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    flash,
+    abort,
+)
+
+from auth.decorators import login_required
+from auth.roles import admin_required, role_required, get_user_site_role
+from database.models import moscow_now
+from database.models import (
+    db,
+    SiteNews,
+    SiteNewsComment,
+    Player,
+    SiteRole,
+)
+
+
+bp = Blueprint(
+    "news",
+    __name__,
+    url_prefix="/news",
+    template_folder="templates",
+)
+
+
+# Категории новостей
+NEWS_CATEGORIES = {
+    'update': 'Обновление',
+    'event': 'Событие',
+    'tech': 'Техработы',
+    'rules': '📜 Правила',
+    'other': 'Другое',
+}
+
+# Лимит длины комментария
+COMMENT_MAX_LENGTH = 1000
+
+
+def get_role_info(steam_id):
+    """Возвращает информацию о роли пользователя для бейджа."""
+    role_code = get_user_site_role(steam_id)
+    role = SiteRole.query.filter_by(role_code=role_code).first()
+    if role:
+        return {
+            'display_name': role.display_name,
+            'icon': role.icon,
+            'color': role.color,
+        }
+    return None
+
+
+def get_author_nickname(steam_id):
+    """Возвращает никнейм автора из players."""
+    player = Player.query.filter_by(SteamID=steam_id).first()
+    if player and player.Nickname:
+        return player.Nickname
+    return steam_id
+
+
+# ══════════════════════════════════════════════════════════════
+# СПИСОК НОВОСТЕЙ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/")
+def index():
+    """Список новостей с пагинацией."""
+    from flask import render_template, session, redirect, url_for, request
+    from database.models import SiteNews, SiteNewsComment, Player
+
+    user = session.get("user")
+    if not user or not user.get("steam_id"):
+        return redirect(url_for("auth.login"))
+
+    is_admin = False
+    try:
+        from auth.roles import has_role
+        is_admin = bool(has_role(session.get("user", {}).get("steam_id"), "admin"))
+    except Exception:
+        is_admin = False
+
+    # Пагинация: 10 новостей на страницу
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+    pagination = (
+        SiteNews.query
+        .order_by(SiteNews.is_pinned.desc(), SiteNews.created_at.desc())
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
+    news_list = pagination.items
+
+    news_data = []
+    for news in news_list:
+        author = Player.query.get(news.author_steam_id)
+        news_data.append({
+            "news": news,
+            "category_name": news.category or "other",
+            "author_nickname": author.Nickname if author else "Администрация",
+            "comments_count": news.comments.count(),
+        })
+
+    return render_template(
+        "news/index.html",
+        is_admin=is_admin,
+        news_data=news_data,
+        pagination=pagination,
+    )
+
+
+@bp.route("/<int:news_id>")
+def detail(news_id):
+    """Страница одной новости с комментариями."""
+    news = SiteNews.query.get_or_404(news_id)
+
+    user = session.get("user", {})
+    current_steam_id = user.get("steam_id")
+    is_admin = user.get("is_admin", False)
+
+    # Черновик видят только админы
+    if not news.is_published and not is_admin:
+        abort(404)
+
+    # Права модератора
+    can_moderate = False
+    if current_steam_id:
+        from auth.roles import has_role
+        can_moderate = has_role(current_steam_id, 'moderator')
+
+    # Комментарии (с авторами)
+    # Используем .filter() вместо .filter_by(), т.к. в запросе несколько моделей
+    comments_query = (
+        db.session.query(SiteNewsComment, Player)
+        .outerjoin(Player, SiteNewsComment.author_steam_id == Player.SteamID)
+        .filter(SiteNewsComment.news_id == news_id)
+        .order_by(SiteNewsComment.created_at.asc())
+    )
+
+    comments_data = []
+    for comment, player in comments_query.all():
+        if player is not None:
+            nickname = player.Nickname or comment.author_steam_id
+        else:
+            # Автор — пользователь "только сайт" (site_users)
+            from database.models import SiteUser
+            _su = SiteUser.query.get(comment.author_steam_id)
+            nickname = (_su.nickname if _su and _su.nickname
+                        else comment.author_steam_id)
+        comments_data.append({
+            'comment': comment,
+            'author_nickname': nickname,
+            'role_info': get_role_info(comment.author_steam_id),
+            'is_own': comment.author_steam_id == current_steam_id,
+        })
+
+    return render_template(
+        "news/detail.html",
+        news=news,
+        category_name=NEWS_CATEGORIES.get(news.category, 'Другое'),
+        author_nickname=get_author_nickname(news.author_steam_id),
+        comments_data=comments_data,
+        is_admin=is_admin,
+        can_moderate=can_moderate,
+        current_steam_id=current_steam_id,
+        comment_max_length=COMMENT_MAX_LENGTH,
+    )
+
+
+# ══════════════════════════════════════════════════════════════
+# СОЗДАНИЕ НОВОСТИ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/create", methods=["GET", "POST"])
+@admin_required
+def create():
+    """Создание новости."""
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
+        category = request.form.get("category", "other")
+        is_published = request.form.get("is_published") == "on"
+
+        if not title or not content:
+            flash("Заголовок и текст не могут быть пустыми.", "error")
+            return redirect(url_for("news.create"))
+
+        if category not in NEWS_CATEGORIES:
+            category = "other"
+
+        current_steam_id = session.get("user", {}).get("steam_id")
+
+        news = SiteNews(
+            title=title,
+            content=content,
+            author_steam_id=current_steam_id,
+            category=category,
+            is_published=is_published,
+            is_pinned=False,
+            created_at=moscow_now(),
+        )
+        db.session.add(news)
+        db.session.commit()
+
+        flash("Новость создана.", "success")
+        return redirect(url_for("news.detail", news_id=news.id))
+
+    return render_template(
+        "news/form.html",
+        news=None,
+        categories=NEWS_CATEGORIES,
+    )
+
+
+# ══════════════════════════════════════════════════════════════
+# РЕДАКТИРОВАНИЕ НОВОСТИ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/<int:news_id>/edit", methods=["GET", "POST"])
+@admin_required
+def edit(news_id):
+    """Редактирование новости."""
+    news = SiteNews.query.get_or_404(news_id)
+
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
+        category = request.form.get("category", "other")
+        is_published = request.form.get("is_published") == "on"
+
+        if not title or not content:
+            flash("Заголовок и текст не могут быть пустыми.", "error")
+            return redirect(url_for("news.edit", news_id=news_id))
+
+        if category not in NEWS_CATEGORIES:
+            category = "other"
+
+        news.title = title
+        news.content = content
+        news.category = category
+        news.is_published = is_published
+        news.updated_at = moscow_now()
+
+        db.session.commit()
+
+        flash("Новость обновлена.", "success")
+        return redirect(url_for("news.detail", news_id=news_id))
+
+    return render_template(
+        "news/form.html",
+        news=news,
+        categories=NEWS_CATEGORIES,
+    )
+
+
+# ══════════════════════════════════════════════════════════════
+# УДАЛЕНИЕ НОВОСТИ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/<int:news_id>/delete", methods=["POST"])
+@admin_required
+def delete(news_id):
+    """Удаление новости и её комментариев."""
+    news = SiteNews.query.get_or_404(news_id)
+
+    # Удаляем комментарии
+    SiteNewsComment.query.filter_by(news_id=news_id).delete()
+
+    db.session.delete(news)
+    db.session.commit()
+
+    flash("Новость удалена.", "success")
+    return redirect(url_for("news.index"))
+
+
+# ══════════════════════════════════════════════════════════════
+# ЗАКРЕПЛЕНИЕ НОВОСТИ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/<int:news_id>/pin", methods=["POST"])
+@admin_required
+def pin(news_id):
+    """Закрепить / открепить новость."""
+    news = SiteNews.query.get_or_404(news_id)
+
+    news.is_pinned = not news.is_pinned
+    db.session.commit()
+
+    if news.is_pinned:
+        flash("Новость закреплена.", "success")
+    else:
+        flash("Новость откреплена.", "success")
+
+    return redirect(url_for("news.detail", news_id=news_id))
+
+
+# ══════════════════════════════════════════════════════════════
+# КОММЕНТАРИИ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/<int:news_id>/comment", methods=["POST"])
+@login_required
+def add_comment(news_id):
+    """Добавить комментарий."""
+    news = SiteNews.query.get_or_404(news_id)
+
+    if not news.is_published:
+        flash("Нельзя комментировать неопубликованную новость.", "error")
+        return redirect(url_for("news.index"))
+
+    content = request.form.get("content", "").strip()
+
+    if not content:
+        flash("Комментарий не может быть пустым.", "error")
+        return redirect(url_for("news.detail", news_id=news_id))
+
+    if len(content) > COMMENT_MAX_LENGTH:
+        flash(f"Комментарий слишком длинный (максимум {COMMENT_MAX_LENGTH} символов).", "error")
+        return redirect(url_for("news.detail", news_id=news_id))
+
+    current_steam_id = session.get("user", {}).get("steam_id")
+
+    comment = SiteNewsComment(
+        news_id=news_id,
+        author_steam_id=current_steam_id,
+        content=content,
+        created_at=moscow_now(),
+        is_hidden=False,
+    )
+    db.session.add(comment)
+    db.session.commit()
+
+    flash("Комментарий добавлен.", "success")
+    return redirect(url_for("news.detail", news_id=news_id))
+
+
+@bp.route("/comment/<int:comment_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_comment(comment_id):
+    """Редактировать свой комментарий."""
+    comment = SiteNewsComment.query.get_or_404(comment_id)
+
+    current_steam_id = session.get("user", {}).get("steam_id")
+
+    # Только автор может редактировать
+    if comment.author_steam_id != current_steam_id:
+        abort(403)
+
+    if request.method == "POST":
+        content = request.form.get("content", "").strip()
+
+        if not content:
+            flash("Комментарий не может быть пустым.", "error")
+            return redirect(url_for("news.edit_comment", comment_id=comment_id))
+
+        if len(content) > COMMENT_MAX_LENGTH:
+            flash(f"Комментарий слишком длинный (максимум {COMMENT_MAX_LENGTH} символов).", "error")
+            return redirect(url_for("news.edit_comment", comment_id=comment_id))
+
+        comment.content = content
+        comment.updated_at = moscow_now()
+        db.session.commit()
+
+        flash("Комментарий обновлён.", "success")
+        return redirect(url_for("news.detail", news_id=comment.news_id))
+
+    return render_template(
+        "news/edit_comment.html",
+        comment=comment,
+        comment_max_length=COMMENT_MAX_LENGTH,
+    )
+
+
+@bp.route("/comment/<int:comment_id>/delete", methods=["POST"])
+@login_required
+def delete_comment(comment_id):
+    """Удалить свой комментарий."""
+    comment = SiteNewsComment.query.get_or_404(comment_id)
+
+    current_steam_id = session.get("user", {}).get("steam_id")
+
+    # Только автор может удалить
+    if comment.author_steam_id != current_steam_id:
+        abort(403)
+
+    news_id = comment.news_id
+    db.session.delete(comment)
+    db.session.commit()
+
+    flash("Комментарий удалён.", "success")
+    return redirect(url_for("news.detail", news_id=news_id))
+
+
+@bp.route("/comment/<int:comment_id>/hide", methods=["POST"])
+@role_required('moderator')
+def hide_comment(comment_id):
+    """Скрыть / показать комментарий (модерация)."""
+    comment = SiteNewsComment.query.get_or_404(comment_id)
+
+    comment.is_hidden = not comment.is_hidden
+    db.session.commit()
+
+    if comment.is_hidden:
+        flash("Комментарий скрыт.", "success")
+    else:
+        flash("Комментарий показан.", "success")
+
+    return redirect(url_for("news.detail", news_id=comment.news_id))

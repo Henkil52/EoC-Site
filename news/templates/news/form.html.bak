@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if news %}Редактирование новости{% else %}Создание новости{% endif %}
+{% endblock %}
+
+{% block body_class %}page page-news page-news-form{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if news %}✏️ Редактирование новости{% else %}➕ Создание новости{% endif %}
+    </h1>
+
+    <a href="{{ url_for('news.index') }}">← Все новости</a>
+
+    <form method="POST" class="news-form">
+        <label>
+            Заголовок:
+            <input type="text" name="title" maxlength="200" required
+                   value="{{ news.title if news else '' }}">
+        </label>
+
+        <label>
+            Категория:
+            <select name="category">
+                {% for code, name in categories.items() %}
+                    <option value="{{ code }}"
+                            {% if news and news.category == code %}selected{% endif %}>
+                        {{ name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Текст новости:
+            <textarea class="rich-editor"  name="content" rows="12" required>{{ news.content if news else '' }}</textarea>
+        </label>
+
+        <label class="checkbox-label">
+            <input type="checkbox" name="is_published"
+                   {% if not news or news.is_published %}checked{% endif %}>
+            Опубликовать (сними галочку, чтобы сохранить как черновик)
+        </label>
+
+        <button type="submit" class="btn">
+            {% if news %}Сохранить{% else %}Создать{% endif %}
+        </button>
+    </form>
+{% endblock %}

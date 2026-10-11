@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Лор{% endblock %}
+
+{% block body_class %}page page-lore{% endblock %}
+
+{% block content %}
+    <h1>Лор</h1>
+
+    {% if is_admin %}
+        <p>
+            <a href="{{ url_for('lore.admin') }}" class="btn">⚙️ Управление лором</a>
+        </p>
+    {% endif %}
+
+    <p class="lore-hint">Нажми на заголовок раздела, чтобы развернуть его. Одновременно открыт только один раздел.</p>
+
+    {% if sections_data %}
+        {% for data in sections_data %}
+            <section class="lore-section" id="section-{{ data.section.id }}">
+                <button type="button" class="lore-section-toggle" aria-expanded="false">
+                    <span class="lore-section-title">
+                        <span class="lore-chevron">▸</span>
+                        {{ data.section.title }}
+                    </span>
+                    <span class="lore-section-meta">
+                        <span class="lore-count">{{ data.entries|length }}</span>
+                        <span class="lore-section-date-short">🕒 {{ data.section.updated_at.strftime("%d.%m.%Y") }}</span>
+                    </span>
+                </button>
+
+                <div class="lore-section-body" hidden>
+                    {% if data.entries %}
+                        {% for entry in data.entries %}
+                            <article class="lore-entry" id="entry-{{ entry.id }}">
+                                <h3>{{ entry.title }}</h3>
+                                <div class="lore-content">
+                                    {{ entry.content|bb }}
+                                </div>
+                                <p class="lore-date">
+                                    (изменено: {{ entry.updated_at.strftime("%d.%m.%Y %H:%M") }})
+                                </p>
+                            </article>
+                        {% endfor %}
+                    {% else %}
+                        <p>В этом разделе пока нет записей.</p>
+                    {% endif %}
+                </div>
+            </section>
+        {% endfor %}
+    {% else %}
+        <p>Лора пока нет.</p>
+    {% endif %}
+
+    <script>
+    (function () {
+        "use strict";
+
+        function closeAll(except) {
+            document.querySelectorAll(".lore-section").forEach(function (sec) {
+                if (sec !== except) {
+                    sec.classList.remove("open");
+                    var body = sec.querySelector(".lore-section-body");
+                    var btn = sec.querySelector(".lore-section-toggle");
+                    if (body) body.hidden = true;
+                    if (btn) btn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+
+        document.querySelectorAll(".lore-section-toggle").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var sec = btn.closest(".lore-section");
+                var body = sec.querySelector(".lore-section-body");
+                var wasOpen = sec.classList.contains("open");
+
+                closeAll(sec);
+
+                if (wasOpen) {
+                    sec.classList.remove("open");
+                    body.hidden = true;
+                    btn.setAttribute("aria-expanded", "false");
+                } else {
+                    sec.classList.add("open");
+                    body.hidden = false;
+                    btn.setAttribute("aria-expanded", "true");
+                }
+            });
+        });
+
+        if (location.hash) {
+            var hashTarget = document.querySelector(location.hash);
+            if (hashTarget) {
+                var sec = hashTarget.classList.contains("lore-section")
+                    ? hashTarget
+                    : hashTarget.closest(".lore-section");
+                if (sec && sec.classList.contains("lore-section")) {
+                    closeAll(sec);
+                    sec.classList.add("open");
+                    var b = sec.querySelector(".lore-section-body");
+                    if (b) b.hidden = false;
+                    var t = sec.querySelector(".lore-section-toggle");
+                    if (t) t.setAttribute("aria-expanded", "true");
+
+                    if (hashTarget.classList.contains("lore-entry")) {
+                        setTimeout(function () {
+                            hashTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }, 100);
+                    }
+                }
+            }
+        }
+    })();
+    </script>
+{% endblock %}

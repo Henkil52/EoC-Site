@@ -1,0 +1,118 @@
+"""
+appeals/service.py
+
+Хелперы и бизнес-логика обращений.
+"""
+
+from datetime import datetime, timedelta
+from pathlib import Path
+from flask import Flask
+
+from database.models import moscow_now
+from database.models import (
+    db,
+    SiteAppeal,
+    SiteAppealParticipant,
+)
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+LOCAL_DB_PATH = PROJECT_ROOT / "local_db.sqlite3"
+
+# Категории
+APPEAL_CATEGORIES = {
+    'complaint_player': '🚨 Жалоба на игрока',
+    'complaint_admin': '⚖️ Жалоба на администрацию',
+    'bug': '🐛 Техническая проблема',
+    'question': '❓ Вопрос',
+    'suggestion': '💡 Предложение',
+    'item_return': '🎁 Возврат предметов',
+    'faction': '🏛️ Вопрос по группировке',
+    'other': '📦 Другое',
+}
+
+# Статусы
+APPEAL_STATUSES = {
+    'new': '🆕 Новое',
+    'in_progress': '⏳ В работе',
+    'waiting_player': '💬 Ждём ответ игрока',
+    'closed': '✅ Закрыто',
+}
+
+# Приоритеты
+APPEAL_PRIORITIES = {
+    'low': '⬇️ Низкий',
+    'normal': '➖ Обычный',
+    'high': '⬆️ Высокий',
+    'urgent': '🔴 Срочный',
+}
+
+# Приоритеты, доступные игроку при создании
+PLAYER_PRIORITIES = ['low', 'normal', 'high']
+
+
+def is_participant(appeal_id, steam_id):
+    """Проверяет, является ли пользователь участником обращения."""
+    if not steam_id:
+        return False
+    return (
+        SiteAppealParticipant.query
+        .filter_by(appeal_id=appeal_id, steam_id=steam_id)
+        .first()
+        is not None
+    )
+
+
+def can_view_appeal(appeal, steam_id, role_level):
+    """Может ли пользователь видеть обращение."""
+    if role_level >= 2:  # moderator+
+        return True
+    if appeal.author_steam_id == steam_id:
+        return True
+    return is_participant(appeal.id, steam_id)
+
+
+def can_reply_appeal(appeal, steam_id, role_level):
+    """Может ли пользователь отвечать в обращении."""
+    if appeal.status == 'closed':
+        return False
+    return can_view_appeal(appeal, steam_id, role_level)
+
+
+def can_manage_appeal(appeal, steam_id, role_level):
+    """Может ли управлять (добавлять участников, закрывать)."""
+    if role_level >= 2:  # moderator+
+        return True
+    return appeal.author_steam_id == steam_id
+
+
+def auto_close_stale_appeals(days=7):
+    """
+    Автоматически закрывает обращения в статусе waiting_player,
+    на которые игрок не ответил в течение N дней.
+    """
+    app = Flask(__name__)
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{LOCAL_DB_PATH}"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    db.init_app(app)
+
+    closed_count = 0
+
+    with app.app_context():
+        cutoff = moscow_now() - timedelta(days=days)
+
+        stale = (
+            SiteAppeal.query
+            .filter_by(status='waiting_player')
+            .filter(SiteAppeal.updated_at < cutoff)
+            .all()
+        )
+
+        for appeal in stale:
+            appeal.status = 'closed'
+            appeal.closed_at = moscow_now()
+            appeal.closed_by = None  # автозакрытие
+            closed_count += 1
+
+        db.session.commit()
+
+    return closed_count

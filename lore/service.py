@@ -1,0 +1,59 @@
+"""
+lore/service.py
+
+Бизнес-логика лора: логирование изменений (без публикации новостей).
+"""
+
+import logging
+from datetime import datetime
+from pathlib import Path
+
+from database.models import moscow_now
+from database.models import db, SiteLoreChange
+
+LOG_FILE = Path(__file__).resolve().parent.parent / "logs" / "lore_changes.log"
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+lore_logger = logging.getLogger("lore_changes")
+lore_logger.setLevel(logging.INFO)
+lore_logger.propagate = False
+
+if not lore_logger.handlers:
+    handler = logging.FileHandler(LOG_FILE, encoding="utf-8")
+    handler.setFormatter(logging.Formatter("%(asctime)s | %(message)s"))
+    lore_logger.addHandler(handler)
+
+
+ACTION_LABELS = {
+    'create': '➕ Добавлена запись',
+    'update': '✏️ Изменена запись',
+    'delete': '🗑️ Удалена запись',
+    'section_create': '➕ Добавлен раздел',
+    'section_update': '✏️ Переименован раздел',
+    'section_delete': '🗑️ Удалён раздел',
+}
+
+
+def record_change(action, target_type, section_title, entry_title, old_text, new_text, changed_by, target_id=None):
+    """
+    Фиксирует изменение лора в журнал (БЕЗ создания новости).
+    """
+    change = SiteLoreChange(
+        action=action,
+        target_type=target_type,
+        target_id=target_id,
+        section_title=section_title,
+        entry_title=entry_title,
+        old_text=old_text,
+        new_text=new_text,
+        changed_by=changed_by,
+        changed_at=moscow_now(),
+    )
+    db.session.add(change)
+
+    # Лог в файл
+    lore_logger.info(
+        f"USER: {changed_by} | ACTION: {action} | "
+        f"SECTION: {section_title} | ENTRY: {entry_title or '—'} | "
+        f"OLD: {(old_text or '')[:100]} | NEW: {(new_text or '')[:100]}"
+    )

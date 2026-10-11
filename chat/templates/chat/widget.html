@@ -1,0 +1,53 @@
+{# ══ Онлайн-чат (виджет на всех страницах) ══ #}
+<div class="chat-widget">
+    <button class="chat-fab" id="chatFab" title="Открыть чат">💬<span class="chat-badge" id="chatBadge" hidden></span></button>
+
+    <div class="chat-panel" id="chatPanel" hidden>
+        <div class="chat-header">
+            <div class="chat-tabs">
+                <button class="chat-tab active" id="tabPublic">Общий чат</button>
+                <button class="chat-tab" id="tabDialogs">Личные<span class="chat-tab-badge" id="tabDialogsBadge" hidden></span></button>
+            </div>
+            <button class="chat-close" id="chatClose" title="Закрыть">✕</button>
+        </div>
+
+        <div class="chat-view" id="viewPublic">
+            <div class="chat-messages" id="publicMessages">
+                <div class="chat-empty">💬 Сообщений пока нет — начни первым!</div>
+            </div>
+            <div class="chat-input-row">
+                <div class="chat-sticker-panel" id="stickerPanelPublic" hidden></div>
+                <button class="chat-sticker-btn" id="stickerBtnPublic" title="Стикеры">🎨</button>
+                <input type="text" id="publicInput" maxlength="1000" placeholder="Сообщение..." autocomplete="off">
+                <button class="chat-send" id="publicSend" title="Отправить">➤</button>
+            </div>
+        </div>
+
+        <div class="chat-view" id="viewDialogs" hidden>
+            <div class="chat-dialogs" id="dialogsList"></div>
+        </div>
+
+        <div class="chat-view" id="viewPrivate" hidden>
+            <div class="chat-private-header">
+                <button class="chat-back" id="privateBack" title="Назад">←</button>
+                <span id="privateAvatar"></span>
+                <span class="chat-private-name" id="privateName"></span>
+            </div>
+            <div class="chat-messages" id="privateMessages"></div>
+            <div class="chat-input-row">
+                <div class="chat-sticker-panel" id="stickerPanelPrivate" hidden></div>
+                <button class="chat-sticker-btn" id="stickerBtnPrivate" title="Стикеры">🎨</button>
+                <input type="text" id="privateInput" maxlength="1000" placeholder="Сообщение..." autocomplete="off">
+                <button class="chat-send" id="privateSend" title="Отправить">➤</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.CHAT_USER = {
+        steam_id: "{{ session['user']['steam_id'] }}",
+        nickname: "{{ session['user'].get('nickname', '') }}"
+    };
+</script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>

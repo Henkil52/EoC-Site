@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Управление значками{% endblock %}
+
+{% block body_class %}page page-badges-admin{% endblock %}
+
+{% block content %}
+    <h1>⚙️ Управление значками</h1>
+    
+    <section class="settings-card">
+        <h2>Создать значок</h2>
+        <form action="{{ url_for('badges.create') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Название:</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Описание:</label>
+                <textarea name="description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Картинка (PNG):</label>
+                <input type="file" name="image" accept=".png" required>
+            </div>
+            <button type="submit" class="btn">Создать значок</button>
+        </form>
+    </section>
+    
+    <section class="settings-card">
+        <h2>Существующие значки</h2>
+        {% if badges %}
+            <div class="badges-admin-list">
+                {% for badge in badges %}
+                    <div class="badge-admin-card">
+                        <img src="{{ badge.image_url() }}" alt="{{ badge.name }}" class="badge-image">
+                        <div class="badge-info">
+                            <h3>{{ badge.name }}</h3>
+                            {% if badge.description %}
+                                <p>{{ badge.description }}</p>
+                            {% endif %}
+                            <p>Владельцев: {{ badge.users.count() }}</p>
+                            
+                            <div class="badge-actions">
+                                <a href="{{ url_for('badges.log', badge_id=badge.id) }}" class="btn btn-small">📋 Лог</a>
+                                <form action="{{ url_for('badges.delete', badge_id=badge.id) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Удалить значок?')">🗑 Удалить</button>
+                                </form>
+                            </div>
+                            
+                            <div class="award-form">
+                                <h4>Назначить игроку:</h4>
+                                <form action="{{ url_for('badges.award') }}" method="post">
+                                    <input type="hidden" name="badge_id" value="{{ badge.id }}">
+                                    <select name="user_steam_id" required>
+                                        <option value="">Выберите игрока...</option>
+                                        {% for player in players %}
+                                            <option value="{{ player.SteamID }}">{{ player.Nickname }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-small">Назначить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Значков пока нет.</p>
+        {% endif %}
+    </section>
+{% endblock %}

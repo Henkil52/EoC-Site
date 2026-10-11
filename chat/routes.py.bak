@@ -1,0 +1,287 @@
+"""
+chat/routes.py
+
+Онлайн-чат: общий чат + личные диалоги (на базе SiteMessage).
+"""
+
+from flask import Blueprint, request, jsonify, session, url_for
+
+from auth.decorators import login_required
+from database.models import (
+    db, Player, SiteUser, SitePlayerAvatar,
+    SiteChatMessage, SiteMessage,
+)
+from database.models import moscow_now
+
+bp = Blueprint(
+    "chat",
+    __name__,
+    url_prefix="/chat",
+    template_folder="templates",
+)
+
+
+def _current_sid():
+    return session.get("user", {}).get("steam_id")
+
+
+def _nickname(steam_id):
+    try:
+        p = Player.query.get(steam_id)
+        if p and p.Nickname:
+            return p.Nickname
+    except Exception:
+        pass
+    try:
+        u = SiteUser.query.get(steam_id)
+        if u and u.nickname:
+            return u.nickname
+    except Exception:
+        pass
+    return "Игрок"
+
+
+def _avatar(steam_id):
+    """Аватар: кастомный -> Steam из БД -> Steam API -> None."""
+    try:
+        rec = SitePlayerAvatar.query.get(steam_id)
+        if rec:
+            return url_for("static", filename="avatars/" + rec.filename)
+    except Exception:
+        pass
+    try:
+        su = SiteUser.query.get(steam_id)
+        if su and su.avatar_url:
+            return su.avatar_url
+    except Exception:
+        pass
+    try:
+        from steam_utils import fetch_steam_avatar
+        url = fetch_steam_avatar(steam_id)
+        if url:
+            return url
+    except Exception:
+        pass
+    return None
+
+
+def _messages_allowed(recipient):
+    try:
+        from messages.routes import messages_allowed
+        return messages_allowed(recipient)
+    except Exception:
+        return True
+
+
+def _msg_dict(m):
+    return {
+        "id": m.id,
+        "author": m.author_steam_id,
+        "nickname": _nickname(m.author_steam_id),
+        "avatar": _avatar(m.author_steam_id),
+        "text": m.text,
+        "time": m.created_at.strftime("%d.%m %H:%M"),
+        "own": m.author_steam_id == _current_sid(),
+    }
+
+
+def _pmsg_dict(m):
+    return {
+        "id": m.id,
+        "author": m.sender_steam_id,
+        "nickname": _nickname(m.sender_steam_id),
+        "avatar": _avatar(m.sender_steam_id),
+        "text": m.content,
+        "time": m.created_at.strftime("%d.%m %H:%M"),
+        "own": m.sender_steam_id == _current_sid(),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ОБЩИЙ ЧАТ
+# ═══════════════════════════════════════════════════════════════════
+
+@bp.route("/api/public")
+@login_required
+def api_public():
+    since = request.args.get("since_id", 0, type=int)
+    msgs = (
+        SiteChatMessage.query
+        .filter(SiteChatMessage.id > since, SiteChatMessage.is_deleted == False)
+        .order_by(SiteChatMessage.id)
+        .limit(100)
+        .all()
+    )
+    return jsonify({"messages": [_msg_dict(m) for m in msgs]})
+
+
+@bp.route("/api/public", methods=["POST"])
+@login_required
+def api_public_send():
+    text = (request.get_json(silent=True) or {}).get("text", "").strip()
+    if not text:
+        return jsonify({"error": "empty"}), 400
+    m = SiteChatMessage(author_steam_id=_current_sid(), text=text[:1000])
+    db.session.add(m)
+    db.session.commit()
+    return jsonify({"message": _msg_dict(m)})
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ЛИЧНЫЕ ДИАЛОГИ (на базе SiteMessage)
+# ═══════════════════════════════════════════════════════════════════
+
+@bp.route("/api/dialogs")
+@login_required
+def api_dialogs():
+    sid = _current_sid()
+    msgs = (
+        SiteMessage.query
+        .filter((SiteMessage.sender_steam_id == sid) | (SiteMessage.recipient_steam_id == sid))
+        .order_by(SiteMessage.id)
+        .all()
+    )
+
+    chats = {}
+    for m in msgs:
+        other = m.recipient_steam_id if m.sender_steam_id == sid else m.sender_steam_id
+        c = chats.setdefault(other, {"last": m, "unread": 0})
+        c["last"] = m
+        if m.recipient_steam_id == sid and not m.is_read:
+            c["unread"] += 1
+
+    out = []
+    for other, c in chats.items():
+        out.append({
+            "id": other,
+            "other": other,
+            "nickname": _nickname(other),
+            "avatar": _avatar(other),
+            "last": c["last"].content,
+            "last_id": c["last"].id,
+            "time": c["last"].created_at.strftime("%d.%m %H:%M"),
+            "unread": c["unread"],
+        })
+
+    out.sort(key=lambda x: x["last_id"], reverse=True)
+    return jsonify({"dialogs": out})
+
+
+@bp.route("/api/dialogs/start", methods=["POST"])
+@login_required
+def api_dialog_start():
+    other = (request.get_json(silent=True) or {}).get("steam_id")
+    sid = _current_sid()
+    if not other or other == sid:
+        return jsonify({"error": "bad"}), 400
+    return jsonify({"dialog_id": other})
+
+
+@bp.route("/api/dialog/<steam_id>")
+@login_required
+def api_dialog(steam_id):
+    sid = _current_sid()
+    if steam_id == sid:
+        return jsonify({"messages": []})
+
+    since = request.args.get("since_id", 0, type=int)
+    msgs = (
+        SiteMessage.query
+        .filter(
+            ((SiteMessage.sender_steam_id == sid) & (SiteMessage.recipient_steam_id == steam_id)) |
+            ((SiteMessage.sender_steam_id == steam_id) & (SiteMessage.recipient_steam_id == sid))
+        )
+        .filter(SiteMessage.id > since)
+        .order_by(SiteMessage.id)
+        .all()
+    )
+
+    # Помечаем входящие как прочитанные
+    unread = SiteMessage.query.filter(
+        SiteMessage.sender_steam_id == steam_id,
+        SiteMessage.recipient_steam_id == sid,
+        SiteMessage.is_read == False,
+    ).all()
+    for m in unread:
+        m.is_read = True
+    if unread:
+        db.session.commit()
+
+    return jsonify({"messages": [_pmsg_dict(m) for m in msgs]})
+
+
+@bp.route("/api/dialog/<steam_id>", methods=["POST"])
+@login_required
+def api_dialog_send(steam_id):
+    sid = _current_sid()
+    if steam_id == sid:
+        return jsonify({"error": "bad"}), 400
+
+    text = (request.get_json(silent=True) or {}).get("text", "").strip()
+    if not text:
+        return jsonify({"error": "empty"}), 400
+
+    if not _messages_allowed(steam_id):
+        return jsonify({"error": "not allowed"}), 403
+
+    m = SiteMessage(sender_steam_id=sid, recipient_steam_id=steam_id, content=text[:1000])
+    db.session.add(m)
+    db.session.commit()
+    return jsonify({"message": _pmsg_dict(m)})
+
+
+@bp.route("/api/unread")
+@login_required
+def api_unread():
+    sid = _current_sid()
+    n = SiteMessage.query.filter_by(recipient_steam_id=sid, is_read=False).count()
+    return jsonify({"unread": n})
+
+
+def _avatar_fast(steam_id):
+    """Быстрая аватарка без сетевых запросов (для списка игроков)."""
+    try:
+        rec = SitePlayerAvatar.query.get(steam_id)
+        if rec:
+            return url_for("static", filename="avatars/" + rec.filename)
+    except Exception:
+        pass
+    try:
+        su = SiteUser.query.get(steam_id)
+        if su and su.avatar_url:
+            return su.avatar_url
+    except Exception:
+        pass
+    return None
+
+
+@bp.route("/api/players")
+@login_required
+def api_players():
+    """Список игроков для @-упоминаний (игровые + только-сайт)."""
+    sid = _current_sid()
+    seen = set()
+    out = []
+    for p in Player.query.order_by(Player.Nickname).all():
+        if p.SteamID == sid or p.SteamID in seen:
+            continue
+        seen.add(p.SteamID)
+        out.append({
+            "steam_id": p.SteamID,
+            "nickname": p.Nickname or "Игрок",
+            "avatar": _avatar_fast(p.SteamID),
+        })
+    try:
+        for u in SiteUser.query.order_by(SiteUser.nickname).all():
+            if not u.steam_id or u.steam_id == sid or u.steam_id in seen:
+                continue
+            seen.add(u.steam_id)
+            out.append({
+                "steam_id": u.steam_id,
+                "nickname": u.nickname or "Игрок",
+                "avatar": _avatar_fast(u.steam_id),
+            })
+    except Exception:
+        pass
+    out.sort(key=lambda x: (x["nickname"] or "").lower())
+    return jsonify({"players": out})

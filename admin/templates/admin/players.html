@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Игроки - Админ-панель{% endblock %}
+
+{% block body_class %}page page-admin page-admin-players{% endblock %}
+
+{% block content %}
+    <h1>Игроки</h1>
+
+    <a class="back-link" href="{{ url_for('admin.dashboard') }}">← Вернуться в админку</a>
+
+    <section class="players-list">
+        {% if players_data %}
+            <table class="players-table">
+                <thead>
+                    <tr>
+                        <th>Никнейм</th>
+                        <th>Steam ID</th>
+                        <th>Последняя активность</th>
+                        <th>Роль сайта</th>
+                        <th>Спецроли</th>
+                        <th>Предупреждения</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in players_data %}
+                        <tr class="{% if data.ban %}player-banned{% endif %}">
+                            <td>
+                                <a href="{{ url_for('profile.view_profile', steam_id=data.steam_id) }}" class="player-cell">
+                                    <span class="player-avatar-letter">{{ data.nickname[:1] }}</span>
+                                    <span class="player-cell-name">
+                                        {{ data.nickname }}
+                                        {% if data.is_site_only %}
+                                            <span class="site-only-badge" title="Не был на сервере">🌐 Только сайт</span>
+                                        {% endif %}
+                                    </span>
+                                </a>
+                            </td>
+                            <td>{{ data.steam_id }}</td>
+                            <td>
+                                {% if data.player and data.player.LastLogonDate %}
+                                    {{ data.player.LastLogonDate|moscow_time("%d.%m.%Y %H:%M") }}
+                                    <span class="login-source-hint">сервер</span>
+                                {% elif data.site_user and data.site_user.last_site_login %}
+                                    <em>{{ data.site_user.last_site_login.strftime("%d.%m.%Y %H:%M") }}</em>
+                                    <span class="login-source-hint">на сайте</span>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if data.site_role %}
+                                    <span style="color: {{ data.site_role.role.color or '#888' }}">
+                                        {{ data.site_role.role.icon }} {{ data.site_role.role.display_name }}
+                                    </span>
+                                {% else %}
+                                    <span style="color: #888">🚶 Сталкер</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% for sr in data.special_roles %}
+                                    <span style="color: {{ sr.role.color or '#888' }}">
+                                        {{ sr.role.icon }}
+                                    </span>
+                                {% else %}
+                                    —
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if data.warnings_count > 0 %}
+                                    ⚠️ {{ data.warnings_count }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if data.ban %}
+                                    <span class="status-banned">🚫 Забанен</span>
+                                {% else %}
+                                    <span class="status-active">✅ Активен</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin.player_edit', steam_id=data.steam_id) }}" class="btn btn-sm">
+                                    Редактировать
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Игроков пока нет.</p>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,279 @@
+"""
+news_sync.py — улучшенная версия с подробным логированием.
+"""
+
+import base64
+import os
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+
+import requests
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+NEWS_IMG_DIR = PROJECT_ROOT / "static" / "news"
+
+_thread = None
+
+
+def _env(key, default=""):
+    val = os.getenv(key)
+    if val:
+        return val
+    for p in (PROJECT_ROOT / ".env", PROJECT_ROOT.parent / ".env"):
+        try:
+            if p.exists():
+                for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+                    line = line.strip()
+                    if line.startswith(key + "="):
+                        return line.split("=", 1)[1].strip().strip('"').strip("'")
+        except Exception:
+            continue
+    return default
+
+
+def _headers():
+    return {"X-Sync-Secret": _env("SYNC_SECRET")}
+
+
+def _get(path):
+    base = _env("SYNC_URL").rstrip("/")
+    if not base:
+        return None
+    try:
+        r = requests.get(base + path, headers=_headers(), timeout=30)
+        if r.status_code != 200:
+            print(f"[news_sync] GET {path} → {r.status_code}")
+            return None
+        return r.json()
+    except Exception as e:
+        print(f"[news_sync] GET {path} ошибка: {e}")
+        return None
+
+
+def _post(path, payload):
+    base = _env("SYNC_URL").rstrip("/")
+    if not base:
+        return None
+    try:
+        r = requests.post(base + path, headers=_headers(), json=payload, timeout=90)
+        print(f"[news_sync] POST {path} → HTTP {r.status_code}")
+        if r.status_code != 200:
+            print(f"[news_sync]   ответ: {r.text[:200]}")
+            return None
+        data = r.json()
+        print(f"[news_sync]   ответ VPS: {data}")
+        return data
+    except Exception as e:
+        print(f"[news_sync] POST {path} ошибка: {e}")
+        return None
+
+
+def pull_from_vps():
+    """Забирает новости, пойманные ботом в TG/Discord."""
+    from database.models import db, SiteNews, CrosspostLog
+
+    data = _get("/sync/pull")
+    if not data or not data.get("items"):
+        return
+
+    ack_ids = []
+    for item in data["items"]:
+        ack_ids.append(item["id"])
+        src = "discord" if item.get("source") == "dc" else "telegram"
+        ext_id = str(item.get("external_id") or item.get("tg_msg_id"))
+
+        # Анти-дубль: пропускаем если уже импортировали
+        if CrosspostLog.query.filter_by(source=src, external_id=ext_id).first():
+            continue
+
+        author = _env("NEWS_AUTHOR_STEAM_ID")
+        if not author:
+            print("[news_sync] не задан NEWS_AUTHOR_STEAM_ID в .env")
+            continue
+
+        # Создаём новость
+        news = SiteNews(
+            title=(item.get("title") or "")[:200],
+            content=item.get("content") or "",
+            author_steam_id=author,
+            category="other",
+            is_published=True,
+            is_pinned=False,
+        )
+        db.session.add(news)
+        db.session.commit()
+
+        # Сохраняем фото если есть
+        if item.get("photo_b64"):
+            try:
+                NEWS_IMG_DIR.mkdir(parents=True, exist_ok=True)
+                ext = item.get("photo_ext") or ".jpg"
+                (NEWS_IMG_DIR / f"news_{news.id}{ext}").write_bytes(
+                    base64.b64decode(item["photo_b64"])
+                )
+            except Exception as e:
+                print(f"[news_sync] ошибка фото: {e}")
+
+        # Помечаем источник как импортированный
+        db.session.add(CrosspostLog(source=src, external_id=ext_id, news_id=news.id))
+        db.session.commit()
+        print(f"[news_sync] ✅ импортирована новость #{news.id} из {src}: {news.title[:40]}")
+
+        # Сразу отправляем в другие каналы
+        other_targets = []
+        if src != "telegram":
+            other_targets.append("telegram")
+        if src != "discord":
+            other_targets.append("discord")
+        
+        if other_targets:
+            print(f"[news_sync] 🚀 кросспост #{news.id} в {other_targets}...")
+            photo_b64 = item.get("photo_b64")
+            photo_ext = item.get("photo_ext") or ".jpg"
+            
+            # Сразу помечаем все направления как отправленные
+            # (чтобы push_to_vps в этом же цикле не отправил повторно)
+            if "telegram" in other_targets:
+                db.session.add(CrosspostLog(
+                    source="telegram",
+                    external_id="pending",
+                    news_id=news.id,
+                ))
+            if "discord" in other_targets:
+                db.session.add(CrosspostLog(
+                    source="discord",
+                    external_id="pending",
+                    news_id=news.id,
+                ))
+            db.session.commit()
+            
+            # Отправляем кросспост
+            res = _post("/sync/push", {
+                "news_id": news.id,
+                "title": news.title,
+                "content": news.content,
+                "photo_b64": photo_b64,
+                "photo_ext": photo_ext,
+                "targets": other_targets,
+            })
+            
+            if res:
+                # Обновляем external_id на реальные значения
+                if res.get("telegram"):
+                    cp = CrosspostLog.query.filter_by(
+                        source="telegram", news_id=news.id, external_id="pending"
+                    ).first()
+                    if cp:
+                        cp.external_id = str(res["telegram"])
+                if res.get("discord"):
+                    cp = CrosspostLog.query.filter_by(
+                        source="discord", news_id=news.id, external_id="pending"
+                    ).first()
+                    if cp:
+                        cp.external_id = "sent"
+                db.session.commit()
+                print(f"[news_sync] ✅ кросспост завершён")
+            else:
+                print(f"[news_sync] ⚠️  кросспост не удался (VPS не ответил)")
+
+    if ack_ids:
+        _post("/sync/ack", {"ids": ack_ids})
+
+
+
+
+def push_to_vps():
+    """Отдаёт новости сайта в TG/Discord."""
+    from database.models import db, SiteNews, CrosspostLog
+
+    if not _env("SYNC_URL"):
+        return
+
+    q = SiteNews.query.filter_by(is_published=True)
+    # Фильтр NEWS_BOT_SINCE убран — отправляем все опубликованные новости
+
+    candidates = q.order_by(SiteNews.id.desc()).limit(50).all()
+    to_send = []
+    for news in candidates:
+        has_tg = CrosspostLog.query.filter_by(source="telegram", news_id=news.id).first()
+        has_dc = CrosspostLog.query.filter_by(source="discord", news_id=news.id).first()
+        targets = []
+        if not has_tg:
+            targets.append("telegram")
+        if not has_dc:
+            targets.append("discord")
+        if targets:
+            to_send.append((news, targets))
+
+    if not to_send:
+        return  # нечего отправлять
+
+    for news, targets in to_send:
+        photo_b64 = photo_ext = None
+        if NEWS_IMG_DIR.exists():
+            cand = list(NEWS_IMG_DIR.glob(f"news_{news.id}.*"))
+            if cand:
+                photo_b64 = base64.b64encode(cand[0].read_bytes()).decode()
+                photo_ext = cand[0].suffix
+
+        print(f"[news_sync] 🚀 #{news.id} '{news.title[:30]}' → {targets}")
+        res = _post("/sync/push", {
+            "news_id": news.id,
+            "title": news.title,
+            "content": news.content,
+            "photo_b64": photo_b64,
+            "photo_ext": photo_ext,
+            "targets": targets,
+        })
+        if not res:
+            print(f"[news_sync]   ❌ VPS не ответил — повторю в след. цикле")
+            continue
+
+        sent = []
+        if res.get("telegram"):
+            db.session.add(CrosspostLog(
+                source="telegram", external_id=str(res["telegram"]), news_id=news.id))
+            sent.append("telegram")
+        if res.get("discord"):
+            db.session.add(CrosspostLog(
+                source="discord", external_id="sent", news_id=news.id))
+            sent.append("discord")
+        if res.get("telegraph_url") and hasattr(news, "telegraph_url"):
+            news.telegraph_url = res["telegraph_url"]
+        db.session.commit()
+        print(f"[news_sync]   ✅ отправлено в {sent if sent else 'НИКУДА (см. ответ VPS выше)'}")
+
+
+def _loop():
+    from main import app
+    while True:
+        try:
+            interval = max(5, int(_env("SYNC_INTERVAL", "20")))
+        except Exception:
+            interval = 20
+        if _env("SYNC_URL"):
+            try:
+                with app.app_context():
+                    pull_from_vps()
+                    push_to_vps()
+            except Exception as e:
+                print(f"[news_sync] ошибка цикла: {e}")
+        time.sleep(interval)
+
+
+def start_news_sync():
+    global _thread
+    if _thread is not None:
+        print("[news_sync] поток уже запущен")
+        return
+    # Проверка reloader: если Flask в debug и это НЕ worker process — пропускаем
+    is_reloader = os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+    is_debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    if is_debug and not is_reloader:
+        print("[news_sync] пропуск (reloader process)")
+        return
+    _thread = threading.Thread(target=_loop, daemon=True, name="news-sync")
+    _thread.start()
+    print("[news_sync] ✅ поток запущен (интервал 20 сек)")

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}О сайте — Echo of Chernobyl{% endblock %}
+
+{% block body_class %}page page-info page-info-about{% endblock %}
+
+{% block content %}
+    <h1>☢️ О сайте</h1>
+
+    <section class="settings-card">
+        <h2>Что это за сайт?</h2>
+        <p>
+            Echo of Chernobyl — сайт-спутник RP-проекта. Здесь ты можешь
+            следить за новостями проекта, смотреть статистику игроков и
+            группировок, общаться с другими сталкерами и обращаться
+            к администрации.
+        </p>
+        <p>
+            Вход выполняется через Steam — без паролей и регистраций.
+            Игровые данные обновляются автоматически каждые 15 минут.
+        </p>
+    </section>
+
+    <section class="settings-card">
+        <h2>🌐 Что доступно на сайте</h2>
+        <ul class="info-list">
+            <li>📰 <strong>Новости</strong> — новости проекта и комментарии.</li>
+            <li>🛡️ <strong>Группировки</strong> — фракции сервера, их состав и роли.</li>
+            <li>📜 <strong>Правила</strong> — актуальные правила проекта.</li>
+            <li>📖 <strong>Лор</strong> — история и мир проекта.</li>
+            <li>🏆 <strong>Лидеры</strong> — топ игроков сервера.</li>
+            <li>👤 <strong>Профиль</strong> — ник, аватар, баннер, роли и статистика.</li>
+            <li>💬 <strong>Сообщения</strong> — личные чаты с другими игроками.</li>
+            <li>📨 <strong>Обращения</strong> — вопросы и жалобы администрации.</li>
+        </ul>
+    </section>
+{% endblock %}

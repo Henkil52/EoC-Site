@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Админ-панель{% endblock %}
+
+{% block body_class %}page page-admin{% endblock %}
+
+{% block content %}
+    <h1>Админ-панель</h1>
+
+    <div class="admin-dashboard">
+        <div class="stat-card">
+            <h3>Всего игроков</h3>
+            <p class="stat-number">{{ total_players }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Администрация</h3>
+            <p class="stat-number">{{ total_admins }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Активные предупреждения</h3>
+            <p class="stat-number">{{ total_warnings }}</p>
+        </div>
+    </div>
+
+    <h2>Управление</h2>
+    <div class="admin-grid">
+        <a class="admin-card" href="{{ url_for('admin.players') }}">
+            <div class="admin-card-icon">👥</div>
+            <h3 class="admin-card-title">Игроки</h3>
+            <p class="admin-card-desc">Просмотр и управление игроками</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('admin.roles') }}">
+            <div class="admin-card-icon">🛡️</div>
+            <h3 class="admin-card-title">Роли</h3>
+            <p class="admin-card-desc">Управление ролями на сайте</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('admin.warnings') }}">
+            <div class="admin-card-icon">⚠️</div>
+            <h3 class="admin-card-title">Предупреждения</h3>
+            <p class="admin-card-desc">Журнал предупреждений</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('appeals.admin_list') }}">
+            <div class="admin-card-icon">📨</div>
+            <h3 class="admin-card-title">Обращения</h3>
+            <p class="admin-card-desc">Обращения игроков</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('admin.env_editor_view') }}">
+            <div class="admin-card-icon">⚙️</div>
+            <h3 class="admin-card-title">Редактор env</h3>
+            <p class="admin-card-desc">Настройки окружения</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('admin.logs') }}">
+            <div class="admin-card-icon">📜</div>
+            <h3 class="admin-card-title">Логи</h3>
+            <p class="admin-card-desc">Системные логи</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('badges.admin') }}">
+            <div class="admin-card-icon">🏅</div>
+            <h3 class="admin-card-title">Значки</h3>
+            <p class="admin-card-desc">Создание и назначение значков</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('stickers.admin') }}">
+            <div class="admin-card-icon">🎨</div>
+            <h3 class="admin-card-title">Стикеры</h3>
+            <p class="admin-card-desc">Управление стикерами чата</p>
+        </a>
+
+        <a class="admin-card" href="{{ url_for('achievements.editor') }}">
+            <div class="admin-card-icon">🏆</div>
+            <h3 class="admin-card-title">Достижения</h3>
+            <p class="admin-card-desc">Триггеры, названия, стикеры</p>
+        </a>
+
+        <a class="admin-card admin-card-external" href="http://echo-of-chernobyl.online:8080/" target="_blank" rel="noopener">
+            <div class="admin-card-icon">🗺️</div>
+            <h3 class="admin-card-title">Игровая карта</h3>
+            <p class="admin-card-desc">Карта DayZ сервера ↗</p>
+        </a>
+
+        <a class="admin-card admin-card-external" href="http://192.124.181.94:3000/" target="_blank" rel="noopener">
+            <div class="admin-card-icon">🖥</div>
+            <h3 class="admin-card-title">RCON консоль</h3>
+            <p class="admin-card-desc">Управление сервером ↗</p>
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{
+    "enabled": 1,
+    "check_interval_sec": 30,
+    "messages": [
+        {
+            "title": "Информация",
+            "message": "Периодическое сообщение сервера",
+            "icon": "set:dayz_gui image:inv_inspecting",
+            "interval_min": 10
+        }
+    ]
+}

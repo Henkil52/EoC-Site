@@ -1,0 +1,619 @@
+(function () {
+    "use strict";
+
+    var $ = function (s) { return document.querySelector(s); };
+
+    var fab = $("#chatFab"), panel = $("#chatPanel"), badge = $("#chatBadge");
+
+    function showToast(data) {
+        var container = document.getElementById("toastContainer");
+        if (!container) return;
+
+        var toast = document.createElement("div");
+        toast.className = "toast";
+        var avatar = data.avatar
+            ? '<img class="toast-avatar" src="' + esc(data.avatar) + '" alt="">'
+            : '<div class="toast-avatar-fallback">' + esc((data.nickname || "?").charAt(0).toUpperCase()) + '</div>';
+
+        toast.innerHTML = avatar +
+            '<div class="toast-body">' +
+            '<div class="toast-label">' + esc(data.label || "Новое сообщение") + '</div>' +
+            '<div class="toast-head"><span class="toast-nick">' + esc(data.nickname) + '</span>' +
+            '<span class="toast-time">' + esc(data.time) + '</span></div>' +
+            '<div class="toast-text">' + esc(data.text) + '</div></div>';
+
+        toast.onclick = function () {
+            toast.remove();
+            if (data.dialog_id) {
+                // открыть личный чат
+                panel.hidden = false;
+                openPrivate(data.dialog_id, {
+                    other: data.other || data.dialog_id,
+                    nickname: data.nickname,
+                    avatar: data.avatar
+                });
+            } else {
+                // открыть общий чат
+                panel.hidden = false;
+                openView("public");
+            }
+        };
+
+        container.appendChild(toast);
+
+        setTimeout(function () {
+            toast.classList.add("hiding");
+            setTimeout(function () { toast.remove(); }, 300);
+        }, 5000);
+    }
+
+    var lastUnread = 0;
+    var lastPublicId = 0;
+    var tabPublic = $("#tabPublic"), tabDialogs = $("#tabDialogs"), tabDialogsBadge = $("#tabDialogsBadge");
+    var viewPublic = $("#viewPublic"), viewDialogs = $("#viewDialogs"), viewPrivate = $("#viewPrivate");
+    var publicMessages = $("#publicMessages"), publicInput = $("#publicInput"), publicSend = $("#publicSend");
+    var dialogsList = $("#dialogsList");
+    var privateBack = $("#privateBack"), privateAvatar = $("#privateAvatar"), privateName = $("#privateName");
+    var privateMessages = $("#privateMessages"), privateInput = $("#privateInput"), privateSend = $("#privateSend");
+    var stickerBtnPublic = $("#stickerBtnPublic"), stickerPanelPublic = $("#stickerPanelPublic");
+    var stickerBtnPrivate = $("#stickerBtnPrivate"), stickerPanelPrivate = $("#stickerPanelPrivate");
+
+    var view = "public", dialogId = null, lastPublic = 0, lastPrivate = 0;
+    var stickersCache = null;
+
+    var STICKER_RE = /^\[sticker:([a-zA-Z0-9_-]+)\/([a-zA-Z0-9._-]+)\]$/;
+
+
+    var mentionCache = null;
+
+    function loadMentions(cb) {
+        if (mentionCache) { cb(mentionCache); return; }
+        api("/chat/api/players").then(function (data) {
+            mentionCache = (data && data.players) ? data.players : [];
+            cb(mentionCache);
+        });
+    }
+
+    function renderMentions(text) {
+        return text.replace(/@([A-Za-zА-Яа-яЁё0-9_ -]{1,40})/g, function (m, nick) {
+            var trimmed = nick.replace(/\s+$/, "");
+            if (!trimmed) return m;
+            var target = null;
+            if (mentionCache) {
+                var low = trimmed.toLowerCase();
+                for (var i = 0; i < mentionCache.length; i++) {
+                    if ((mentionCache[i].nickname || "").toLowerCase() === low) {
+                        target = mentionCache[i];
+                        break;
+                    }
+                }
+            }
+            if (!target) return m;
+            return '<a class="chat-mention" href="/view/' + encodeURIComponent(target.steam_id) + '">@' + trimmed + '</a>';
+        });
+    }
+
+    var activePicker = null;
+    var activeInput  = null;
+    var activeQuery  = "";
+    var activeIndex  = 0;
+    var activeStart  = 0;
+
+    function hidePicker() {
+        if (activePicker) { activePicker.remove(); activePicker = null; }
+        activeInput = null;
+    }
+
+    function showPickerFor(inputEl, query) {
+        activeInput = inputEl;
+        activeQuery = query;
+        activeIndex = 0;
+
+        if (!activePicker) {
+            activePicker = document.createElement("div");
+            activePicker.className = "chat-user-picker";
+            inputEl.parentNode.appendChild(activePicker);
+        }
+
+        loadMentions(function (players) {
+            var q = query.toLowerCase();
+            var matches = players.filter(function (p) {
+                return !q || (p.nickname || "").toLowerCase().indexOf(q) !== -1;
+            }).slice(0, 20);
+
+            activePicker.innerHTML = "";
+            if (!matches.length) {
+                activePicker.innerHTML = '<div class="chat-user-pick-item" style="color:var(--muted);cursor:default">Никого не найдено</div>';
+                return;
+            }
+            matches.forEach(function (p, idx) {
+                var item = document.createElement("div");
+                item.className = "chat-user-pick-item" + (idx === activeIndex ? " active" : "");
+                var av = p.avatar
+                    ? '<img class="pick-avatar" src="' + esc(p.avatar) + '" alt="">'
+                    : '<div class="pick-fallback">' + esc((p.nickname || "?").charAt(0).toUpperCase()) + '</div>';
+                item.innerHTML = av + '<span class="pick-name">' + esc(p.nickname) + '</span>';
+                item.onmousedown = function (e) {
+                    e.preventDefault();
+                    pickUser(p);
+                };
+                activePicker.appendChild(item);
+            });
+        });
+    }
+
+    function pickUser(p) {
+        if (!activeInput) return;
+        var v = activeInput.value;
+        var before = v.slice(0, activeStart);
+        var after  = v.slice(activeInput.selectionStart || v.length);
+        activeInput.value = before + "@" + p.nickname + " " + after;
+        var newPos = before.length + p.nickname.length + 2;
+        activeInput.selectionStart = activeInput.selectionEnd = newPos;
+        activeInput.focus();
+        hidePicker();
+    }
+
+    function onMentionInput(e) {
+        var input = e.target;
+        var pos = input.selectionStart || 0;
+        var v = input.value;
+        var at = v.lastIndexOf("@", pos - 1);
+        if (at === -1) { hidePicker(); return; }
+        if (at > 0 && !/\s/.test(v.charAt(at - 1))) { hidePicker(); return; }
+        var between = v.slice(at + 1, pos);
+        if (between.indexOf(" ") !== -1 || between.length > 30) { hidePicker(); return; }
+        activeStart = at;
+        showPickerFor(input, between);
+    }
+
+    function onMentionKey(e) {
+        if (!activePicker) return;
+        var items = activePicker.querySelectorAll(".chat-user-pick-item");
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % Math.max(items.length, 1);
+            items.forEach(function (el, i) { el.classList.toggle("active", i === activeIndex); });
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + items.length) % Math.max(items.length, 1);
+            items.forEach(function (el, i) { el.classList.toggle("active", i === activeIndex); });
+        } else if (e.key === "Enter" || e.key === "Tab") {
+            var activeEl = activePicker.querySelector(".chat-user-pick-item.active");
+            if (activeEl) {
+                mentionJustPicked = true;
+                e.preventDefault();
+                activeEl.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+            }
+        } else if (e.key === "Escape") {
+            hidePicker();
+        }
+    }
+
+    document.addEventListener("click", function (e) {
+        if (activePicker && !activePicker.contains(e.target) && e.target !== activeInput) {
+            hidePicker();
+        }
+    });
+
+
+    function emojiTokens(s) {
+        return s.replace(/\[emoji:([a-zA-Z0-9_.\-]+\.gif)\]/g, function (m, name) {
+            return '<img class="emoji-img" src="/static/emoji/' + name + '" alt="">';
+        });
+    }
+
+    function esc(s) {
+        var d = document.createElement("div");
+        d.textContent = (s == null ? "" : String(s));
+        return d.innerHTML;
+    }
+
+    function profileHref(steam_id) {
+        return "/view/" + encodeURIComponent(steam_id);
+    }
+
+    function avatarHtml(item, size) {
+        if (item.avatar) {
+            return '<img class="chat-avatar" style="width:' + size + 'px;height:' + size + 'px" src="' + esc(item.avatar) + '" alt="">';
+        }
+        var letter = esc((item.nickname || "?").charAt(0).toUpperCase());
+        return '<div class="chat-avatar chat-avatar-fallback" style="width:' + size + 'px;height:' + size + 'px">' + letter + '</div>';
+    }
+
+    function textHtml(t) {
+        var m = STICKER_RE.exec(t || "");
+        if (m) {
+            return '<img class="chat-sticker-img" src="/static/stickers/' +
+                encodeURIComponent(m[1]) + "/" + encodeURIComponent(m[2]) + '" alt="стикер">';
+        }
+        return '<div class="chat-text">' + renderMentions(emojiTokens(esc(t))) + '</div>';
+    }
+
+    function previewText(t) {
+        return STICKER_RE.test(t || "") ? "🎨 Стикер" : (t || "");
+    }
+
+    function roleClass(m) {
+        if (m.role === "admin") return " chat-msg-admin";
+        if (m.role === "vip") return " chat-msg-vip";
+        return "";
+    }
+
+    function msgHtml(m) {
+        var href = profileHref(m.author);
+        return '<div class="chat-msg' + (m.own ? " own" : "") + '">' +
+            '<a class="chat-profile-link" href="' + href + '" title="Открыть профиль">' + avatarHtml(m, 32) + '</a>' +
+            '<div class="chat-msg-body' + roleClass(m) + '">' +
+            '<div class="chat-msg-head"><a class="chat-nick chat-profile-link" href="' + href + '">' + esc(m.nickname) + '</a>' +
+            '<span class="chat-time">' + esc(m.time) + '</span></div>' +
+            textHtml(m.text) +
+            '</div></div>';
+    }
+
+    function api(url, opts) {
+        return fetch(url, Object.assign({ headers: { "Content-Type": "application/json" } }, opts))
+            .then(function (r) { return r.json(); })
+            .catch(function () { return null; });
+    }
+
+    function scrollBottom(el) { el.scrollTop = el.scrollHeight; }
+
+    function clearEmpty(box) {
+        var e = box.querySelector(".chat-empty");
+        if (e) e.remove();
+    }
+
+    function openView(name) {
+        view = name;
+        viewPublic.hidden = (name !== "public");
+        viewDialogs.hidden = (name !== "dialogs");
+        viewPrivate.hidden = (name !== "private");
+        tabPublic.classList.toggle("active", name === "public");
+        tabDialogs.classList.toggle("active", name !== "public");
+        closeStickerPanels();
+        if (name === "public") loadPublic();
+        if (name === "dialogs") loadDialogs();
+    }
+
+    /* ── Стикеры ── */
+
+    function closeStickerPanels() {
+        stickerPanelPublic.hidden = true;
+        stickerPanelPrivate.hidden = true;
+    }
+
+    function loadStickers(cb) {
+        if (stickersCache) { cb(stickersCache); return; }
+        api("/stickers/api/my").then(function (data) {
+            stickersCache = (data && data.stickers) ? data.stickers : [];
+            cb(stickersCache);
+        });
+    }
+
+    function buildStickerPanel(panelEl, onPick) {
+        loadStickers(function (stickers) {
+            panelEl.innerHTML = "";
+            if (!stickers.length) {
+                panelEl.innerHTML = '<div class="chat-sticker-empty">Стикеров пока нет</div>';
+                return;
+            }
+
+            var catOrder = ["common", "vip", "admin"];
+            var catTitles = { common: "🌐 Общие", vip: "⭐ VIP", admin: "🛡 Админ" };
+            var cats = [];
+            stickers.forEach(function (s) {
+                if (cats.indexOf(s.category) === -1) cats.push(s.category);
+            });
+            cats.sort(function (a, b) { return catOrder.indexOf(a) - catOrder.indexOf(b); });
+
+            var current = panelEl.getAttribute("data-cat") || cats[0];
+            if (cats.indexOf(current) === -1) current = cats[0];
+
+            if (cats.length > 1) {
+                var tabs = document.createElement("div");
+                tabs.className = "chat-sticker-tabs";
+                cats.forEach(function (c) {
+                    var t = document.createElement("button");
+                    t.type = "button";
+                    t.className = "chat-sticker-tab" + (c === current ? " active" : "");
+                    t.textContent = catTitles[c] || c;
+                    t.onclick = function (e) {
+                        e.stopPropagation();
+                        panelEl.setAttribute("data-cat", c);
+                        buildStickerPanel(panelEl, onPick);
+                    };
+                    tabs.appendChild(t);
+                });
+                panelEl.appendChild(tabs);
+            }
+
+            var grid = document.createElement("div");
+            grid.className = "chat-sticker-grid";
+            var shown = 0;
+            stickers.forEach(function (s) {
+                if (s.category !== current) return;
+                shown++;
+                var b = document.createElement("button");
+                b.type = "button";
+                b.className = "chat-sticker-item";
+                b.title = s.filename;
+                b.innerHTML = '<img src="' + esc(s.url) + '" alt="">';
+                b.onclick = function (e) {
+                    e.stopPropagation();
+                    onPick(s);
+                };
+                grid.appendChild(b);
+            });
+            if (!shown) {
+                grid.innerHTML = '<div class="chat-sticker-empty">В этой папке нет стикеров</div>';
+            }
+            panelEl.appendChild(grid);
+        });
+    }
+
+    function stickerCode(s) {
+        return "[sticker:" + s.category + "/" + s.filename + "]";
+    }
+
+    /* ── Общий чат ── */
+
+    var mentionJustPicked = false;
+
+    function notifyIfMention(m, hadInitial) {
+        if (!hadInitial || m.own) return;
+        var myNick = ((window.CHAT_USER || {}).nickname || "").toLowerCase();
+        if (!myNick) return;
+        var text = (m.text || "").toLowerCase();
+        var isMention = text.indexOf("@" + myNick) !== -1;
+        var viewingPublic = !panel.hidden && view === "public";
+        if (isMention && !viewingPublic) {
+            showToast({
+                label: "📢 Вас упомянули",
+                nickname: m.nickname,
+                avatar: m.avatar,
+                text: m.text,
+                time: m.time
+            });
+        } else if (!isMention && panel.hidden) {
+            showToast({
+                label: "🌐 Общий чат",
+                nickname: m.nickname,
+                avatar: m.avatar,
+                text: m.text,
+                time: m.time
+            });
+        }
+    }
+
+    function loadPublic() {
+        api("/chat/api/public?since_id=" + lastPublic).then(function (data) {
+            if (!data || !data.messages || !data.messages.length) return;
+            clearEmpty(publicMessages);
+            var hadInitial = lastPublic > 0;
+            data.messages.forEach(function (m) {
+                lastPublic = Math.max(lastPublic, m.id);
+                publicMessages.insertAdjacentHTML("beforeend", msgHtml(m));
+                notifyIfMention(m, hadInitial);
+            });
+            scrollBottom(publicMessages);
+        });
+    }
+
+    function sendPublicText(text) {
+        api("/chat/api/public", { method: "POST", body: JSON.stringify({ text: text }) }).then(function (data) {
+            if (data && data.message) {
+                clearEmpty(publicMessages);
+                lastPublic = Math.max(lastPublic, data.message.id);
+                publicMessages.insertAdjacentHTML("beforeend", msgHtml(data.message));
+                scrollBottom(publicMessages);
+            }
+        });
+    }
+
+    function sendPublic() {
+        hidePicker();
+        var text = publicInput.value.trim();
+        if (!text) return;
+        publicInput.value = "";
+        sendPublicText(text);
+    }
+
+    /* ── Диалоги ── */
+
+    function loadDialogs() {
+        api("/chat/api/dialogs").then(function (data) {
+            if (!data || !data.dialogs) return;
+            dialogsList.innerHTML = "";
+            if (!data.dialogs.length) {
+                dialogsList.innerHTML = '<p class="chat-empty">📭 Диалогов пока нет.<br>Открой профиль игрока и нажми «💬 Написать».</p>';
+                return;
+            }
+            data.dialogs.forEach(function (d) {
+                var href = profileHref(d.other);
+                var el = document.createElement("div");
+                el.className = "chat-dialog";
+                el.innerHTML = '<a class="chat-profile-link" href="' + href + '" title="Открыть профиль">' + avatarHtml(d, 40) + '</a>' +
+                    '<div class="chat-dialog-info"><a class="chat-dialog-name chat-profile-link" href="' + href + '">' + esc(d.nickname) + '</a>' +
+                    '<div class="chat-dialog-last">' + esc(previewText(d.last)) + '</div></div>' +
+                    '<div class="chat-dialog-meta"><span class="chat-time">' + esc(d.time) + '</span>' +
+                    (d.unread ? '<span class="chat-unread">' + d.unread + '</span>' : '') + '</div>';
+                el.onclick = function (e) {
+                    if (e.target.closest("a")) return;
+                    openPrivate(d.id, d);
+                };
+                dialogsList.appendChild(el);
+            });
+        });
+    }
+
+    /* ── Личный чат ── */
+
+    function openPrivate(id, info) {
+        dialogId = id;
+        lastPrivate = 0;
+        privateMessages.innerHTML = "";
+        var otherId = (info && info.other) || id;
+        var href = profileHref(otherId);
+        privateName.innerHTML = '<a class="chat-profile-link" href="' + href + '">' + esc(info.nickname || "") + '</a>';
+        privateAvatar.innerHTML = '<a class="chat-profile-link" href="' + href + '">' + avatarHtml(info, 28) + '</a>';
+        openView("private");
+        loadPrivate();
+    }
+
+    function loadPrivate() {
+        if (!dialogId) return;
+        api("/chat/api/dialog/" + dialogId + "?since_id=" + lastPrivate).then(function (data) {
+            if (!data || !data.messages || !data.messages.length) return;
+            data.messages.forEach(function (m) {
+                lastPrivate = Math.max(lastPrivate, m.id);
+                privateMessages.insertAdjacentHTML("beforeend", msgHtml(m));
+            });
+            scrollBottom(privateMessages);
+        });
+    }
+
+    function sendPrivateText(text) {
+        api("/chat/api/dialog/" + dialogId, { method: "POST", body: JSON.stringify({ text: text }) }).then(function (data) {
+            if (data && data.message) {
+                lastPrivate = Math.max(lastPrivate, data.message.id);
+                privateMessages.insertAdjacentHTML("beforeend", msgHtml(data.message));
+                scrollBottom(privateMessages);
+            }
+        });
+    }
+
+    function sendPrivate() {
+        hidePicker();
+        var text = privateInput.value.trim();
+        if (!text || !dialogId) return;
+        privateInput.value = "";
+        sendPrivateText(text);
+    }
+
+    /* ── Счётчик и поллинг ── */
+
+    function updateBadge() {
+        api("/chat/api/unread").then(function (data) {
+            if (!data) return;
+            var n = data.unread || 0;
+            badge.hidden = (n === 0);
+            badge.textContent = n > 99 ? "99+" : n;
+            tabDialogsBadge.hidden = (n === 0);
+            tabDialogsBadge.textContent = n;
+
+            // Если счётчик вырос — показываем toast с последним личным сообщением
+            if (n > lastUnread) {
+                api("/chat/api/dialogs").then(function (d) {
+                    if (!d || !d.dialogs || !d.dialogs.length) return;
+                    var top = d.dialogs[0];
+                    if (top.unread > 0 && !panel.hidden && view === "private" && dialogId === top.id) return;
+                    showToast({
+                        label: "💬 Личное сообщение",
+                        nickname: top.nickname,
+                        avatar: top.avatar,
+                        text: top.last,
+                        time: top.time,
+                        dialog_id: top.id,
+                        other: top.other
+                    });
+                });
+            }
+            lastUnread = n;
+        });
+    }
+
+    publicInput.addEventListener("input", onMentionInput);
+    publicInput.addEventListener("keydown", onMentionKey);
+    privateInput.addEventListener("input", onMentionInput);
+    privateInput.addEventListener("keydown", onMentionKey);
+
+    setInterval(function () {
+        updateBadge();
+        if (panel.hidden) return;
+        if (view === "public") loadPublic();
+        if (view === "private") loadPrivate();
+        if (view === "dialogs") loadDialogs();
+    }, 3000);
+
+    /* ── События ── */
+
+    fab.onclick = function () {
+        panel.hidden = !panel.hidden;
+        if (!panel.hidden) { openView("public"); updateBadge(); }
+    };
+    $("#chatClose").onclick = function () { panel.hidden = true; hidePicker(); };
+    tabPublic.onclick = function () { openView("public"); };
+    tabDialogs.onclick = function () { openView("dialogs"); };
+
+    publicSend.onclick = sendPublic;
+    publicInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            if (activePicker || mentionJustPicked) { mentionJustPicked = false; return; }
+            sendPublic();
+        }
+    });
+    privateSend.onclick = sendPrivate;
+    privateInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            if (activePicker || mentionJustPicked) { mentionJustPicked = false; return; }
+            sendPrivate();
+        }
+    });
+    privateBack.onclick = function () { openView("dialogs"); };
+
+    stickerBtnPublic.onclick = function (e) {
+        e.stopPropagation();
+        var was = stickerPanelPublic.hidden;
+        closeStickerPanels();
+        if (was) {
+            buildStickerPanel(stickerPanelPublic, function (s) {
+                closeStickerPanels();
+                sendPublicText(stickerCode(s));
+            });
+            stickerPanelPublic.hidden = false;
+        }
+    };
+
+    stickerBtnPrivate.onclick = function (e) {
+        e.stopPropagation();
+        var was = stickerPanelPrivate.hidden;
+        closeStickerPanels();
+        if (was) {
+            buildStickerPanel(stickerPanelPrivate, function (s) {
+                closeStickerPanels();
+                if (dialogId) sendPrivateText(stickerCode(s));
+            });
+            stickerPanelPrivate.hidden = false;
+        }
+    };
+
+    document.addEventListener("click", function (e) {
+        if (!stickerPanelPublic.hidden && !e.target.closest("#stickerPanelPublic") && !e.target.closest("#stickerBtnPublic")) {
+            stickerPanelPublic.hidden = true;
+        }
+        if (!stickerPanelPrivate.hidden && !e.target.closest("#stickerPanelPrivate") && !e.target.closest("#stickerBtnPrivate")) {
+            stickerPanelPrivate.hidden = true;
+        }
+    });
+
+    document.addEventListener("click", function (e) {
+        var btn = e.target.closest(".js-chat-with");
+        if (!btn) return;
+        var sid = btn.getAttribute("data-steam-id");
+        if (!sid || sid === (window.CHAT_USER || {}).steam_id) return;
+        api("/chat/api/dialogs/start", { method: "POST", body: JSON.stringify({ steam_id: sid }) }).then(function (res) {
+            if (res && res.dialog_id) {
+                panel.hidden = false;
+                openPrivate(res.dialog_id, {
+                    other: sid,
+                    nickname: btn.getAttribute("data-nickname") || "",
+                    avatar: btn.getAttribute("data-avatar") || null
+                });
+            }
+        });
+    });
+
+    loadMentions(function () {});
+    updateBadge();
+})();

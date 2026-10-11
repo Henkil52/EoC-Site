@@ -1,0 +1,25 @@
+{
+  "roles": [
+    {
+      "role_code": "architect",
+      "role_type": "special",
+      "display_name": "Архитектор О-Сознания",
+      "icon": "⚙️",
+      "color": "#b57edc",
+      "level": 50,
+      "description": "Архитектор проекта О-Сознания"
+    }
+  ],
+  "user_roles": [
+    {
+      "id": 1,
+      "steam_id": "76561198160108755",
+      "role_code": "architect",
+      "assigned_by": "script",
+      "assigned_at": "2026-09-12T11:27:42.361607",
+      "expires_at": null
+    }
+  ],
+  "faction_roles": [],
+  "history": []
+}

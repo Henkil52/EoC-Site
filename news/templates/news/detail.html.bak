@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }} — Новости{% endblock %}
+
+{% block body_class %}page page-news page-news-detail{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{{ url_for('news.index') }}">← Все новости</a>
+
+    <article class="news-full">
+        <h1>
+            {% if news.is_pinned %}📌 {% endif %}
+            {{ news.title }}
+        </h1>
+
+        <p class="news-meta">
+            <span class="news-category">[{{ category_name }}]</span>
+            <span class="news-author">{{ author_nickname }}</span>
+            <span class="news-date">{{ news.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
+            {% if news.updated_at %}
+                <span class="news-edited">(изменено {{ news.updated_at.strftime("%d.%m.%Y %H:%M") }})</span>
+            {% endif %}
+            {% if not news.is_published %}
+                <span class="news-draft-label">📝 Черновик</span>
+            {% endif %}
+        </p>
+
+                {# Текст новости: HTML-режим (автоновости) или обычный #}
+        <div class="news-content">
+            {% if news.content_html %}
+                {{ news.content_html|safe }}
+            {% else %}
+                {{ news.content|bb }}
+            {% endif %}
+        </div>
+
+        {# Кнопки управления для админов #}
+        {% if is_admin %}
+            <div class="news-actions">
+                <a href="{{ url_for('news.edit', news_id=news.id) }}" class="btn">✏️ Редактировать</a>
+
+                <form method="POST" action="{{ url_for('news.pin', news_id=news.id) }}" style="display:inline;">
+                    <button type="submit" class="btn">
+                        {% if news.is_pinned %}📌 Открепить{% else %}📌 Закрепить{% endif %}
+                    </button>
+                </form>
+
+                <form method="POST" action="{{ url_for('news.delete', news_id=news.id) }}" style="display:inline;"
+                      onsubmit="return confirm('Удалить новость и все комментарии?');">
+                    <button type="submit" class="btn btn-danger">🗑️ Удалить</button>
+                </form>
+            </div>
+        {% endif %}
+    </article>
+
+    {# ── Комментарии ───────────────────────────────────────── #}
+    <section class="news-comments">
+        <h2>Комментарии ({{ comments_data|length }})</h2>
+
+        {% if comments_data %}
+            <ul class="comments-list">
+                {% for data in comments_data %}
+                    {% set comment = data.comment %}
+                    <li class="comment {% if comment.is_hidden %}comment-hidden{% endif %}">
+                        <div class="comment-header">
+                            <strong>
+                                {% if data.role_info %}
+                                    <span style="color: {{ data.role_info.color or '#888' }}">
+                                        {{ data.role_info.icon }} {{ data.author_nickname }}
+                                    </span>
+                                {% else %}
+                                    {{ data.author_nickname }}
+                                {% endif %}
+                            </strong>
+                            <span class="comment-date">{{ comment.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
+                            {% if comment.updated_at %}
+                                <span class="comment-edited">(изменено)</span>
+                            {% endif %}
+                            {% if comment.is_hidden %}
+                                <span class="comment-hidden-label">🚫 Скрыт модератором</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="comment-body">
+                            {% if comment.is_hidden and not can_moderate %}
+                                <em>Комментарий скрыт модератором.</em>
+                            {% else %}
+                                {{ comment.content|bb }}
+                            {% endif %}
+                        </div>
+
+                        <div class="comment-actions">
+                            {# Свои комментарии: редактировать / удалить #}
+                            {% if data.is_own %}
+                                <a href="{{ url_for('news.edit_comment', comment_id=comment.id) }}">✏️ Редактировать</a>
+                                <form method="POST" action="{{ url_for('news.delete_comment', comment_id=comment.id) }}" style="display:inline;"
+                                      onsubmit="return confirm('Удалить комментарий?');">
+                                    <button type="submit" class="link-btn">🗑️ Удалить</button>
+                                </form>
+                            {% endif %}
+
+                            {# Модерация: скрыть / показать #}
+                            {% if can_moderate %}
+                                <form method="POST" action="{{ url_for('news.hide_comment', comment_id=comment.id) }}" style="display:inline;">
+                                    <button type="submit" class="link-btn">
+                                        {% if comment.is_hidden %}👁️ Показать{% else %}🚫 Скрыть{% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Комментариев пока нет. Будь первым!</p>
+        {% endif %}
+
+        {# Форма добавления комментария #}
+        {% if current_user and current_user.get("steam_id") %}
+            <form method="POST" action="{{ url_for('news.add_comment', news_id=news.id) }}" class="comment-form">
+                <label>
+                    Твой комментарий:
+                    <textarea class="rich-editor"  name="content" maxlength="{{ comment_max_length }}" required
+                              placeholder="Напиши комментарий (до {{ comment_max_length }} символов)"></textarea>
+                </label>
+                <button type="submit" class="btn">Отправить</button>
+            </form>
+        {% else %}
+            <p>
+                <a href="{{ url_for('auth.login', next=request.path) }}">Войди через Steam</a>,
+                чтобы оставить комментарий.
+            </p>
+        {% endif %}
+    </section>
+{% endblock %}

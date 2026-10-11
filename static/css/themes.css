@@ -1,0 +1,180 @@
+/* ══════════════════════════════════════════════════════════
+   ТЕМЫ ОФОРМЛЕНИЯ (тёмная / серая / светлая)
+   Подключается ПОСЛЕ base.css и переопределяет цвета.
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Палитры ─────────────────────────────────────────────── */
+
+:root,
+html[data-theme="light"] {
+    --bg: #f5f6fa;
+    --card: #ffffff;
+    --card-alt: #f8f9fa;
+    --text: #22272b;
+    --muted: #77808a;
+    --border: #e0e3e8;
+    --link: #0066cc;
+    --nav-bg: #ffffff;
+    --input-bg: #ffffff;
+    --th-bg: #eef1f4;
+    --hover: #f0f2f5;
+    --shadow: rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="gray"] {
+    --bg: #33383d;
+    --card: #3e444a;
+    --card-alt: #454c53;
+    --text: #d8dce0;
+    --muted: #9aa2ab;
+    --border: #565d66;
+    --link: #8ab4f8;
+    --nav-bg: #2b3035;
+    --input-bg: #4a5158;
+    --th-bg: #4a5158;
+    --hover: #4a5158;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] {
+    --bg: #121417;
+    --card: #1b1e22;
+    --card-alt: #23272c;
+    --text: #e2e5e9;
+    --muted: #9aa2ab;
+    --border: #33383e;
+    --link: #4fc3f7;
+    --nav-bg: #16191d;
+    --input-bg: #23272c;
+    --th-bg: #23272c;
+    --hover: #23272c;
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* ── Применение к общим элементам ────────────────────────── */
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+h1, h2, h3, h4 { color: var(--text); }
+a { color: var(--link); }
+
+nav, .navbar, header {
+    background: var(--nav-bg);
+    border-color: var(--border);
+}
+
+nav a, .navbar a, header a { color: var(--text); }
+nav a:hover, .navbar a:hover { background: var(--hover); }
+
+/* ── Карточки и секции ───────────────────────────────────── */
+
+.player-card,
+.game-info,
+.player-stats,
+.extended-stats,
+.weapon-stats,
+.player-appeals,
+.player-logs,
+.player-log-block,
+.news-item,
+.news-full,
+.rules-section,
+.lore-entry,
+.leaderboard-category,
+.admin-rules-section,
+.admin-lore-section,
+.admin-lore-entry,
+.log-sources,
+.auth-gate {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text);
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.player-stats,
+.extended-stats,
+.weapon-stats,
+.player-logs,
+.player-appeals {
+    background: var(--card-alt);
+}
+
+/* ── Таблицы ─────────────────────────────────────────────── */
+
+table th,
+.appeals-table th,
+.leaderboard-table th,
+.weapons-table th,
+.admin-table th,
+.appeals-mini-table th,
+.backups-table th {
+    background: var(--th-bg);
+    color: var(--text);
+}
+
+table td,
+table th,
+.appeals-table td,
+.leaderboard-table td,
+.weapons-table td,
+.admin-table td,
+.appeals-mini-table td,
+.backups-table td {
+    border-color: var(--border);
+    color: var(--text);
+}
+
+/* ── Формы ───────────────────────────────────────────────── */
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    background: var(--input-bg);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+/* ── Мелочи ──────────────────────────────────────────────── */
+
+dt, .hint, .news-meta, .rule-date, .lore-date,
+.category-description, .muted {
+    color: var(--muted);
+}
+
+details summary:hover { background: var(--hover); }
+
+.leader-row { background: var(--card-alt); }
+
+.news-content, .lore-content, .comment-body, .message-body {
+    color: var(--text);
+}
+
+/* Консоль логов остаётся тёмной во всех темах */
+.logs-pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+}
+
+/* ── Кнопка смены темы ───────────────────────────────────── */
+
+.theme-toggle {
+    background: var(--card-alt);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+    background: var(--hover);
+    transform: translateY(-1px);
+}

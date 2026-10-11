@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Админ-панель{% endblock %}
+
+{% block body_class %}page page-admin{% endblock %}
+
+{% block content %}
+    <h1>Админ-панель</h1>
+
+    <div class="admin-dashboard">
+        <div class="stat-card">
+            <h3>Всего игроков</h3>
+            <p class="stat-number">{{ total_players }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Администрация</h3>
+            <p class="stat-number">{{ total_admins }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Активные предупреждения</h3>
+            <p class="stat-number">{{ total_warnings }}</p>
+        </div>
+    </div>
+
+    <div class="admin-menu">
+        <h2>Управление</h2>
+        <ul>
+            <li><a href="{{ url_for('admin.roles') }}">Управление ролями</a></li>
+            <li><a href="{{ url_for('admin.players') }}">Игроки</a></li>
+            <li><a href="{{ url_for('admin.warnings') }}">Предупреждения</a></li>
+            <li><a href="{{ url_for('admin.env_editor_view') }}">⚙️ Редактор env</a></li>
+            <li><a href="{{ url_for('appeals.admin_list') }}">Обращения</a></li>
+            <li><a href="{{ url_for('admin.logs') }}">📜 Логи</a></li>
+        </ul>
+    </div>
+
+    <section class="settings-card">
+        <h2>🏅 Значки</h2>
+        <p>Создание значков, назначение их игрокам и просмотр журнала действий.</p>
+        <p>
+            <a href="{{ url_for('badges.admin') }}" class="btn">⚙️ Управление значками</a>
+        </p>
+    </section>
+
+
+    <section class="settings-card">
+        <h2>🎨 Стикеры</h2>
+        <p>Просмотр и удаление стикеров для чата.</p>
+        <p>
+            <a href="{{ url_for('stickers.admin') }}" class="btn">🎨 Управление стикерами</a>
+        </p>
+    </section>
+
+
+    <section class="settings-card">
+        <h2>🖥 RCON консоль</h2>
+        <p>Управление игровым сервером через веб-RCON (внешний сервис).</p>
+        <p>
+            <a href="http://192.124.181.94:3000/" target="_blank" rel="noopener" class="btn">
+                🔗 Открыть RCON в новой вкладке
+            </a>
+        </p>
+    </section>
+
+
+    <section class="settings-card">
+        <h2>🏆 Редактор достижений</h2>
+        <p>Триггеры, названия и стикеры достижений.</p>
+        <p>
+            <a href="{{ url_for('achievements.editor') }}" class="btn">🏆 Редактор достижений</a>
+        </p>
+    </section>
+
+{% endblock %}

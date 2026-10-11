@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Обращение #{{ appeal.id }}{% endblock %}
+
+{% block body_class %}page page-appeals page-appeals-detail{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{{ url_for('appeals.index') }}">← Мои обращения</a>
+
+    <article class="appeal-full">
+        <h1>Обращение #{{ appeal.id }} — {{ appeal.subject }}</h1>
+
+        <p class="appeal-meta">
+            <span>{{ categories.get(appeal.category, 'Другое') }}</span>
+            <span>{{ statuses.get(appeal.status, appeal.status) }}</span>
+            <span>{{ priorities.get(appeal.priority, appeal.priority) }}</span>
+        </p>
+
+        <dl class="appeal-info">
+            <dt>Автор</dt>
+            <dd>{{ author_nickname }}</dd>
+
+            {% if target_nickname %}
+                <dt>На кого</dt>
+                <dd>{{ target_nickname }}</dd>
+            {% endif %}
+
+            <dt>Создано</dt>
+            <dd>{{ appeal.created_at.strftime("%d.%m.%Y %H:%M") }}</dd>
+
+            {% if appeal.assigned_to %}
+                <dt>Исполнитель</dt>
+                <dd>🛡️ {{ nickname_of(appeal.assigned_to) }}</dd>
+            {% endif %}
+
+            {% if appeal.closed_at %}
+                <dt>Закрыто</dt>
+                <dd>{{ appeal.closed_at.strftime("%d.%m.%Y %H:%M") }}</dd>
+            {% endif %}
+        </dl>
+        {# ── Принятие обращения (модератор+) ──────────────── #}
+        {% if is_moderator and appeal.status != 'closed' %}
+            <div class="accept-block">
+                {% if not appeal.assigned_to %}
+                    <form method="POST" action="{{ url_for('appeals.accept', appeal_id=appeal.id) }}">
+                        <button type="submit" class="btn btn-success">✅ Принять обращение</button>
+                    </form>
+                {% elif appeal.assigned_to == current_steam_id %}
+                    <span class="assignee-badge me">🛡️ Вы — исполнитель</span>
+                {% else %}
+                    <span class="assignee-badge">🛡️ Исполнитель: {{ nickname_of(appeal.assigned_to) }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
+
+
+        <div class="appeal-content">
+            {{ appeal.content|bb }}
+        </div>
+
+        {# ── Панель управления (модератор+) ────────────────── #}
+        {% if is_moderator %}
+            <form method="POST" action="{{ url_for('appeals.update', appeal_id=appeal.id) }}" class="appeal-admin-panel">
+                <label>
+                    Статус:
+                    <select name="status">
+                        {% for code, name in statuses.items() %}
+                            <option value="{{ code }}" {% if appeal.status == code %}selected{% endif %}>
+                                {{ name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label>
+                    Приоритет:
+                    <select name="priority">
+                        {% for code, name in priorities.items() %}
+                            <option value="{{ code }}" {% if appeal.priority == code %}selected{% endif %}>
+                                {{ name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label>
+                    Исполнитель:
+                    <input type="text" name="assigned_to" value="{{ appeal.assigned_to or '' }}"
+                           data-user-picker="staff" data-optional="1">
+                </label>
+
+                <button type="submit" class="btn">Сохранить</button>
+            </form>
+        {% endif %}
+    </article>
+
+    {# ── Участники ─────────────────────────────────────────── #}
+    <section class="appeal-participants">
+        <h2>Участники</h2>
+
+        <ul>
+            <li>👤 {{ author_nickname }} <em>(автор)</em></li>
+            {% for data in participants_data %}
+                <li>
+                    👤 {{ data.nickname }}
+                    <em>(добавил: {{ data.added_by_nickname }})</em>
+
+                    {% if can_manage %}
+                        <form method="POST" style="display:inline;"
+                              action="{{ url_for('appeals.remove_participant', appeal_id=appeal.id, participant_id=data.participant.id) }}"
+                              onsubmit="return confirm('Удалить участника?');">
+                            <button type="submit" class="link-btn">✖ Удалить</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if can_manage and appeal.status != 'closed' %}
+            <form method="POST" action="{{ url_for('appeals.add_participant', appeal_id=appeal.id) }}" class="add-participant-form">
+                <input type="text" name="steam_id" required placeholder="Начни вводить ник..." data-user-picker="all">
+                <button type="submit" class="btn btn-sm">➕ Добавить участника</button>
+            </form>
+        {% endif %}
+    </section>
+
+    {# ── Диалог ────────────────────────────────────────────── #}
+    <section class="appeal-dialog">
+        <h2>Диалог</h2>
+
+        {% if messages_data %}
+            <ul class="messages-list">
+                {% for data in messages_data %}
+                    <li class="message {% if data.message.is_admin_reply %}message-admin{% endif %}">
+                        <div class="message-header">
+                            <strong>{{ data.author_nickname }}</strong>
+                            {% if data.message.is_admin_reply %}
+                                <span class="admin-badge">🛡️ Администрация</span>
+                            {% endif %}
+                            <span class="message-date">{{ data.message.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
+                        </div>
+                        <div class="message-body">
+                            {{ data.message.content|bb }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Сообщений пока нет.</p>
+        {% endif %}
+
+        {% if can_reply %}
+            <form method="POST" action="{{ url_for('appeals.reply', appeal_id=appeal.id) }}" class="reply-form">
+                <label>
+                    Твой ответ:
+                    <textarea class="rich-editor"  name="content" rows="4" required></textarea>
+                </label>
+                <button type="submit" class="btn">💬 Ответить</button>
+            </form>
+        {% endif %}
+    </section>
+
+    {# ── Закрытие ──────────────────────────────────────────── #}
+    {% if can_manage and appeal.status != 'closed' %}
+        <form method="POST" action="{{ url_for('appeals.close', appeal_id=appeal.id) }}"
+              onsubmit="return confirm('Закрыть обращение?');">
+            <button type="submit" class="btn btn-danger">✅ Закрыть обращение</button>
+        </form>
+    {% endif %}
+
+    <script>
+        window.SITE_USERS = {{ all_users|tojson }};
+        window.STAFF_USERS = {{ staff_users|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/user-picker.js') }}"></script>
+{% endblock %}

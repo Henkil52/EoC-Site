@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Лог значка: {{ badge.name }}{% endblock %}
+
+{% block body_class %}page page-badges-log{% endblock %}
+
+{% block content %}
+    <h1>📋 Лог значка: {{ badge.name }}</h1>
+    
+    <p>
+        <a href="{{ url_for('badges.admin') }}" class="btn">← Назад к управлению</a>
+    </p>
+    
+    {% if logs %}
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Действие</th>
+                    <th>Исполнитель</th>
+                    <th>Игрок</th>
+                    <th>Детали</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                        <td>
+                            {% if log.action == 'create' %}
+                                <span class="log-action-create">Создание</span>
+                            {% elif log.action == 'award' %}
+                                <span class="log-action-award">Назначение</span>
+                            {% elif log.action == 'revoke' %}
+                                <span class="log-action-revoke">Отзыв</span>
+                            {% elif log.action == 'delete' %}
+                                <span class="log-action-delete">Удаление</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log.actor_nickname }}</td>
+                        <td>{{ log.user_nickname or '—' }}</td>
+                        <td>{{ log.details or '—' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Записей в логе нет.</p>
+    {% endif %}
+{% endblock %}

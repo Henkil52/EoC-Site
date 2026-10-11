@@ -1,0 +1,13 @@
+﻿ID,Name,SpawnPos,MaxMembers,Abilities,Color,Icon
+0,Одиночка,,-1,0,-3505920,set:nh_factions image:loner
+2,ОКСОП,4903.625977 104.308876 306.445557,15,0,-16715499,set:nh_factions image:millitary
+3,Н.И.И.Ч.А.З.,5165.609375 107.455910 229.575592,10,0,0,set:nh_factions image:sience
+4,Нейтралы,5601.251465 111.443481 1681.385132,10,0,0,set:nh_factions image:loner
+5,Долг,1761.186035 119.857872 3437.220703,10,0,0,set:nh_factions image:duty
+6,Бандиты,5454.413086 105.219757 3172.528076,10,0,0,set:nh_faction_icons image:loner
+7,Свобода,8965.642578 116.732872 3063.993652,10,0,0,set:nh_factions image:freedom
+8,Чистое Небо,,15,0,-11543569,set:nh_factions image:clear_sky
+9,New fraction,,10,0,0,set:nh_faction_icons image:loner
+10,New fraction,,10,0,0,set:nh_faction_icons image:loner
+11,New fraction,,10,0,0,set:nh_faction_icons image:loner
+12,ОСОЗНАНИЕ,,10,32766,0,set:nh_factions image:no_data

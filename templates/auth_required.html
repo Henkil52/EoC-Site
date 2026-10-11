@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Требуется авторизация — Echo of Chernobyl</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body class="auth-gate-page">
+    <div class="auth-gate">
+        <div class="auth-gate-logo">☢️</div>
+
+        <h1>Echo of Chernobyl</h1>
+
+        <p class="auth-gate-description">
+            Для доступа к сайту требуется авторизация через Steam.
+            Это необходимо для защиты данных игроков и синхронизации
+            с игровым сервером.
+        </p>
+
+        <div class="auth-gate-features">
+            <h3>После авторизации тебе будут доступны:</h3>
+            <ul>
+                <li>Профиль с игровой статистикой</li>
+                <li>Новости и обновления сервера</li>
+                <li>Список группировок и игроков</li>
+                <li>Правила и лор сервера</li>
+                <li>Система обращений в администрацию</li>
+            </ul>
+        </div>
+
+        <a href="{{ url_for('auth.login') }}" class="auth-gate-button">
+            🔐 Войти через Steam
+        </a>
+
+        <p class="auth-gate-hint">
+            Авторизация безопасна. Мы не получаем пароль от Steam,<br>
+            только публичные данные профиля.
+        </p>
+    </div>
+</body>
+</html>

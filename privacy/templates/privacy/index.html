@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Настройки профиля{% endblock %}
+
+{% block body_class %}page page-privacy{% endblock %}
+
+{% block content %}
+    <h1>⚙️ Настройки профиля</h1>
+
+    {# ── Аватар и баннер ───────────────────────────────────── #}
+    <section class="settings-card">
+        <h2>🖼️ Аватар и баннер</h2>
+
+        <div class="settings-media">
+            <div class="media-item">
+                <div class="media-preview">
+                    {% if custom_avatar %}
+                        <img src="{{ custom_avatar }}" alt="Аватар" class="media-avatar">
+                    {% elif steam_user.get("avatar_url") %}
+                        <img src="{{ steam_user.get('avatar_url') }}" alt="Аватар" class="media-avatar">
+                    {% else %}
+                        <div class="media-avatar player-avatar-placeholder">
+                            {{ steam_user.get("nickname", "?")[:1] }}
+                        </div>
+                    {% endif %}
+                </div>
+                <h3>Аватар</h3>
+                <form method="POST" action="{{ url_for('profile.avatar_upload') }}"
+                      enctype="multipart/form-data">
+                    <label class="avatar-upload-btn" for="avatar-file-input">📷 Сменить</label>
+                    <input type="file" id="avatar-file-input" name="avatar"
+                           accept="image/png,image/jpeg,image/gif,image/webp"
+                           style="display:none" onchange="this.form.submit()">
+                </form>
+                {% if custom_avatar %}
+                    <form method="POST" action="{{ url_for('profile.avatar_reset') }}">
+                        <button type="submit" class="btn btn-sm">↩️ Сбросить</button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <div class="media-item media-banner">
+                <div class="media-preview">
+                    {% if custom_banner %}
+                        <img src="{{ custom_banner }}" alt="Баннер" class="media-banner-img">
+                    {% else %}
+                        <div class="media-banner-img media-banner-default"></div>
+                    {% endif %}
+                </div>
+                <h3>Баннер <span class="hint">(рекомендую 1600×400 px)</span></h3>
+                <form method="POST" action="{{ url_for('profile.banner_upload') }}"
+                      enctype="multipart/form-data">
+                    <label class="avatar-upload-btn" for="banner-file-input">🖼️ Сменить</label>
+                    <input type="file" id="banner-file-input" name="banner"
+                           accept="image/png,image/jpeg,image/gif,image/webp"
+                           style="display:none" onchange="this.form.submit()">
+                </form>
+                {% if custom_banner %}
+                    <form method="POST" action="{{ url_for('profile.banner_reset') }}">
+                        <button type="submit" class="btn btn-sm">↩️ Сбросить</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    {# ── Приватность ───────────────────────────────────────── #}
+    <section class="settings-card">
+        <h2>🔒 Приватность</h2>
+
+        <ul class="privacy-settings-list">
+            {% for setting in privacy_settings %}
+                <li class="privacy-setting-item">
+                    <form method="POST" action="{{ url_for('privacy.toggle') }}"
+                          class="privacy-toggle-form">
+                        <input type="hidden" name="key" value="{{ setting.key }}">
+                        <span class="privacy-label">{{ setting.label }}</span>
+                        <button type="submit"
+                                class="toggle-switch {{ 'on' if setting.enabled else 'off' }}"
+                                title="{{ 'Включено' if setting.enabled else 'Выключено' }}">
+                            <span class="toggle-knob"></span>
+                        </button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

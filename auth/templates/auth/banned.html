@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Вы забанены{% endblock %}
+
+{% block body_class %}page page-banned{% endblock %}
+
+{% block content %}
+    <div class="banned-card">
+        <h1>🚫 Вы забанены на сайте</h1>
+
+        <dl class="banned-info">
+            <dt>Причина</dt>
+            <dd>{{ ban.reason if ban else "Не указана" }}</dd>
+
+            <dt>Кто забанил</dt>
+            <dd>
+                {% if ban and nickname_for is defined %}
+                    {{ nickname_for(ban.banned_by) }}
+                {% else %}
+                    Администрация
+                {% endif %}
+            </dd>
+
+            <dt>Дата бана</dt>
+            <dd>{{ ban.banned_at.strftime("%d.%m.%Y %H:%M") if ban else "—" }}</dd>
+
+            <dt>Истекает</dt>
+            <dd>
+                {% if ban and ban.expires_at %}
+                    {{ ban.expires_at.strftime("%d.%m.%Y %H:%M") }}
+                {% else %}
+                    ♾ Перманентный бан
+                {% endif %}
+            </dd>
+        </dl>
+
+        <p class="banned-note">
+            Если вы считаете, что это ошибка, — обратитесь к администрации.
+        </p>
+
+        <img src="{{ url_for('static', filename='stickers/ban.webp') }}"
+             alt="Бан-стикер" class="banned-sticker">
+    </div>
+{% endblock %}

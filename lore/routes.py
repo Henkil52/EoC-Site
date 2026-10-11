@@ -1,0 +1,340 @@
+"""
+lore/routes.py
+
+Раздел лора: публичный просмотр и админ-управление.
+"""
+
+from datetime import datetime
+
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    flash,
+)
+
+from auth.roles import admin_required
+from database.models import moscow_now
+from database.models import db, SiteLoreSection, SiteLore
+from lore.service import record_change
+
+
+bp = Blueprint(
+    "lore",
+    __name__,
+    url_prefix="/lore",
+    template_folder="templates",
+)
+
+
+def get_sections_data():
+    """Возвращает разделы с записями лора для шаблонов."""
+    sections = (
+        SiteLoreSection.query
+        .order_by(SiteLoreSection.order.asc(), SiteLoreSection.id.asc())
+        .all()
+    )
+
+    sections_data = []
+    for section in sections:
+        entries = (
+            SiteLore.query
+            .filter_by(section_id=section.id)
+            .order_by(SiteLore.order.asc(), SiteLore.id.asc())
+            .all()
+        )
+        sections_data.append({
+            'section': section,
+            'entries': entries,
+        })
+
+    return sections_data
+
+
+def get_current_steam_id():
+    return session.get("user", {}).get("steam_id")
+
+
+def is_admin():
+    return session.get("user", {}).get("is_admin", False)
+
+
+# ══════════════════════════════════════════════════════════════
+# ПУБЛИЧНЫЙ ПРОСМОТР
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/")
+def index():
+    """Страница лора."""
+    from flask import render_template, session, redirect, url_for
+    from database.models import SiteLoreSection, SiteLore
+
+    user = session.get("user")
+    if not user or not user.get("steam_id"):
+        return redirect(url_for("auth.login"))
+
+    is_admin = False
+    try:
+        from auth.roles import has_role
+        is_admin = bool(has_role(session.get("user", {}).get("steam_id"), "admin"))
+    except Exception:
+        is_admin = False
+
+    sections = SiteLoreSection.query.order_by(SiteLoreSection.order).all()
+    sections_data = [
+        {"section": s, "entries": s.entries.order_by(SiteLore.order).all()}
+        for s in sections
+    ]
+
+    return render_template("lore/index.html", is_admin=is_admin, sections_data=sections_data)
+
+
+@bp.route("/admin")
+@admin_required
+def admin():
+    """Страница управления лором."""
+    return render_template(
+        "lore/admin.html",
+        sections_data=get_sections_data(),
+    )
+
+
+# ══════════════════════════════════════════════════════════════
+# РАЗДЕЛЫ
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/section/create", methods=["POST"])
+@admin_required
+def section_create():
+    """Создать раздел."""
+    title = request.form.get("title", "").strip()
+
+    if not title:
+        flash("Название раздела не может быть пустым.", "error")
+        return redirect(url_for("lore.admin"))
+
+    max_order = db.session.query(db.func.max(SiteLoreSection.order)).scalar() or 0
+
+    section = SiteLoreSection(
+        title=title,
+        order=max_order + 1,
+        created_at=moscow_now(),
+        updated_at=moscow_now(),
+    )
+    db.session.add(section)
+    db.session.flush()
+
+    record_change(
+        action='section_create',
+        target_type='section',
+        section_title=title,
+        entry_title=None,
+        old_text=None,
+        new_text=title,
+        changed_by=get_current_steam_id(),
+        target_id=section.id,
+    )
+
+    db.session.commit()
+
+    flash(f"Раздел «{title}» создан.", "success")
+    return redirect(url_for("lore.admin"))
+
+
+@bp.route("/section/<int:section_id>/edit", methods=["POST"])
+@admin_required
+def section_edit(section_id):
+    """Переименовать раздел."""
+    section = SiteLoreSection.query.get_or_404(section_id)
+
+    new_title = request.form.get("title", "").strip()
+
+    if not new_title:
+        flash("Название раздела не может быть пустым.", "error")
+        return redirect(url_for("lore.admin"))
+
+    old_title = section.title
+
+    if old_title != new_title:
+        section.title = new_title
+        section.updated_at = moscow_now()
+
+        record_change(
+            action='section_update',
+            target_type='section',
+            section_title=new_title,
+            entry_title=None,
+            old_text=old_title,
+            new_text=new_title,
+            changed_by=get_current_steam_id(),
+            target_id=section.id,
+        )
+
+        db.session.commit()
+
+        flash(f"Раздел переименован в «{new_title}».", "success")
+    else:
+        flash("Название не изменилось.", "info")
+
+    return redirect(url_for("lore.admin"))
+
+
+@bp.route("/section/<int:section_id>/delete", methods=["POST"])
+@admin_required
+def section_delete(section_id):
+    """Удалить раздел и все его записи."""
+    section = SiteLoreSection.query.get_or_404(section_id)
+
+    title = section.title
+
+    # Удаляем записи раздела
+    SiteLore.query.filter_by(section_id=section_id).delete()
+
+    db.session.delete(section)
+    db.session.flush()
+
+    record_change(
+        action='section_delete',
+        target_type='section',
+        section_title=title,
+        entry_title=None,
+        old_text=title,
+        new_text=None,
+        changed_by=get_current_steam_id(),
+        target_id=section_id,
+    )
+
+    db.session.commit()
+
+    flash(f"Раздел «{title}» удалён.", "success")
+    return redirect(url_for("lore.admin"))
+
+
+# ══════════════════════════════════════════════════════════════
+# ЗАПИСИ ЛОРА
+# ══════════════════════════════════════════════════════════════
+
+@bp.route("/section/<int:section_id>/entry/create", methods=["POST"])
+@admin_required
+def entry_create(section_id):
+    """Добавить запись лора в раздел."""
+    section = SiteLoreSection.query.get_or_404(section_id)
+
+    title = request.form.get("title", "").strip()
+    content = request.form.get("content", "").strip()
+
+    if not title or not content:
+        flash("Заголовок и текст не могут быть пустыми.", "error")
+        return redirect(url_for("lore.admin"))
+
+    max_order = (
+        db.session.query(db.func.max(SiteLore.order))
+        .filter_by(section_id=section_id)
+        .scalar()
+    ) or 0
+
+    entry = SiteLore(
+        section_id=section_id,
+        title=title,
+        content=content,
+        order=max_order + 1,
+        created_at=moscow_now(),
+        updated_at=moscow_now(),
+    )
+    db.session.add(entry)
+    db.session.flush()
+
+    section.updated_at = moscow_now()
+
+    record_change(
+        action='create',
+        target_type='lore',
+        section_title=section.title,
+        entry_title=title,
+        old_text=None,
+        new_text=f"{title}\n\n{content}",
+        changed_by=get_current_steam_id(),
+        target_id=entry.id,
+    )
+
+    db.session.commit()
+
+    flash("Запись добавлена.", "success")
+    return redirect(url_for("lore.admin"))
+
+
+@bp.route("/entry/<int:entry_id>/edit", methods=["POST"])
+@admin_required
+def entry_edit(entry_id):
+    """Изменить запись лора."""
+    entry = SiteLore.query.get_or_404(entry_id)
+
+    new_title = request.form.get("title", "").strip()
+    new_content = request.form.get("content", "").strip()
+
+    if not new_title or not new_content:
+        flash("Заголовок и текст не могут быть пустыми.", "error")
+        return redirect(url_for("lore.admin"))
+
+    old_title = entry.title
+    old_content = entry.content
+
+    if old_title != new_title or old_content != new_content:
+        entry.title = new_title
+        entry.content = new_content
+        entry.updated_at = moscow_now()
+        entry.section.updated_at = moscow_now()
+
+        record_change(
+            action='update',
+            target_type='lore',
+            section_title=entry.section.title,
+            entry_title=new_title,
+            old_text=f"{old_title}\n\n{old_content}",
+            new_text=f"{new_title}\n\n{new_content}",
+            changed_by=get_current_steam_id(),
+            target_id=entry.id,
+        )
+
+        db.session.commit()
+
+        flash("Запись изменена.", "success")
+    else:
+        flash("Текст не изменился.", "info")
+
+    return redirect(url_for("lore.admin"))
+
+
+@bp.route("/entry/<int:entry_id>/delete", methods=["POST"])
+@admin_required
+def entry_delete(entry_id):
+    """Удалить запись лора."""
+    entry = SiteLore.query.get_or_404(entry_id)
+
+    old_title = entry.title
+    old_content = entry.content
+    section_title = entry.section.title
+
+    entry.section.updated_at = moscow_now()
+
+    db.session.delete(entry)
+    db.session.flush()
+
+    record_change(
+        action='delete',
+        target_type='lore',
+        section_title=section_title,
+        entry_title=old_title,
+        old_text=f"{old_title}\n\n{old_content}",
+        new_text=None,
+        changed_by=get_current_steam_id(),
+        target_id=entry_id,
+    )
+
+    db.session.commit()
+
+    flash("Запись удалена.", "success")
+    return redirect(url_for("lore.admin"))

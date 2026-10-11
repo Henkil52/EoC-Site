@@ -1,0 +1,217 @@
+"""
+rules/service.py
+
+Бизнес-логика правил: дифф изменений, счётчик, логирование.
+Автоновости публикуются не сразу, а через 60 минут —
+все изменения за период собираются в одну новость.
+"""
+
+import difflib
+import logging
+from datetime import datetime, timedelta
+from html import escape
+from pathlib import Path
+
+from database.models import moscow_now
+from database.models import (
+    db,
+    SiteNews,
+    SiteRuleChange,
+    SiteCounter,
+)
+
+LOG_FILE = Path(__file__).resolve().parent.parent / "logs" / "rules_changes.log"
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+rules_logger = logging.getLogger("rules_changes")
+rules_logger.setLevel(logging.INFO)
+rules_logger.propagate = False
+
+if not rules_logger.handlers:
+    handler = logging.FileHandler(LOG_FILE, encoding="utf-8")
+    handler.setFormatter(logging.Formatter("%(asctime)s | %(message)s"))
+    rules_logger.addHandler(handler)
+
+
+# Задержка публикации в минутах
+PUBLISH_DELAY_MINUTES = 60
+
+
+ACTION_LABELS = {
+    'create': '➕ Добавлено правило',
+    'update': '✏️ Изменено правило',
+    'delete': '🗑️ Удалено правило',
+    'section_create': '➕ Добавлен раздел',
+    'section_update': '✏️ Переименован раздел',
+    'section_delete': '🗑️ Удалён раздел',
+}
+
+
+def highlight_diff(old_text, new_text):
+    """Сравнивает два текста и возвращает HTML с подсвеченными изменениями."""
+    old_text = old_text or ""
+    new_text = new_text or ""
+
+    sm = difflib.SequenceMatcher(None, old_text, new_text)
+    parts = []
+
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag == 'equal':
+            parts.append(escape(new_text[j1:j2]))
+        elif tag == 'insert':
+            parts.append(f'<mark class="diff-insert">{escape(new_text[j1:j2])}</mark>')
+        elif tag == 'delete':
+            parts.append(f'<mark class="diff-delete">{escape(old_text[i1:i2])}</mark>')
+        elif tag == 'replace':
+            parts.append(f'<mark class="diff-delete">{escape(old_text[i1:i2])}</mark>')
+            parts.append(f'<mark class="diff-insert">{escape(new_text[j1:j2])}</mark>')
+
+    return ''.join(parts)
+
+
+def next_change_number():
+    """Возвращает следующий номер публикации изменений правил."""
+    counter = SiteCounter.query.filter_by(key='rules_change').first()
+
+    if not counter:
+        counter = SiteCounter(key='rules_change', value=0)
+        db.session.add(counter)
+        db.session.flush()
+
+    counter.value += 1
+    return counter.value
+
+
+def record_change(action, target_type, section_title, old_text, new_text, changed_by, target_id=None):
+    """
+    Фиксирует изменение правила в журнал (БЕЗ создания новости).
+    Новость будет создана через 60 минут функцией publish_pending_changes(),
+    которая соберёт все изменения за период в одну публикацию.
+    """
+    change = SiteRuleChange(
+        action=action,
+        target_type=target_type,
+        target_id=target_id,
+        section_title=section_title,
+        old_text=old_text,
+        new_text=new_text,
+        changed_by=changed_by,
+        changed_at=moscow_now(),
+        change_number=None,   # ← номер присвоится при публикации
+        news_id=None,         # ← ID новости присвоится при публикации
+    )
+    db.session.add(change)
+
+    # Лог в файл
+    rules_logger.info(
+        f"PENDING | USER: {changed_by} | ACTION: {action} | "
+        f"SECTION: {section_title} | OLD: {(old_text or '')[:100]} | NEW: {(new_text or '')[:100]}"
+    )
+
+
+def _build_change_html(change):
+    """Собирает HTML-блок для одного изменения."""
+    action_label = ACTION_LABELS.get(change.action, change.action)
+
+    if change.action == 'create' or change.action == 'section_create':
+        diff_html = f'<mark class="diff-insert">{escape(change.new_text or "")}</mark>'
+    elif change.action == 'delete' or change.action == 'section_delete':
+        diff_html = f'<mark class="diff-delete">{escape(change.old_text or "")}</mark>'
+    else:
+        diff_html = highlight_diff(change.old_text, change.new_text)
+
+    return f"""<div class="change-item">
+<div class="change-header">
+<strong>{escape(action_label)}</strong>
+{f'в разделе «<mark class="diff-section">{escape(change.section_title)}</mark>»' if change.section_title else ''}
+<span class="change-time">({change.changed_at.strftime("%H:%M")})</span>
+</div>
+<div class="rules-diff">{diff_html}</div>
+</div>"""
+
+
+def _build_change_plain(change):
+    """Собирает текстовое описание одного изменения."""
+    action_label = ACTION_LABELS.get(change.action, change.action)
+    section_info = f" (раздел: {change.section_title})" if change.section_title else ""
+    return f"• {action_label}{section_info} [{change.changed_at.strftime('%H:%M')}]"
+
+
+def publish_pending_changes():
+    """
+    Проверяет, есть ли неопубликованные изменения старше 60 минут.
+    Если есть — собирает их в ОДНУ новость "Изменение правил #N".
+
+    Вызывается планировщиком раз в минуту.
+    Возвращает номер публикации или None, если нечего публиковать.
+    """
+    cutoff = moscow_now() - timedelta(minutes=PUBLISH_DELAY_MINUTES)
+
+    # Ищем все неопубликованные изменения старше cutoff
+    pending = (
+        SiteRuleChange.query
+        .filter(SiteRuleChange.news_id.is_(None))
+        .filter(SiteRuleChange.changed_at <= cutoff)
+        .order_by(SiteRuleChange.changed_at.asc())
+        .all()
+    )
+
+    if not pending:
+        return None
+
+    # Берём следующий номер счётчика
+    change_number = next_change_number()
+
+    # Определяем период
+    first_time = min(c.changed_at for c in pending).strftime("%H:%M")
+    last_time = max(c.changed_at for c in pending).strftime("%H:%M")
+
+    # Автор публикации — кто сделал последнее изменение
+    author_steam_id = pending[-1].changed_by
+
+    # HTML-контент
+    items_html = '\n'.join(_build_change_html(c) for c in pending)
+
+    content_html = f"""<div class="rules-change-news">
+<p><strong>Номер изменения:</strong> #{change_number}</p>
+<p><strong>Период:</strong> с {first_time} до {last_time}</p>
+<p><strong>Всего изменений:</strong> {len(pending)}</p>
+{items_html}
+</div>"""
+
+    # Текстовый контент (для списка новостей и уведомлений)
+    items_plain = '\n'.join(_build_change_plain(c) for c in pending)
+    content_plain = (
+        f"Изменение правил #{change_number}\n"
+        f"Период: с {first_time} до {last_time}\n"
+        f"Всего изменений: {len(pending)}\n\n"
+        f"{items_plain}"
+    )
+
+    # Создаём одну общую новость
+    news = SiteNews(
+        title=f"Изменение правил #{change_number}",
+        content=content_plain,
+        content_html=content_html,
+        author_steam_id=author_steam_id,
+        category='rules',
+        is_published=True,
+        is_pinned=False,
+        created_at=moscow_now(),
+    )
+    db.session.add(news)
+    db.session.flush()
+
+    # Привязываем все изменения к этой новости
+    for change in pending:
+        change.change_number = change_number
+        change.news_id = news.id
+
+    db.session.commit()
+
+    rules_logger.info(
+        f"PUBLISHED #{change_number} | NEWS_ID: {news.id} | "
+        f"CHANGES: {len(pending)} | PERIOD: {first_time}-{last_time}"
+    )
+
+    return change_number

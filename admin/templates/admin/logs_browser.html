@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ source.name }} — Логи{% endblock %}
+
+{% block body_class %}page page-admin page-admin-logs-browser{% endblock %}
+
+{% block content %}
+    <h1>📜 {{ source.name }}</h1>
+
+    <a class="back-link" href="{{ url_for('admin.logs') }}">← Все источники</a>
+
+    <p class="logs-current-path">
+        📁 <code>{{ current_dir }}</code>
+    </p>
+
+    {% if error %}
+        <div class="flash flash-error">
+            ❌ Ошибка подключения к FTP: {{ error }}
+        </div>
+    {% endif %}
+
+    {# ── Список файлов и папок ─────────────────────────────── #}
+    <section class="logs-files">
+        <h2>Файлы и папки</h2>
+
+        <ul class="logs-list">
+            {% if parent_dir is not none %}
+                <li>
+                    <a href="{{ url_for('admin.logs_browser', source_id=source.id, dir=parent_dir) }}">
+                        📁 ..
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for item in items %}
+                <li>
+                    {% if item.is_dir %}
+                        <a href="{{ url_for('admin.logs_browser', source_id=source.id, dir=item.path) }}">
+                            📁 {{ item.name }}/
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('admin.logs_browser', source_id=source.id, file=item.path) }}">
+                            📄 {{ item.name }}
+                        </a>
+                        <span class="logs-size">{{ item.size }} Б</span>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li>Папка пуста.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    {# ── Содержимое файла ──────────────────────────────────── #}
+    {% if file_content %}
+        <section class="logs-content">
+            <h2>📄 {{ file_path }}</h2>
+
+            {% if file_content.truncated %}
+                <p class="hint">
+                    Показаны последние {{ file_content.shown_lines|length }}
+                    из {{ file_content.total_lines }} строк.
+                </p>
+            {% endif %}
+
+            <pre class="logs-pre">{% for line in file_content.shown_lines %}{{ line }}
+{% endfor %}</pre>
+        </section>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Настройки приватности{% endblock %}
+
+{% block body_class %}page page-privacy{% endblock %}
+
+{% block content %}
+    <h1>Настройки приватности</h1>
+
+    {% if privacy_settings %}
+        <ul class="privacy-settings-list">
+            {% for setting in privacy_settings %}
+                <li class="privacy-setting-item">
+                    {{ setting.label }}:
+                    <strong>
+                        {{ "Включено" if setting.enabled else "Выключено" }}
+                    </strong>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Настроек приватности пока нет.</p>
+    {% endif %}
+{% endblock %}

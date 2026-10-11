@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Правила{% endblock %}
+
+{% block body_class %}page page-rules{% endblock %}
+
+{% block content %}
+    <h1>Правила</h1>
+
+    {% if is_admin %}
+        <p>
+            <a href="{{ url_for('rules.admin') }}" class="btn">⚙️ Управление правилами</a>
+        </p>
+    {% endif %}
+
+    {% if sections_data %}
+        {% for data in sections_data %}
+            <section class="rules-section">
+                <h2>{{ data.section.title }}</h2>
+                <p class="rules-section-date">
+                    🕒 Раздел обновлён: {{ data.section.updated_at.strftime("%d.%m.%Y %H:%M") }}
+                </p>
+
+                {% if data.rules %}
+                    <ol>
+                        {% for rule in data.rules %}
+                            <li>
+                                {{ rule.text }}
+                                <span class="rule-date">
+                                    (изменено: {{ rule.updated_at.strftime("%d.%m.%Y") }})
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p>В этом разделе пока нет правил.</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+    {% else %}
+        <p>Правил пока нет.</p>
+    {% endif %}
+{% endblock %}

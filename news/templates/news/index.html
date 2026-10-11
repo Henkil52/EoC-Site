@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Новости{% endblock %}
+
+{% block body_class %}page page-news{% endblock %}
+
+{% block content %}
+    <h1>Новости</h1>
+
+    {% if is_admin %}
+        <p>
+            <a href="{{ url_for('news.create') }}" class="btn">➕ Создать новость</a>
+        </p>
+    {% endif %}
+
+    {% if news_data %}
+        <div class="news-list">
+            {% for data in news_data %}
+                {% set news = data.news %}
+                <article class="news-item {% if news.is_pinned %}news-pinned{% endif %} {% if not news.is_published %}news-draft{% endif %}">
+                    <h2>
+                        {% if news.is_pinned %}📌 {% endif %}
+                        <a href="{{ url_for('news.detail', news_id=news.id) }}">
+                            {{ news.title }}
+                        </a>
+                    </h2>
+
+                    <p class="news-meta">
+                        <span class="news-category">[{{ data.category_name }}]</span>
+                        <span class="news-author">{{ data.author_nickname }}</span>
+                        <span class="news-date">{{ news.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
+                        <span class="news-comments">💬 {{ data.comments_count }}</span>
+                        {% if not news.is_published %}
+                            <span class="news-draft-label">📝 Черновик</span>
+                        {% endif %}
+                    </p>
+                </article>
+            {% endfor %}
+        </div>
+
+        {# Пагинация #}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a class="back-link" href="{{ url_for('news.index', page=pagination.prev_num) }}">← Назад</a>
+            {% endif %}
+
+            <span>Страница {{ pagination.page }} из {{ pagination.pages }}</span>
+
+            {% if pagination.has_next %}
+                <a href="{{ url_for('news.index', page=pagination.next_num) }}">Вперёд →</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Новостей пока нет.</p>
+    {% endif %}
+{% endblock %}

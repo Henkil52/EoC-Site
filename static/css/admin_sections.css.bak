@@ -1,0 +1,26 @@
+/* Секции админки */
+.admin-section {
+    margin-bottom: 40px;
+}
+
+.admin-section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 20px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary, #fff);
+}
+
+/* Внешние карточки — лёгкий визуальный акцент */
+.admin-card-external {
+    background: linear-gradient(135deg,
+        rgba(59, 130, 246, 0.08),
+        rgba(139, 92, 246, 0.08)) !important;
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+}
+
+.admin-card-external:hover {
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+}

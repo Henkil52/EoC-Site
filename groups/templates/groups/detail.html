@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ faction.Name }} — Группировки{% endblock %}
+
+{% block body_class %}page page-groups page-group-detail{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{{ url_for('groups.index') }}">← Все группировки</a>
+
+    <section class="group-header" style="border-left: 6px solid {{ color }};">
+        <h1 style="color: {{ color }};">{{ faction.Name }}</h1>
+
+        <dl class="group-info">
+            <dt>Цвет</dt>
+            <dd>
+                <span class="color-dot" style="background: {{ color }};"></span>
+                {{ color }}
+            </dd>
+
+            <dt>Участников</dt>
+            <dd>{{ members_count }} / {{ faction.MaxMembers }}</dd>
+
+            <dt>Способности</dt>
+            <dd>{{ faction.Abilities }}</dd>
+        </dl>
+    </section>
+
+    <section class="group-members-list">
+        <h2>Состав группировки</h2>
+
+        {% if can_view_members %}
+            {% if members_data %}
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Игрок</th>
+                            <th>Игровой ранг</th>
+                            <th>Роль в группировке</th>
+                            <th>⏱ За 7 дней</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members_data %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for('profile.view_profile', steam_id=member.player.SteamID) }}" class="player-cell">
+                                        <span class="player-avatar-letter">{{ (member.player.Nickname or "Б")[:1] }}</span>
+                                        <span class="player-cell-name">{{ member.player.Nickname or "Без ника" }}</span>
+                                    </a>
+                                </td>
+                                <td>{{ member.rank.Name }}</td>
+                                <td>{{ member.role_label }}</td>
+                                <td>
+                                    {% if member.week_hours and member.week_hours[0] is not none %}
+                                        {{ member.week_hours[0] }} ч
+                                        {% if member.week_hours[1] != 7 %}
+                                            <span class="hours-note"
+                                                  title="данные копятся с {{ member.week_hours[1] }} дн. назад">
+                                                ({{ member.week_hours[1] }} дн)
+                                            </span>
+                                        {% endif %}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>В этой группировке пока нет участников.</p>
+            {% endif %}
+        {% else %}
+            <p class="members-hidden">🔒 Состав скрыт. Полный состав видят участники группировки и администрация.</p>
+        {% endif %}
+    </section>
+
+    {% if can_chat %}
+        <section class="settings-card faction-chat-section">
+            <h2>💬 Чат группировки</h2>
+            <div class="chat-messages faction-chat-messages"
+                 id="factionChatMessages"
+                 data-faction-id="{{ faction.ID }}">
+                <div class="chat-empty">Сообщений пока нет — начни первым!</div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="factionChatInput" maxlength="1000"
+                       placeholder="Сообщение в чат группировки..." autocomplete="off">
+                <button class="chat-send" id="factionChatSend" title="Отправить">➤</button>
+            </div>
+        </section>
+        <script src="{{ url_for('static', filename='js/faction_chat.js') }}"></script>
+    {% endif %}
+{% endblock %}

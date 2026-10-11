@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование игрока - Админ-панель{% endblock %}
+
+{% block body_class %}page page-admin page-admin-player-edit{% endblock %}
+
+{% block content %}
+    <h1>Редактирование игрока</h1>
+
+    <a class="back-link" href="{{ url_for('admin.players') }}">← Вернуться к списку игроков</a>
+
+    <section class="player-info">
+        <h2>{{ player.Nickname or "Без ника" }}</h2>
+        <p><strong>Steam ID:</strong> {{ player.SteamID }}</p>
+        <p><strong>Дата регистрации:</strong> {{ player.RegistrationDate|moscow_time("%d.%m.%Y %H:%M") }}</p>
+        <p><strong>Последний вход:</strong> {{ player.LastLogonDate|moscow_time("%d.%m.%Y %H:%M") }}</p>
+
+        <p>
+            <a href="{{ url_for('profile.view_profile', steam_id=player.SteamID) }}" target="_blank">
+                Открыть профиль игрока
+            </a>
+        </p>
+    </section>
+
+    {# ── Текущие роли ──────────────────────────────────────── #}
+    <section class="current-roles">
+        <h2>Текущие роли</h2>
+
+        {% if user_roles %}
+            <ul>
+                {% for ur in user_roles %}
+                    <li>
+                        <strong>{{ ur.role.icon }} {{ ur.role.display_name }}</strong>
+                        ({{ ur.role.role_type }})
+                        {% if ur.expires_at %}
+                            — истекает {{ ur.expires_at.strftime("%d.%m.%Y") }}
+                        {% else %}
+                            — бессрочно
+                        {% endif %}
+
+                        <form method="POST" action="{{ url_for('admin.remove_role', role_id=ur.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Снять роль?')">
+                                Снять
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Ролей не назначено.</p>
+        {% endif %}
+    </section>
+
+    {# ── Назначить роль ────────────────────────────────────── #}
+    <section class="assign-role-form">
+        <h2>Назначить роль</h2>
+
+        <form method="POST" action="{{ url_for('admin.player_update', steam_id=player.SteamID) }}">
+            <label>
+                Роль:
+                <select name="role_code" required>
+                    <option value="">-- Выберите роль --</option>
+                    {% for role in all_roles %}
+                        <option value="{{ role.role_code }}">
+                            {{ role.icon }} {{ role.display_name }} ({{ role.role_type }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Срок действия (дней, пусто = бессрочно):
+                <input type="number" name="expires_in_days" min="1" placeholder="Например, 30">
+            </label>
+
+            <button type="submit" class="btn">Назначить роль</button>
+        </form>
+    </section>
+
+    {# ── Бан ───────────────────────────────────────────────── #}
+    <section class="ban-section">
+        <h2>Бан</h2>
+
+        {% if ban %}
+            <div class="ban-info">
+                <p><strong>🚫 Игрок забанен</strong></p>
+                <p><strong>Причина:</strong> {{ ban.reason }}</p>
+                <p><strong>Забанил:</strong> {{ ban.banned_by }}</p>
+                <p><strong>Дата:</strong> {{ ban.banned_at.strftime("%d.%m.%Y %H:%M") }}</p>
+                <p>
+                    <strong>Истекает:</strong>
+                    {% if ban.expires_at %}
+                        {{ ban.expires_at.strftime("%d.%m.%Y %H:%M") }}
+                    {% else %}
+                        Перманентно
+                    {% endif %}
+                </p>
+
+                <form method="POST" action="{{ url_for('admin.player_unban', steam_id=player.SteamID) }}">
+                    <button type="submit" class="btn btn-success" onclick="return confirm('Разбанить игрока?')">
+                        Разбанить
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <form method="POST" action="{{ url_for('admin.player_ban', steam_id=player.SteamID) }}">
+                <label>
+                    Причина:
+                    <textarea name="reason" required placeholder="Укажите причину бана"></textarea>
+                </label>
+
+                <label>
+                    Срок (дней, пусто = перманентно):
+                    <input type="number" name="expires_in_days" min="1" placeholder="Например, 7">
+                </label>
+
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Забанить игрока?')">
+                    Забанить
+                </button>
+            </form>
+        {% endif %}
+    </section>
+
+    {# ── Предупреждения ────────────────────────────────────── #}
+    <section class="warnings-section">
+        <h2>Предупреждения</h2>
+
+        <form method="POST" action="{{ url_for('admin.player_warning', steam_id=player.SteamID) }}">
+            <label>
+                Добавить предупреждение:
+                <textarea name="reason" required placeholder="Причина предупреждения"></textarea>
+            </label>
+
+            <button type="submit" class="btn">Добавить предупреждение</button>
+        </form>
+
+        {% if warnings %}
+            <h3>Активные предупреждения</h3>
+            <ul>
+                {% for warning in warnings %}
+                    <li>
+                        <strong>{{ warning.given_at.strftime("%d.%m.%Y %H:%M") }}</strong>
+                        — {{ warning.reason }}
+                        (дал: {{ warning.given_by }})
+
+                        <form method="POST" action="{{ url_for('admin.player_warning_remove', steam_id=player.SteamID, warning_id=warning.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Снять предупреждение?')">
+                                Снять
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Активных предупреждений нет.</p>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль игрока{% endblock %}
+
+{% block body_class %}page page-profile{% endblock %}
+
+{% block content %}
+    <h1>Профиль игрока</h1>
+
+    {# ══ БЛОК 1: Аватар + имя + бейджи + игровая информация ══ #}
+        {% set custom_banner = custom_banner_url(steam_user.get("steam_id")) %}
+
+    <section class="player-card{% if custom_banner %} has-custom-banner{% endif %}"
+             {% if custom_banner %}style="--banner-url: url('{{ custom_banner }}')"{% endif %}>
+        {% set custom_avatar = custom_avatar_url(steam_user.get("steam_id")) %}
+        {% set display_avatar = custom_avatar or avatar_url_for(steam_user.get("steam_id")) or steam_user.get("avatar_url") %}
+        {% if display_avatar %}
+            <img class="player-avatar" src="{{ display_avatar }}" alt="Аватар">
+        {% else %}
+            <div class="player-avatar player-avatar-placeholder">
+                {{ steam_user.get("nickname", "?")[:1] }}
+            </div>
+        {% endif %}
+
+        {% if current_user and current_user.get("steam_id") == steam_user.get("steam_id") %}
+            <div class="avatar-controls">
+                <a href="{{ url_for('privacy.index') }}" class="avatar-upload-btn">⚙️ Настройки профиля</a>
+            </div>
+        {% endif %}
+
+        <h2>{{ steam_user.get("nickname", "Без имени") }}</h2>
+
+        {# ── Бейджи ролей ── #}
+        <div class="role-badges">
+            {% if steam_user.get("site_role_display") %}
+                <span class="role-badge site-role"
+                      {% if steam_user.get("site_role_color") %}
+                      style="color: {{ steam_user.get('site_role_color') }}"
+                      {% endif %}>
+                    {{ steam_user.get("site_role_icon", "") }}
+                    {{ steam_user.get("site_role_display") }}
+                </span>
+            {% endif %}
+
+            {% if steam_user.get("faction_role") %}
+                <span class="role-badge faction-role">
+                    {{ steam_user.faction_role.icon }}
+                    {{ steam_user.faction_role.display_name }}
+                    {% if steam_user.faction_role.faction_name %}
+                        «{{ steam_user.faction_role.faction_name }}»
+                    {% endif %}
+                </span>
+            {% endif %}
+
+            {% if steam_user.get("special_roles") %}
+                {% for special in steam_user.special_roles %}
+                    <span class="role-badge special-role"
+                          {% if special.color %}
+                          style="color: {{ special.color }}"
+                          {% endif %}>
+                        {{ special.icon }}
+                        {{ special.display_name }}
+                    </span>
+                {% endfor %}
+            {% endif %}
+
+            {% if steam_user.get("leader_badges") %}
+                {% for badge in steam_user.leader_badges %}
+                    <span class="role-badge leader-badge-item" style="color: {{ badge.color }};">
+                        {{ badge.icon }}
+                        {{ badge.title }} ({{ badge.value }})
+                    </span>
+                {% endfor %}
+            {% endif %}
+
+            {% if steam_user.get("warnings_count", 0) > 0 %}
+                <span class="role-badge warning-badge">
+                    ⚠️ Предупреждений: {{ steam_user.warnings_count }}
+                </span>
+            {% endif %}
+        </div>
+
+        {# ── Игровая информация в том же блоке ── #}
+                {% if current_user and current_user.get("steam_id") != steam_user.get("steam_id") and can_message(steam_user.get("steam_id")) %}
+
+<div class="avatar-controls">
+                <a href="{{ url_for('messages.chat', steam_id=steam_user.get('steam_id')) }}" class="avatar-upload-btn">💬 Написать сообщение</a>
+            </div>
+        {% endif %}
+
+        <dl class="player-info">
+            {% if game_data %}
+                <dt>Игровой никнейм</dt>
+                <dd>{{ game_data.player.Nickname or "—" }}</dd>
+
+                <dt>Дата регистрации</dt>
+                <dd>
+                    {% if game_data.player.RegistrationDate %}
+                        {{ game_data.player.RegistrationDate|moscow_time("%d.%m.%Y %H:%M") }}
+                    {% else %}—{% endif %}
+                </dd>
+
+                <dt>Последний вход</dt>
+                <dd>
+                    {% if game_data.player.LastLogonDate %}
+                        {{ game_data.player.LastLogonDate|moscow_time("%d.%m.%Y %H:%M") }}
+                    {% else %}—{% endif %}
+                </dd>
+
+                {% if game_data.faction %}
+                    <dt>Фракция</dt>
+                    <dd>{{ game_data.faction.Name }}</dd>
+
+                    {% if game_data.rank %}
+                        <dt>Ранг</dt>
+                        <dd>{{ game_data.rank.Name }}</dd>
+                    {% endif %}
+                {% else %}
+                    <dt>Фракция</dt>
+                    <dd>Одиночка</dd>
+                {% endif %}
+
+                <dt>Достижений получено</dt>
+                <dd>{{ game_data.achievements_count }}</dd>
+            {% endif %}
+
+            <dt>Steam ID</dt>
+            <dd>{{ steam_user.get("steam_id", "—") }}</dd>
+
+            <dt>Профиль Steam</dt>
+            <dd>
+                {% if steam_user.get("profile_url") %}
+{% if session.get("user", {}).get("steam_id") != steam_user.get("steam_id") %}
+                    {% set chat_avatar = custom_avatar_url(steam_user.get("steam_id")) %}
+                    <button type="button" class="btn js-chat-with" data-steam-id="{{ steam_user.get('steam_id') }}" data-nickname="{{ steam_user.get('nickname', '') }}"{% if chat_avatar %} data-avatar="{{ chat_avatar }}"{% endif %}>💬 Написать</button>
+                    {% endif %}
+                    <a href="{{ steam_user.get('profile_url') }}" target="_blank" rel="noopener">Открыть в Steam</a>
+                {% else %}—{% endif %}
+            </dd>
+        </dl>
+    </section>
+
+    {# ══ БЛОК 2: Статистика (та же ширина) ══ #}
+    {% if game_data and (game_data.stats or game_data.extended) %}
+    <section class="settings-card">
+        <h2>🏅 Значки</h2>
+        {% if player_badges|length > 0 %}
+            <div class="profile-badges">
+                {% for badge in player_badges %}
+                    <div class="badge-cell" title="{% if badge.description %}{{ badge.description }}{% endif %}">
+                        <img src="{{ badge.image_url() }}" alt="{{ badge.name }}" class="badge-mini">
+                        <span class="badge-name">{{ badge.name }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>У игрока пока нет значков.</p>
+        {% endif %}
+    </section>
+
+
+        <section class="player-stats player-stats-block">
+            <h3>📊 Статистика</h3>
+            <dl>
+                {% if game_data.extended %}
+                    <dt>⏱️ Время в игре</dt>
+                    <dd>{{ (game_data.extended.TotalPlayTime / 3600)|round(1) }} ч</dd>
+
+                    <dt>🔁 Сессий</dt>
+                    <dd>{{ game_data.extended.SessionCount }}</dd>
+                {% endif %}
+
+                {% if game_data.stats %}
+                    <dt>⚔️ Убито игроков</dt>
+                    <dd>{{ game_data.stats.PlayerKills }}</dd>
+                {% endif %}
+
+                {% if game_data.extended %}
+                    <dt>🎯 Хедшотов</dt>
+                    <dd>{{ game_data.extended.HeadshotKills }} ({{ (game_data.extended.HeadshotRatio * 100)|round(1) }}%)</dd>
+
+                    <dt>📈 K/D</dt>
+                    <dd>{{ game_data.extended.KDRatio|round(2) }}</dd>
+
+                    <dt>💀 Смертей</dt>
+                    <dd>{{ game_data.extended.Deaths }}</dd>
+
+                    {% if game_data.extended.FavoriteWeapon and game_data.extended.FavoriteWeapon != 'Нет' %}
+                        <dt>⭐ Любимое оружие</dt>
+                        <dd>
+                            {{ game_data.extended.FavoriteWeapon }}
+                            <span class="stat-sub">({{ game_data.extended.FavoriteWeaponKills }} фрагов)</span>
+                        </dd>
+                    {% endif %}
+                {% endif %}
+
+                {% if game_data.stats %}
+                    <dt>🐺 Убито мутантов</dt>
+                    <dd>{{ game_data.stats.MutantsKills }}</dd>
+                {% endif %}
+
+                {% if game_data.extended %}
+                    <dt>🧟 Убито зомби</dt>
+                    <dd>{{ game_data.extended.ZombieKills }}</dd>
+
+                    <dt>🦌 Убито животных</dt>
+                    <dd>{{ game_data.extended.AnimalKills }}</dd>
+
+                    <dt>🏃 Пройдено</dt>
+                    <dd>{{ (game_data.extended.TotalDistanceTraveled / 1000)|round(1) }} км</dd>
+                {% endif %}
+
+                {% if game_data.stats %}
+                    <dt>🎁 Найдено тайников</dt>
+                    <dd>{{ game_data.stats.StashesFound }}</dd>
+
+                    <dt>💎 Найдено артефактов</dt>
+                    <dd>{{ game_data.stats.ArtefactFound }}</dd>
+
+                    <dt>⚡ Пережито выбросов</dt>
+                    <dd>{{ game_data.stats.EmissionSurvived }}</dd>
+                {% endif %}
+
+                {% if game_data.extended %}
+                    <dt>🔨 Скрафчено предметов</dt>
+                    <dd>{{ game_data.extended.ItemsCrafted }}</dd>
+                {% endif %}
+            </dl>
+
+            {% if game_data.weapons %}
+                <details class="weapon-stats-details">
+                    <summary>🔫 Статистика по оружию ({{ game_data.weapons|length }})</summary>
+                    <table class="weapons-table">
+                        <thead>
+                            <tr><th>Оружие</th><th>Убийств</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for weapon in game_data.weapons %}
+                                <tr>
+                                    <td>
+                                        {{ weapon.WeaponName }}
+                                        {% if game_data.extended and game_data.extended.FavoriteWeapon == weapon.WeaponName %}
+                                            <span class="favorite-weapon">⭐ Любимое</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="value-cell">{{ weapon.Kills }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </details>
+            {% endif %}
+        </section>
+    {% endif %}
+
+    {# ══ БЛОК 3: Админ-раздел (обращения + логи) ══ #}
+    {% if is_moderator %}
+        <section class="player-admin-block">
+            <h3>🛡️ Администрация</h3>
+
+            <div class="player-appeals">
+                <h4>📨 Обращения игрока ({{ player_appeals|length }})</h4>
+                {% if player_appeals %}
+                    <table class="appeals-mini-table">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Тема</th><th>Категория</th>
+                                <th>Статус</th><th>Приоритет</th><th>Создано</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appeal in player_appeals %}
+                                <tr>
+                                    <td><a href="{{ url_for('appeals.detail', appeal_id=appeal.id) }}">#{{ appeal.id }}</a></td>
+                                    <td><a href="{{ url_for('appeals.detail', appeal_id=appeal.id) }}">{{ appeal.subject }}</a></td>
+                                    <td>{{ appeal.category }}</td>
+                                    <td>{{ appeal.status }}</td>
+                                    <td>{{ appeal.priority }}</td>
+                                    <td>{{ appeal.created_at.strftime("%d.%m.%Y") }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Обращений нет.</p>
+                {% endif %}
+            </div>
+
+            <div class="player-logs">
+                <h4>🕵️ Логи игрока</h4>
+                {% if player_logs %}
+                    {% for log in player_logs %}
+                        <details class="player-log-block">
+                            <summary>
+                                {{ log.label }}
+                                <span class="log-count">({{ log.total }})</span>
+                            </summary>
+                            {% if log.truncated %}
+                                <p class="hint">
+                                    Показаны последние {{ log.lines|length }}
+                                    из {{ log.total }} записей.
+                                </p>
+                            {% endif %}
+                            <pre class="logs-pre">{% for line in log.lines %}{{ line }}
+{% endfor %}</pre>
+                        </details>
+                    {% endfor %}
+                {% else %}
+                    <p>Логов по этому игроку нет.</p>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
+
+    {# ── Если игрок не найден в БД ── #}
+    {% if not game_data %}
+        <section class="game-profile-empty">
+            <p>
+                Игрок с Steam ID <strong>{{ steam_user.get("steam_id") }}</strong>
+                не найден в игровой базе данных.
+            </p>
+            <p>Возможно, ты ещё не заходил на игровой сервер.</p>
+            <p><em>Данные обновляются каждые 15 минут из игрового сервера.</em></p>
+        </section>
+    {% endif %}
+
+{{ achievement_showcase(steam_user.get("steam_id")) }}
+
+{% endblock %}

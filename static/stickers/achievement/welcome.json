@@ -1,0 +1,7 @@
+{
+    "enabled": 1,
+    "title": "Добро пожаловать!",
+    "message": "Ну здарова сталкер",
+    "icon": "set:dayz_gui image:inv_inspecting",
+    "delay_ms": 7000
+}

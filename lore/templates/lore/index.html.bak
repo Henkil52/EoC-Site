@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Лор{% endblock %}
+
+{% block body_class %}page page-lore{% endblock %}
+
+{% block content %}
+    <h1>Лор</h1>
+
+    {% if is_admin %}
+        <p>
+            <a href="{{ url_for('lore.admin') }}" class="btn">⚙️ Управление лором</a>
+        </p>
+    {% endif %}
+
+    {% if sections_data %}
+        {% for data in sections_data %}
+            <section class="lore-section">
+                <h2>{{ data.section.title }}</h2>
+                <p class="lore-section-date">
+                    🕒 Раздел обновлён: {{ data.section.updated_at.strftime("%d.%m.%Y %H:%M") }}
+                </p>
+
+                {% if data.entries %}
+                    {% for entry in data.entries %}
+                        <article class="lore-entry">
+                            <h3>{{ entry.title }}</h3>
+                            <div class="lore-content">
+                                {{ entry.content|e|replace('\n', '<br>')|safe }}
+                            </div>
+                            <p class="lore-date">
+                                (изменено: {{ entry.updated_at.strftime("%d.%m.%Y %H:%M") }})
+                            </p>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <p>В этом разделе пока нет записей.</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+    {% else %}
+        <p>Лора пока нет.</p>
+    {% endif %}
+{% endblock %}

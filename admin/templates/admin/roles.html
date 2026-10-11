@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Управление ролями{% endblock %}
+
+{% block body_class %}page page-admin page-admin-roles{% endblock %}
+
+{% block content %}
+    <h1>Управление ролями</h1>
+
+    <a class="back-link" href="{{ url_for('admin.dashboard') }}">← Вернуться в админку</a>
+
+    {# ── Форма назначения роли ────────────────────────────── #}
+    <section class="assign-role-form">
+        <h2>Назначить роль</h2>
+
+        <form method="POST" action="{{ url_for('admin.assign_role') }}">
+            <label>
+                Steam ID:
+                <input type="text" name="steam_id" required placeholder="76561198160108755">
+            </label>
+
+            <label>
+                Роль:
+                <select name="role_code" required>
+                    <option value="">-- Выберите роль --</option>
+                    {% for role in all_roles %}
+                        <option value="{{ role.role_code }}">
+                            {{ role.icon }} {{ role.display_name }} ({{ role.role_type }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Срок действия (дней, пусто = бессрочно):
+                <input type="number" name="expires_in_days" min="1" placeholder="Например, 30">
+            </label>
+
+            <button type="submit">Назначить роль</button>
+        </form>
+    </section>
+
+    {# ── Список пользователей с ролями ────────────────────── #}
+    <section class="users-roles-list">
+        <h2>Пользователи с ролями</h2>
+
+        {% if users_with_roles %}
+            <table class="roles-table">
+                <thead>
+                    <tr>
+                        <th>Steam ID</th>
+                        <th>Никнейм</th>
+                        <th>Роль</th>
+                        <th>Назначил</th>
+                        <th>Дата назначения</th>
+                        <th>Истекает</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player, user_role in users_with_roles %}
+                        {% if user_role %}
+                            <tr>
+                                <td>{{ player.SteamID }}</td>
+                                <td>{{ player.Nickname or "—" }}</td>
+                                <td>{{ user_role.role.display_name }}</td>
+                                <td>{{ user_role.assigned_by or "—" }}</td>
+                                <td>{{ user_role.assigned_at.strftime("%d.%m.%Y %H:%M") }}</td>
+                                <td>
+                                    {% if user_role.expires_at %}
+                                        {{ user_role.expires_at.strftime("%d.%m.%Y %H:%M") }}
+                                    {% else %}
+                                        Бессрочно
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('admin.remove_role', role_id=user_role.id) }}" style="display:inline;">
+                                        <button type="submit" onclick="return confirm('Снять роль?')">Снять</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Пользователей с ролями пока нет.</p>
+        {% endif %}
+    </section>
+{% endblock %}

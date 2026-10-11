@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Редактор достижений{% endblock %}
+
+{% block body_class %}page page-ach-editor{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="/admin/">← Админка</a>
+    <h1>🏆 Редактор достижений</h1>
+
+    <section class="settings-card">
+        <h2>Добавить достижение</h2>
+        <form method="POST" action="{{ url_for('achievements.editor_add') }}" class="ach-form">
+            <label>Тип:
+                <select name="kind">
+                    <option value="location">📍 Локация (visited_locations)</option>
+                    <option value="item">🎒 Предмет (found_items)</option>
+                </select>
+            </label>
+            <label>Триггер (значение из лога):
+                <input type="text" name="trigger" required placeholder="Например: derebas">
+            </label>
+            <label>Название (видно при наведении на витрине):
+                <input type="text" name="title" required placeholder="Например: Деревня дураков">
+            </label>
+            <label>Имя стикера (папка static/stickers/achievement/):
+                <input type="text" name="sticker" required placeholder="Например: derebas.webp">
+            </label>
+            <button type="submit" class="btn">➕ Добавить</button>
+        </form>
+        <form method="POST" action="{{ url_for('achievements.editor_sync') }}" style="margin-top: 12px;">
+            <button type="submit" class="btn btn-small">🔄 Синхронизировать сейчас</button>
+        </form>
+    </section>
+
+    <section class="settings-card">
+        <h2>Существующие достижения ({{ defs|length }})</h2>
+        {% if defs %}
+            <table class="members-table">
+                <thead>
+                    <tr>
+                        <th>Тип</th>
+                        <th>Триггер</th>
+                        <th>Название</th>
+                        <th>Стикер</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in defs %}
+                        <tr>
+                            <td>{{ "📍" if d.kind == "location" else "🎒" }}</td>
+                            <td><code>{{ d.trigger }}</code></td>
+                            <td>{{ d.title }}</td>
+                            <td>{{ d.sticker }}</td>
+                            <td>
+                                <form method="POST"
+                                      action="{{ url_for('achievements.editor_delete', def_id=d.id) }}"
+                                      onsubmit="return confirm('Удалить достижение?');">
+                                    <button type="submit" class="btn btn-small btn-danger">🗑</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Достижений пока нет. Добавь первое выше!</p>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Чат с {{ other_nickname }}{% endblock %}
+
+{% block body_class %}page page-messages page-messages-chat{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{{ url_for('messages.index') }}">← Все чаты</a>
+
+    <h1>💬 {{ other_nickname }}</h1>
+
+    <section class="chat-window" id="chatWindow" data-other="{{ other_id }}" data-last="{{ messages[-1].id if messages else 0 }}">
+        {% if messages %}
+            <ul class="chat-messages">
+                {% for m in messages %}
+                    <li class="chat-msg {% if m.sender_steam_id == my_id %}msg-out{% else %}msg-in{% endif %}">
+                        <div class="msg-bubble">{{ m.content|bb }}</div>
+                        <span class="msg-time">{{ m.created_at.strftime("%d.%m.%Y %H:%M") }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Сообщений пока нет — напиши первым!</p>
+        {% endif %}
+    </section>
+
+    {% if can_write %}
+        <form method="POST" action="{{ url_for('messages.send', steam_id=other_id) }}" class="chat-send-form">
+            <textarea class="rich-editor" name="content" rows="3" required
+                      placeholder="Сообщение..."></textarea>
+            <button type="submit" class="btn">📨 Отправить</button>
+        </form>
+    {% else %}
+        <p class="privacy-locked">🔒 Пользователь запретил личные сообщения в настройках профиля.</p>
+    {% endif %}
+
+    <script>
+    (function () {
+        var win = document.getElementById('chatWindow');
+        if (!win) return;
+
+        var other = win.getAttribute('data-other');
+        var lastId = parseInt(win.getAttribute('data-last') || '0', 10);
+        var list = win.querySelector('.chat-messages');
+
+        function scrollDown() { win.scrollTop = win.scrollHeight; }
+
+        /* ── Живое обновление чата ── */
+        function poll() {
+            fetch('/messages/api/chat/' + other + '?after=' + lastId)
+                .then(function (r) { return r.ok ? r.json() : []; })
+                .then(function (items) {
+                    if (!items || !items.length) return;
+
+                    if (!list) {
+                        win.innerHTML = '<ul class="chat-messages"></ul>';
+                        list = win.querySelector('.chat-messages');
+                    }
+
+                    items.forEach(function (m) {
+                        lastId = Math.max(lastId, m.id);
+                        var li = document.createElement('li');
+                        li.className = 'chat-msg ' + (m.out ? 'msg-out' : 'msg-in');
+                        li.innerHTML =
+                            '<div class="msg-bubble">' + m.html + '</div>' +
+                            '<span class="msg-time">' + m.time + '</span>';
+                        list.appendChild(li);
+                    });
+                    scrollDown();
+                })
+                .catch(function () {});
+        }
+
+        setInterval(poll, 4000);
+        scrollDown();
+
+        /* ── Отправка по Enter (Shift+Enter — новая строка) ── */
+        var form = document.querySelector('.chat-send-form');
+        if (form) {
+            var ta = form.querySelector('textarea');
+            if (ta) {
+                ta.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        form.submit();
+                    }
+                });
+            }
+        }
+    })();
+    </script>
+{% endblock %}

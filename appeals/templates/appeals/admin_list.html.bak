@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Все обращения — Админка{% endblock %}
+
+{% block body_class %}page page-appeals page-appeals-admin{% endblock %}
+
+{% block content %}
+    <h1>Все обращения</h1>
+
+    <a class="back-link" href="{{ url_for('admin.dashboard') }}">← Вернуться в админку</a>
+
+    {# ── Фильтры ───────────────────────────────────────────── #}
+    <form method="GET" class="appeals-filters">
+        <select name="status">
+            <option value="">Все статусы</option>
+            {% for code, name in statuses.items() %}
+                <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="category">
+            <option value="">Все категории</option>
+            {% for code, name in categories.items() %}
+                <option value="{{ code }}" {% if category_filter == code %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="priority">
+            <option value="">Все приоритеты</option>
+            {% for code, name in priorities.items() %}
+                <option value="{{ code }}" {% if priority_filter == code %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-sm">Применить</button>
+    </form>
+
+    {% if appeals_data %}
+        <table class="appeals-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Тема</th>
+                    <th>Автор</th>
+                    <th>Категория</th>
+                    <th>Статус</th>
+                    <th>Приоритет</th>
+                    <th>💬</th>
+                    <th>Обновлено</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in appeals_data %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('appeals.detail', appeal_id=data.appeal.id) }}">
+                                #{{ data.appeal.id }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('appeals.detail', appeal_id=data.appeal.id) }}">
+                                {{ data.appeal.subject }}
+                            </a>
+                        </td>
+                        <td>{{ data.author_nickname }}</td>
+                        <td>{{ categories.get(data.appeal.category, 'Другое') }}</td>
+                        <td>{{ statuses.get(data.appeal.status, data.appeal.status) }}</td>
+                        <td>{{ priorities.get(data.appeal.priority, data.appeal.priority) }}</td>
+                        <td>{{ data.messages_count }}</td>
+                        <td>{{ data.appeal.updated_at.strftime("%d.%m.%Y %H:%M") }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Обращений не найдено.</p>
+    {% endif %}
+{% endblock %}

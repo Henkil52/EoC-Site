@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+
+    <title>{% block title %}Echo of Chernobyl{% endblock %}</title>
+
+    {# ── Применяем сохранённую тему ДО отрисовки (без мигания) ── #}
+    <script>
+        document.documentElement.setAttribute(
+            'data-theme',
+            localStorage.getItem('site_theme') || 'dark'
+        );
+    </script>
+
+    {# ── Стили: base.css, затем темы ── #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}?v=6?v=5?v=4?v=3">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+    {# ── Навигация ────────────────────────────────────────── #}
+    {% include "includes/navbar.html" %}
+
+    {# ── Flash-сообщения ──────────────────────────────────── #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {# ── Содержимое страницы ──────────────────────────────── #}
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    {# ── Подвал ───────────────────────────────────────────── #}
+    <footer class="site-footer">
+        <p>☢️ <div class="footer-links">
+            <a href="{{ url_for('info.about') }}">О сайте</a>
+            <span class="dot">•</span>
+            <a href="{{ url_for('info.help_page') }}">Справка</a>
+        </div>
+        Echo of Chernobyl © 2026</p>
+    </footer>
+
+    {# ── Скрипт переключения тем ──────────────────────────── #}
+        <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+
+    {# ── Онлайн-чат ───────────────────────────────────────────── #}
+    {% if session.get("user") %}
+        {% include "chat/widget.html" %}
+    {% endif %}
+    {# ── Контейнер для всплывающих уведомлений ── #}
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="{{ url_for('static', filename='js/stickers_render.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/emoji_local.js') }}"></script>
+</body>
+</html>

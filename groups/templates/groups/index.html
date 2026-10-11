@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Группировки{% endblock %}
+
+{% block body_class %}page page-groups{% endblock %}
+
+{% block content %}
+    <h1>Группировки</h1>
+
+    <p>
+        Всего группировок: {{ groups_data|length }}
+    </p>
+
+    {% if groups_data %}
+        <div class="groups-list">
+            {% for data in groups_data %}
+                <a href="{{ url_for('groups.detail', faction_id=data.faction.ID) }}"
+                   class="group-card"
+                   style="border-left: 6px solid {{ data.color }};">
+
+                    <h2 style="color: {{ data.color }};">
+                        {{ data.faction.Name }}
+                    </h2>
+
+                    <p class="group-members">
+                        👥 Участников: {{ data.members_count }} / {{ data.faction.MaxMembers }}
+                    </p>
+
+                    <p class="group-hint">
+                        Подробнее →
+                    </p>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Группировок пока нет.</p>
+    {% endif %}
+{% endblock %}

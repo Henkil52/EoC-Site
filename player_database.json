@@ -1,0 +1,1220 @@
+{
+    "76561198411457357": {
+        "SteamID": "76561198411457357",
+        "Name": "Aheron",
+        "FirstJoinDate": "2026-07-21 10:02:39",
+        "LastSeen": "2026-09-27 21:25:29",
+        "SessionCount": 70,
+        "TotalPlayTime": 315654.03125,
+        "CurrentSessionStart": 259.4460144042969,
+        "Kills": 0,
+        "Deaths": 15,
+        "NamesHistory": [
+            "Radon",
+            "Aheron"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 1316189.625,
+        "ItemsCrafted": 101,
+        "LastPosition": [
+            5176.75537109375,
+            99.58638763427735,
+            919.8087768554688
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 159,
+        "AnimalKills": 122
+    },
+    "76561198283713172": {
+        "SteamID": "76561198283713172",
+        "Name": "Vanguard",
+        "FirstJoinDate": "2026-06-15 05:20:28",
+        "LastSeen": "2026-09-28 07:29:37",
+        "SessionCount": 227,
+        "TotalPlayTime": 233882.640625,
+        "CurrentSessionStart": 292.114990234375,
+        "Kills": 1,
+        "Deaths": 28,
+        "NamesHistory": [
+            "Vanguard"
+        ],
+        "KDRatio": 0.0357142873108387,
+        "FavoriteWeapon": "AK-74",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "AK-74": 1
+        },
+        "BuildingsConstructed": 160,
+        "TrapCount": 0,
+        "HeadshotKills": 1,
+        "HeadshotRatio": 1.0,
+        "TotalDistanceTraveled": 1840319.75,
+        "ItemsCrafted": 16,
+        "LastPosition": [
+            5352.919921875,
+            109.1222152709961,
+            867.5995483398438
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 93,
+        "AnimalKills": 17
+    },
+    "76561199048620737": {
+        "SteamID": "76561199048620737",
+        "Name": "[CS] Ion",
+        "FirstJoinDate": "2026-09-26 01:05:12",
+        "LastSeen": "2026-09-27 21:37:20",
+        "SessionCount": 13,
+        "TotalPlayTime": 38517.1015625,
+        "CurrentSessionStart": 222.05099487304688,
+        "Kills": 0,
+        "Deaths": 6,
+        "NamesHistory": [
+            "Heimdallr",
+            "[CS] Ion"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 61741.41796875,
+        "ItemsCrafted": 6,
+        "LastPosition": [
+            2037.2447509765626,
+            108.04802703857422,
+            413.484375
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 1
+    },
+    "76561198083420985": {
+        "SteamID": "76561198083420985",
+        "Name": "Metis",
+        "FirstJoinDate": "2026-09-22 08:15:06",
+        "LastSeen": "2026-09-22 09:19:05",
+        "SessionCount": 5,
+        "TotalPlayTime": 1734.294677734375,
+        "CurrentSessionStart": 237.34100341796876,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "Metis"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 4135.03955078125,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            5146.8857421875,
+            99.55500793457031,
+            932.478515625
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 4
+    },
+    "76561198062830811": {
+        "SteamID": "76561198062830811",
+        "Name": "[ren]kuba",
+        "FirstJoinDate": "2026-06-12 10:08:30",
+        "LastSeen": "2026-09-28 03:46:56",
+        "SessionCount": 83,
+        "TotalPlayTime": 168794.671875,
+        "CurrentSessionStart": 9845.5078125,
+        "Kills": 2,
+        "Deaths": 13,
+        "NamesHistory": [
+            "[ren]kuba"
+        ],
+        "KDRatio": 0.1538461595773697,
+        "FavoriteWeapon": "Dosimeter DGB-60M",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "Dosimeter DGB-60M": 1,
+            "IJ-70": 1
+        },
+        "BuildingsConstructed": 6,
+        "TrapCount": 0,
+        "HeadshotKills": 1,
+        "HeadshotRatio": 0.5,
+        "TotalDistanceTraveled": 981874.5625,
+        "ItemsCrafted": 8,
+        "LastPosition": [
+            1024.3590087890626,
+            124.74288940429688,
+            3181.95947265625
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID",
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 20,
+        "AnimalKills": 40
+    },
+    "76561198310706049": {
+        "SteamID": "76561198310706049",
+        "Name": "Rik0",
+        "FirstJoinDate": "2026-09-23 01:05:06",
+        "LastSeen": "2026-09-24 21:00:10",
+        "SessionCount": 2,
+        "TotalPlayTime": 10402.697265625,
+        "CurrentSessionStart": 8950.328125,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "Rik0"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 7672.2607421875,
+        "ItemsCrafted": 3,
+        "LastPosition": [
+            1975.6993408203126,
+            111.77626037597656,
+            417.8680114746094
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 2
+    },
+    "76561198055555995": {
+        "SteamID": "76561198055555995",
+        "Name": "[CS] Altair",
+        "FirstJoinDate": "2026-07-16 10:56:23",
+        "LastSeen": "2026-09-27 08:26:28",
+        "SessionCount": 60,
+        "TotalPlayTime": 217401.078125,
+        "CurrentSessionStart": 434.5790100097656,
+        "Kills": 18,
+        "Deaths": 9,
+        "NamesHistory": [
+            "[VECTOR] Grinch",
+            "[CS] Altair"
+        ],
+        "KDRatio": 2.0,
+        "FavoriteWeapon": "АКМСН",
+        "FavoriteWeaponKills": 13,
+        "WeaponKills": {
+            "АКМСН": 13,
+            "AK-50": 3,
+            "Кулак": 2
+        },
+        "BuildingsConstructed": 32,
+        "TrapCount": 0,
+        "HeadshotKills": 10,
+        "HeadshotRatio": 0.5555555820465088,
+        "TotalDistanceTraveled": 661818.0625,
+        "ItemsCrafted": 45,
+        "LastPosition": [
+            2016.5802001953126,
+            107.80652618408203,
+            384.8346252441406
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 17,
+        "AnimalKills": 56
+    },
+    "76561199158855494": {
+        "SteamID": "76561199158855494",
+        "Name": "Tushkan",
+        "FirstJoinDate": "2026-09-28 01:40:46",
+        "LastSeen": "2026-09-28 04:09:01",
+        "SessionCount": 1,
+        "TotalPlayTime": 8895.533203125,
+        "CurrentSessionStart": 2346.31494140625,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "Tushkan"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 11129.703125,
+        "ItemsCrafted": 5,
+        "LastPosition": [
+            5002.2353515625,
+            99.68270874023438,
+            78.03741455078125
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 7
+    },
+    "76561199437805016": {
+        "SteamID": "76561199437805016",
+        "Name": "Orel",
+        "FirstJoinDate": "2026-09-27 15:28:43",
+        "LastSeen": "2026-09-27 17:06:54",
+        "SessionCount": 1,
+        "TotalPlayTime": 5484.501953125,
+        "CurrentSessionStart": 8826.5146484375,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "Orel"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 9819.6435546875,
+        "ItemsCrafted": 1,
+        "LastPosition": [
+            5001.27197265625,
+            99.6827621459961,
+            72.83842468261719
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 1
+    },
+    "76561199785614775": {
+        "SteamID": "76561199785614775",
+        "Name": "[NET] Satyrn",
+        "FirstJoinDate": "2026-09-23 03:09:43",
+        "LastSeen": "2026-09-28 19:49:54",
+        "SessionCount": 32,
+        "TotalPlayTime": 170111.796875,
+        "CurrentSessionStart": 806.2169799804688,
+        "Kills": 0,
+        "Deaths": 6,
+        "NamesHistory": [
+            "Satyrn",
+            "[NET] Satyrn"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 266207.25,
+        "ItemsCrafted": 102,
+        "LastPosition": [
+            5576.1787109375,
+            108.69788360595703,
+            2537.17919921875
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 93,
+        "AnimalKills": 133
+    },
+    "76561199214689827": {
+        "SteamID": "76561199214689827",
+        "Name": "[OA]Mugivara",
+        "FirstJoinDate": "2026-09-22 08:36:37",
+        "LastSeen": "2026-09-22 09:18:47",
+        "SessionCount": 3,
+        "TotalPlayTime": 1892.001953125,
+        "CurrentSessionStart": 216.43800354003907,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "[OA]Mugivara"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 2730.19140625,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            5144.20556640625,
+            100.20339965820313,
+            905.0547485351563
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561199444571897": {
+        "SteamID": "76561199444571897",
+        "Name": "fortunate",
+        "FirstJoinDate": "2026-09-25 05:06:48",
+        "LastSeen": "2026-09-27 07:29:44",
+        "SessionCount": 4,
+        "TotalPlayTime": 9989.515625,
+        "CurrentSessionStart": 5289.61181640625,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "fortunate"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 16795.244140625,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            5603.87744140625,
+            111.46853637695313,
+            1678.293701171875
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 3,
+        "AnimalKills": 2
+    },
+    "76561198140982820": {
+        "SteamID": "76561198140982820",
+        "Name": "[CS] Odin",
+        "FirstJoinDate": "2026-09-24 18:59:49",
+        "LastSeen": "2026-09-27 22:47:20",
+        "SessionCount": 18,
+        "TotalPlayTime": 52801.13671875,
+        "CurrentSessionStart": 614.5440063476563,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "[CS] Odin"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 58378.9296875,
+        "ItemsCrafted": 11,
+        "LastPosition": [
+            5197.22412109375,
+            96.90801239013672,
+            925.586181640625
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 12,
+        "AnimalKills": 8
+    },
+    "76561198147254227": {
+        "SteamID": "76561198147254227",
+        "Name": "1+1/Burberry",
+        "FirstJoinDate": "2026-09-23 01:04:48",
+        "LastSeen": "2026-09-23 23:42:33",
+        "SessionCount": 3,
+        "TotalPlayTime": 5798.267578125,
+        "CurrentSessionStart": 658.541015625,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "1+1/Burberry"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 13839.2197265625,
+        "ItemsCrafted": 1,
+        "LastPosition": [
+            5196.11083984375,
+            96.59471893310547,
+            933.2344360351563
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 7
+    },
+    "76561198130876999": {
+        "SteamID": "76561198130876999",
+        "Name": "[NET]Amogoose",
+        "FirstJoinDate": "2026-09-22 17:14:18",
+        "LastSeen": "2026-09-27 11:37:31",
+        "SessionCount": 16,
+        "TotalPlayTime": 71225.4296875,
+        "CurrentSessionStart": 3058.820068359375,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "Amogoose",
+            "[NET]Amogoose"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 126353.890625,
+        "ItemsCrafted": 19,
+        "LastPosition": [
+            5602.90966796875,
+            111.46856689453125,
+            1682.580078125
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 67,
+        "AnimalKills": 27
+    },
+    "76561199082299744": {
+        "SteamID": "76561199082299744",
+        "Name": "Gosha",
+        "FirstJoinDate": "2026-09-26 05:09:56",
+        "LastSeen": "2026-09-27 22:45:15",
+        "SessionCount": 6,
+        "TotalPlayTime": 8885.0576171875,
+        "CurrentSessionStart": 5861.548828125,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "Gosha"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 14888.8486328125,
+        "ItemsCrafted": 1,
+        "LastPosition": [
+            5194.15966796875,
+            96.5741195678711,
+            930.8513793945313
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 18,
+        "AnimalKills": 10
+    },
+    "76561198360944356": {
+        "SteamID": "76561198360944356",
+        "Name": "Manul",
+        "FirstJoinDate": "2026-09-22 19:19:06",
+        "LastSeen": "2026-09-27 02:20:07",
+        "SessionCount": 11,
+        "TotalPlayTime": 19579.533203125,
+        "CurrentSessionStart": 346.5509948730469,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "Manul"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 22409.15234375,
+        "ItemsCrafted": 4,
+        "LastPosition": [
+            5581.3427734375,
+            111.48784637451172,
+            1699.278564453125
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 13,
+        "AnimalKills": 5
+    },
+    "76561198680745172": {
+        "SteamID": "76561198680745172",
+        "Name": "GENERAL",
+        "FirstJoinDate": "2026-09-23 04:42:23",
+        "LastSeen": "2026-09-27 23:21:53",
+        "SessionCount": 20,
+        "TotalPlayTime": 40447.86328125,
+        "CurrentSessionStart": 250.43299865722657,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "EGOR YBICA",
+            "GENERAL"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 117938.3203125,
+        "ItemsCrafted": 13,
+        "LastPosition": [
+            5196.013671875,
+            96.59359741210938,
+            932.7725830078125
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 38,
+        "AnimalKills": 31
+    },
+    "76561199175354190": {
+        "SteamID": "76561199175354190",
+        "Name": "[CS] Volt",
+        "FirstJoinDate": "2026-09-26 19:10:30",
+        "LastSeen": "2026-09-26 20:35:55",
+        "SessionCount": 1,
+        "TotalPlayTime": 5124.90283203125,
+        "CurrentSessionStart": 7735.60302734375,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "[CS] Volt"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 1737.97900390625,
+        "ItemsCrafted": 6,
+        "LastPosition": [
+            2021.38232421875,
+            107.71354675292969,
+            388.5715026855469
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561198380963209": {
+        "SteamID": "76561198380963209",
+        "Name": "Orion",
+        "FirstJoinDate": "2026-09-22 15:22:11",
+        "LastSeen": "2026-09-28 06:01:23",
+        "SessionCount": 19,
+        "TotalPlayTime": 80269.953125,
+        "CurrentSessionStart": 1488.258056640625,
+        "Kills": 0,
+        "Deaths": 5,
+        "NamesHistory": [
+            "Orion"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 104562.328125,
+        "ItemsCrafted": 11,
+        "LastPosition": [
+            5205.48095703125,
+            99.8748550415039,
+            914.7987670898438
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 16,
+        "AnimalKills": 67
+    },
+    "76561199187671882": {
+        "SteamID": "76561199187671882",
+        "Name": "[NET]Enigma",
+        "FirstJoinDate": "2026-09-25 10:30:01",
+        "LastSeen": "2026-09-27 21:39:11",
+        "SessionCount": 13,
+        "TotalPlayTime": 51092.32421875,
+        "CurrentSessionStart": 235.36300659179688,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "Enigma",
+            "[NET] Enigma",
+            "[NET]Enigma"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 101555.7578125,
+        "ItemsCrafted": 13,
+        "LastPosition": [
+            5603.60009765625,
+            111.46856689453125,
+            1682.859130859375
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 26,
+        "AnimalKills": 19
+    },
+    "76561198150227023": {
+        "SteamID": "76561198150227023",
+        "Name": "Hoffmann",
+        "FirstJoinDate": "2026-09-25 22:21:37",
+        "LastSeen": "2026-09-27 04:39:58",
+        "SessionCount": 14,
+        "TotalPlayTime": 42302.359375,
+        "CurrentSessionStart": 4823.203125,
+        "Kills": 0,
+        "Deaths": 6,
+        "NamesHistory": [
+            "Hoffmann"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 71429.875,
+        "ItemsCrafted": 32,
+        "LastPosition": [
+            5193.7236328125,
+            96.59109497070313,
+            928.8561401367188
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 44,
+        "AnimalKills": 27
+    },
+    "76561198845876996": {
+        "SteamID": "76561198845876996",
+        "Name": "[SV]Grizzly",
+        "FirstJoinDate": "2026-09-25 01:01:01",
+        "LastSeen": "2026-09-27 23:09:20",
+        "SessionCount": 17,
+        "TotalPlayTime": 49205.01171875,
+        "CurrentSessionStart": 229.2239990234375,
+        "Kills": 0,
+        "Deaths": 4,
+        "NamesHistory": [
+            "Survivor",
+            "[SV]Grizzly"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 116915.5703125,
+        "ItemsCrafted": 34,
+        "LastPosition": [
+            5079.099609375,
+            99.23771667480469,
+            958.7130126953125
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 37,
+        "AnimalKills": 24
+    },
+    "76561198421800071": {
+        "SteamID": "76561198421800071",
+        "Name": "[FREE]Gena",
+        "FirstJoinDate": "2026-09-27 05:06:04",
+        "LastSeen": "2026-09-27 06:03:51",
+        "SessionCount": 1,
+        "TotalPlayTime": 3467.1640625,
+        "CurrentSessionStart": 270.47198486328127,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "[FREE]Gena"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 5025.66943359375,
+        "ItemsCrafted": 2,
+        "LastPosition": [
+            5069.9716796875,
+            97.99689483642578,
+            974.045166015625
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561198160108755": {
+        "SteamID": "76561198160108755",
+        "Name": "TigarD",
+        "FirstJoinDate": "2026-06-12 09:50:24",
+        "LastSeen": "2026-09-28 19:38:23",
+        "SessionCount": 128,
+        "TotalPlayTime": 143095.78125,
+        "CurrentSessionStart": 326.2120056152344,
+        "Kills": 17,
+        "Deaths": 6,
+        "NamesHistory": [
+            "Henkil",
+            "TigarD"
+        ],
+        "KDRatio": 2.8333332538604738,
+        "FavoriteWeapon": "AK-105",
+        "FavoriteWeaponKills": 13,
+        "WeaponKills": {
+            "MK II": 1,
+            "AK-74": 2,
+            "LE-MAS": 1,
+            "AK-105": 13
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 1,
+        "HeadshotKills": 10,
+        "HeadshotRatio": 0.5882353186607361,
+        "TotalDistanceTraveled": 72001.265625,
+        "ItemsCrafted": 1,
+        "LastPosition": [
+            5082.51611328125,
+            94.90402221679688,
+            956.1658325195313
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 13,
+        "AnimalKills": 35
+    },
+    "76561198397054325": {
+        "SteamID": "76561198397054325",
+        "Name": "bes",
+        "FirstJoinDate": "2026-06-16 23:18:45",
+        "LastSeen": "2026-06-25 08:42:14",
+        "SessionCount": 28,
+        "TotalPlayTime": 148545.6875,
+        "CurrentSessionStart": 85.4219970703125,
+        "Kills": 1,
+        "Deaths": 2,
+        "NamesHistory": [
+            "bes"
+        ],
+        "KDRatio": 0.5,
+        "FavoriteWeapon": "Кулак",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "Кулак": 1
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 1,
+        "HeadshotRatio": 1.0,
+        "TotalDistanceTraveled": 19064.861328125,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            1027.1143798828126,
+            107.55498504638672,
+            3169.072998046875
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561199380005504": {
+        "SteamID": "76561199380005504",
+        "Name": "Survivor",
+        "FirstJoinDate": "2026-07-21 10:02:39",
+        "LastSeen": "2026-09-28 19:21:52",
+        "SessionCount": 133,
+        "TotalPlayTime": 405168.0625,
+        "CurrentSessionStart": 290.9209899902344,
+        "Kills": 0,
+        "Deaths": 20,
+        "NamesHistory": [
+            "Kashtan",
+            "Rjaviy",
+            "Survivor"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 1828922.375,
+        "ItemsCrafted": 142,
+        "LastPosition": [
+            5168.83984375,
+            108.54815673828125,
+            1772.10888671875
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 172,
+        "AnimalKills": 218
+    },
+    "76561198213340429": {
+        "SteamID": "76561198213340429",
+        "Name": "Highlander",
+        "FirstJoinDate": "2026-09-25 07:05:06",
+        "LastSeen": "2026-09-28 07:59:32",
+        "SessionCount": 14,
+        "TotalPlayTime": 44389.16796875,
+        "CurrentSessionStart": 329.27099609375,
+        "Kills": 0,
+        "Deaths": 5,
+        "NamesHistory": [
+            "Survivor",
+            "Highlander"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 78437.8515625,
+        "ItemsCrafted": 8,
+        "LastPosition": [
+            5193.37841796875,
+            96.25677490234375,
+            932.2207641601563
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 1,
+        "AnimalKills": 24
+    },
+    "76561198159136048": {
+        "SteamID": "76561198159136048",
+        "Name": "[CS]LIVESEY",
+        "FirstJoinDate": "2026-09-26 18:44:29",
+        "LastSeen": "2026-09-26 19:49:15",
+        "SessionCount": 2,
+        "TotalPlayTime": 3654.69580078125,
+        "CurrentSessionStart": 7070.77783203125,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "Survivor",
+            "[CS]LIVESEY"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 1701.7520751953126,
+        "ItemsCrafted": 9,
+        "LastPosition": [
+            1983.72265625,
+            108.9085693359375,
+            411.9089660644531
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561198240323386": {
+        "SteamID": "76561198240323386",
+        "Name": "[OD] Beriya",
+        "FirstJoinDate": "2026-09-23 01:37:08",
+        "LastSeen": "2026-09-27 22:39:40",
+        "SessionCount": 17,
+        "TotalPlayTime": 59157.4609375,
+        "CurrentSessionStart": 242.677001953125,
+        "Kills": 0,
+        "Deaths": 3,
+        "NamesHistory": [
+            "[OD] Beriya"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 93538.2265625,
+        "ItemsCrafted": 12,
+        "LastPosition": [
+            5597.8349609375,
+            111.46854400634766,
+            1677.910400390625
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 7,
+        "AnimalKills": 15
+    },
+    "76561198048933139": {
+        "SteamID": "76561198048933139",
+        "Name": "Krechet",
+        "FirstJoinDate": "2026-09-26 01:22:13",
+        "LastSeen": "2026-09-27 04:12:32",
+        "SessionCount": 2,
+        "TotalPlayTime": 14315.52734375,
+        "CurrentSessionStart": 550.7550048828125,
+        "Kills": 0,
+        "Deaths": 1,
+        "NamesHistory": [
+            "[NII]Svarogov",
+            "Krechet"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 23041.412109375,
+        "ItemsCrafted": 5,
+        "LastPosition": [
+            5148.35595703125,
+            99.61814880371094,
+            908.4564819335938
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 1
+    },
+    "76561199126109439": {
+        "SteamID": "76561199126109439",
+        "Name": "[CS] STRAJ",
+        "FirstJoinDate": "2026-09-22 06:08:29",
+        "LastSeen": "2026-09-25 04:14:18",
+        "SessionCount": 17,
+        "TotalPlayTime": 52512.7578125,
+        "CurrentSessionStart": 8220.28515625,
+        "Kills": 0,
+        "Deaths": 3,
+        "NamesHistory": [
+            "zavniktios",
+            "[CS] STRAJ"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 52777.64453125,
+        "ItemsCrafted": 15,
+        "LastPosition": [
+            2015.9979248046876,
+            107.7961196899414,
+            386.14239501953127
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 13,
+        "AnimalKills": 32
+    },
+    "76561198400687560": {
+        "SteamID": "76561198400687560",
+        "Name": "Danila Kolpak",
+        "FirstJoinDate": "2026-09-26 17:05:44",
+        "LastSeen": "2026-09-27 12:43:33",
+        "SessionCount": 4,
+        "TotalPlayTime": 2420.07958984375,
+        "CurrentSessionStart": 12704.28515625,
+        "Kills": 0,
+        "Deaths": 2,
+        "NamesHistory": [
+            "Danila Kolpak"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 7455.32958984375,
+        "ItemsCrafted": 1,
+        "LastPosition": [
+            5398.0712890625,
+            114.78221893310547,
+            1291.1864013671876
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561198062589102": {
+        "SteamID": "76561198062589102",
+        "Name": "Bogatirev Ivan",
+        "FirstJoinDate": "2026-06-23 13:00:45",
+        "LastSeen": "2026-09-27 04:28:57",
+        "SessionCount": 38,
+        "TotalPlayTime": 127417.9140625,
+        "CurrentSessionStart": 234.07699584960938,
+        "Kills": 1,
+        "Deaths": 9,
+        "NamesHistory": [
+            "Bogatirev Ivan"
+        ],
+        "KDRatio": 0.1111111119389534,
+        "FavoriteWeapon": "Кулак",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "Кулак": 1
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 606522.125,
+        "ItemsCrafted": 28,
+        "LastPosition": [
+            5153.91796875,
+            99.94792938232422,
+            895.62451171875
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 54,
+        "AnimalKills": 123
+    },
+    "76561198095874609": {
+        "SteamID": "76561198095874609",
+        "Name": "[CS]Sapsan",
+        "FirstJoinDate": "2026-09-23 01:51:04",
+        "LastSeen": "2026-09-28 03:23:16",
+        "SessionCount": 18,
+        "TotalPlayTime": 70795.0390625,
+        "CurrentSessionStart": 5423.64208984375,
+        "Kills": 0,
+        "Deaths": 2,
+        "NamesHistory": [
+            "Sapsan",
+            "[CS]Sapsan"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 72801.0703125,
+        "ItemsCrafted": 27,
+        "LastPosition": [
+            1470.58056640625,
+            107.55500030517578,
+            447.4435729980469
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 17,
+        "AnimalKills": 26
+    },
+    "76561198118788053": {
+        "SteamID": "76561198118788053",
+        "Name": "TigarD",
+        "FirstJoinDate": "2026-09-20 04:56:01",
+        "LastSeen": "2026-09-20 04:56:09",
+        "SessionCount": 1,
+        "TotalPlayTime": 8.02734375,
+        "CurrentSessionStart": 14052.853515625,
+        "Kills": 0,
+        "Deaths": 0,
+        "NamesHistory": [
+            "TigarD"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 0.0,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    }
+}

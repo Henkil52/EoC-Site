@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Стикеры{% endblock %}
+
+{% block body_class %}page page-stickers{% endblock %}
+
+{% block content %}
+    <h1>🎨 Стикеры</h1>
+
+    <p>
+        Положите файлы <code>.webp</code> в соответствующие папки —
+        они появятся здесь автоматически.
+    </p>
+
+    {% for cat in categories %}
+        <section class="settings-card stickers-section">
+            <h2>{{ cat.icon }} {{ cat.title }}</h2>
+            <p class="stickers-hint">{{ cat.hint }}</p>
+
+            {% if cat.stickers %}
+                <div class="stickers-grid">
+                    {% for s in cat.stickers %}
+                        <div class="sticker-card">
+                            <img src="{{ s.url }}" alt="{{ s.filename }}" class="sticker-image">
+                            <div class="sticker-name">{{ s.filename }}</div>
+                            <form action="{{ url_for('stickers.delete') }}" method="post"
+                                  onsubmit="return confirm('Удалить стикер {{ s.filename }}?');">
+                                <input type="hidden" name="filename" value="{{ s.filename }}">
+                                <input type="hidden" name="category" value="{{ cat.key }}">
+                                <button type="submit" class="btn btn-small btn-danger">🗑 Удалить</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Папка <code>static/stickers/{{ cat.key }}/</code> пуста.</p>
+            {% endif %}
+        </section>
+    {% endfor %}
+{% endblock %}

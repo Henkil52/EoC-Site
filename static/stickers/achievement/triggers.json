@@ -1,0 +1,70 @@
+{
+    "enabled": 1,
+    "check_interval_sec": 5,
+    "locations": [
+        {
+            "enabled": 1,
+            "id": "pripyat",
+            "title": "Открыта новая локация",
+            "message": "Добро пожаловать в Прияпять.",
+            "icon": "set:dayz_gui image:map",
+            "x": 5018.312988,
+            "y": 109.529243,
+            "z": 17071.416016,
+            "radius": 250.0,
+            "square_size": 0.0,
+            "notify_once": 1,
+            "steam_ids": []
+        },
+	{
+            "enabled": 1,
+            "id": "derebas",
+            "title": "Открыта новая локация",
+            "message": "Добро пожаловать в деревню дураков.",
+            "icon": "set:dayz_gui image:map",
+            "x": 5191.135254,
+            "y": 99.529999,
+            "z": 900.345398,
+            "radius": 100.0,
+            "square_size": 0.0,
+            "notify_once": true,
+            "steam_ids": []
+        },
+	{
+            "enabled": 1,
+            "id": "sidor",
+            "title": "Открыта новая локация",
+            "message": "Пункт приема консервных банок!",
+            "icon": "set:dayz_gui image:map",
+            "x": 5074.309082,
+            "y": 94.184349,
+            "z": 963.324402,
+            "radius": 5.0,
+            "square_size": 0.0,
+            "notify_once": true,
+            "steam_ids": []
+        }
+    ],
+    "items": [
+        {
+            "enabled": 1,
+            "id": "artifact_example",
+            "item_class": "Apple",
+            "title": "Item found",
+            "message": "You have found the required item.",
+            "icon": "set:dayz_gui image:inv_inspecting",
+            "notify_once": 1,
+            "steam_ids": []
+        },
+	{
+            "enabled": 1,
+            "id": "NH_art_medusa",
+            "item_class": "NH_art_medusa",
+            "title": "Найден артефакт",
+            "message": "Медуза медуза медузаааа",
+            "icon": "set:dayz_gui image:inv_inspecting",
+            "notify_once": 1,
+            "steam_ids": []
+        }
+    ]
+}

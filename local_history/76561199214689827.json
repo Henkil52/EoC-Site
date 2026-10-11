@@ -1,0 +1,29 @@
+{
+    "steam_id": "76561199214689827",
+    "player_name": "[OA]Mugivara",
+    "visited_locations": [
+        "v2|loc|sever_kpp|5071.12|605.79|250|0",
+        "v2|loc|derebas|5191.14|900.345|100|0"
+    ],
+    "found_items": [],
+    "events": [
+        {
+            "event_type": "location",
+            "trigger_id": "v2|loc|sever_kpp|5071.12|605.79|250|0",
+            "value": "Северное КПП",
+            "time_ms": 377670,
+            "x": 5199.66015625,
+            "y": 99.55500793457031,
+            "z": 395.77301025390627
+        },
+        {
+            "event_type": "location",
+            "trigger_id": "v2|loc|derebas|5191.14|900.345|100|0",
+            "value": "Деревня новичков",
+            "time_ms": 472786,
+            "x": 5198.720703125,
+            "y": 106.7230224609375,
+            "z": 803.5986938476563
+        }
+    ]
+}

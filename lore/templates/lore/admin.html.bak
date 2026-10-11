@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Управление лором{% endblock %}
+
+{% block body_class %}page page-lore page-lore-admin{% endblock %}
+
+{% block content %}
+    <h1>⚙️ Управление лором</h1>
+
+    <a href="{{ url_for('lore.index') }}">← К лору</a>
+
+    <div class="lore-admin-warning">
+        <p>
+            ⚠️ Каждое изменение (добавление, правка, удаление) записывается в журнал
+            и логируется в файл. Новости не публикуются.
+        </p>
+    </div>
+
+    {# ── Создание раздела ──────────────────────────────────── #}
+    <form method="POST" action="{{ url_for('lore.section_create') }}" class="inline-form section-create-form">
+        <input type="text" name="title" required placeholder="Название нового раздела">
+        <button type="submit" class="btn">➕ Добавить раздел</button>
+    </form>
+
+    {# ── Разделы и записи ─────────────────────────────────── #}
+    {% for data in sections_data %}
+        <section class="admin-lore-section">
+            <div class="section-header">
+                <h2>{{ data.section.title }}</h2>
+
+                <form method="POST" action="{{ url_for('lore.section_edit', section_id=data.section.id) }}" class="inline-form">
+                    <input type="text" name="title" value="{{ data.section.title }}">
+                    <button type="submit" class="btn btn-sm">✏️ Переименовать</button>
+                </form>
+
+                <form method="POST" action="{{ url_for('lore.section_delete', section_id=data.section.id) }}"
+                      onsubmit="return confirm('Удалить раздел и ВСЕ его записи?');">
+                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Удалить раздел</button>
+                </form>
+            </div>
+
+            <ul class="admin-lore-list">
+                {% for entry in data.entries %}
+                    <li class="admin-lore-entry">
+                        <div class="admin-entry-header">
+                            <strong>{{ entry.title }}</strong>
+                            <span class="entry-date">{{ entry.updated_at.strftime("%d.%m.%Y %H:%M") }}</span>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('lore.entry_edit', entry_id=entry.id) }}" class="entry-edit-form">
+                            <input type="text" name="title" value="{{ entry.title }}" required>
+                            <textarea class="rich-editor"  name="content" rows="4" required>{{ entry.content|bb }}</textarea>
+                            <button type="submit" class="btn btn-sm">💾 Сохранить</button>
+                        </form>
+
+                        <form method="POST" action="{{ url_for('lore.entry_delete', entry_id=entry.id) }}"
+                              onsubmit="return confirm('Удалить запись?');">
+                            <button type="submit" class="btn btn-sm btn-danger">🗑️ Удалить</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <form method="POST" action="{{ url_for('lore.entry_create', section_id=data.section.id) }}" class="entry-create-form">
+                <input type="text" name="title" required placeholder="Заголовок записи">
+                <textarea class="rich-editor"  name="content" rows="4" required placeholder="Текст записи"></textarea>
+                <button type="submit" class="btn btn-sm">➕ Добавить запись</button>
+            </form>
+        </section>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,330 @@
+"""
+main.py
+
+Главный файл запуска сайта Echo of Chernobyl.
+"""
+
+import os
+import atexit
+from pathlib import Path
+
+from dotenv import load_dotenv
+from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+# Цветной вывод для стартовых сообщений
+try:
+    from colorama import Fore, Style, init as colorama_init
+    colorama_init()
+    GREEN = Fore.GREEN
+    BLUE = Fore.BLUE
+    YELLOW = Fore.YELLOW
+    RED = Fore.RED
+    RESET = Style.RESET_ALL
+except ImportError:
+    GREEN = BLUE = YELLOW = RED = RESET = ''
+
+from database.models import db
+
+from env_config import load_env
+
+ENV_PATH = load_env()
+
+# Путь к локальной БД
+LOCAL_DB_PATH = Path(__file__).resolve().parent / "local_db.sqlite3"
+
+
+def create_app():
+    app = Flask(
+        __name__,
+        template_folder="templates",
+        static_folder="static",
+    )
+
+    # ── Основные настройки ───────────────────────────────────
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "change-me")
+    app.config["STEAM_API_KEY"] = os.getenv("STEAM_API_KEY", "")
+    app.config["PUBLIC_BASE_URL"] = os.getenv(
+        "PUBLIC_BASE_URL",
+        "https://echo-of-chernobyl.ru"
+    ).rstrip("/")
+
+    # ── Настройки безопасности ───────────────────────────────
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = True
+    app.config["PREFERRED_URL_SCHEME"] = "https"
+
+    # ── Подключение к локальной БД (SQLite) ──────────────────
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{LOCAL_DB_PATH}"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    db.init_app(app)
+
+    # ── ProxyFix для работы за Nginx/Cloudflare ──────────────
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=1,
+        x_proto=1,
+        x_host=1,
+        x_prefix=1
+    )
+
+    # ── Регистрация blueprints ───────────────────────────────
+    from news.routes import bp as news_bp
+    from groups.routes import bp as groups_bp
+    from rules.routes import bp as rules_bp
+    from lore.routes import bp as lore_bp
+    from profile.routes import bp as profile_bp
+    from appeals.routes import bp as appeals_bp
+    from privacy.routes import bp as privacy_bp
+    from auth.routes import bp as auth_bp
+    from admin.routes import bp as admin_bp
+    from leaderboard.routes import bp as leaderboard_bp
+    from messages.routes import bp as messages_bp
+    from info.routes import bp as info_bp
+    from badges.routes import bp as badges_bp
+    from chat.routes import bp as chat_bp
+    from stickers.routes import bp as stickers_bp
+    from achievements.routes import bp as achievements_bp
+    blueprints = [
+        news_bp,
+        groups_bp,
+        rules_bp,
+        lore_bp,
+        profile_bp,
+        appeals_bp,
+        privacy_bp,
+        auth_bp,
+        admin_bp,
+        leaderboard_bp,
+    ]
+
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint)
+        if 'messages' not in app.blueprints:
+            app.register_blueprint(messages_bp)
+            if 'info' not in app.blueprints:
+                app.register_blueprint(info_bp)
+                app.register_blueprint(badges_bp)
+    app.register_blueprint(chat_bp)
+    app.register_blueprint(stickers_bp)
+
+    app.register_blueprint(achievements_bp)
+    # ── Запуск планировщика синхронизации ────────────────────
+    # В debug режиме Flask запускает два процесса:
+    # 1. Reloader (WERKZEUG_RUN_MAIN не установлен)
+    # 2. Рабочий процесс (WERKZEUG_RUN_MAIN='true')
+    # Запускаем планировщик только в рабочем процессе.
+    debug = os.getenv("FLASK_DEBUG", "0") == "1"
+    is_reloader = debug and not os.environ.get("WERKZEUG_RUN_MAIN")
+
+    if not is_reloader:
+        print(f"\n{GREEN}{'=' * 60}{RESET}")
+        print(f"{GREEN}ЗАПУСК ПЛАНИРОВЩИКА СИНХРОНИЗАЦИИ{RESET}")
+        print(f"{GREEN}{'=' * 60}{RESET}")
+
+        try:
+            from sync.scheduler import start_sync_scheduler, stop_sync_scheduler
+            from sync.db_sync import sync_database
+
+            # Запускаем первую синхронизацию сразу
+            print(f"{BLUE}Запуск первой синхронизации...{RESET}")
+            sync_database()
+
+            # Проверяем, нет ли старых неопубликованных изменений правил
+            print(f"{BLUE}Проверка неопубликованных изменений правил...{RESET}")
+            try:
+                from rules.service import publish_pending_changes
+                with app.app_context():
+                    number = publish_pending_changes()
+                    if number:
+                        print(f"{GREEN}📰 Опубликована накопившаяся новость: Изменение правил #{number}{RESET}")
+                    else:
+                        print(f"{BLUE}Накопившихся изменений нет{RESET}")
+            except Exception as e:
+                print(f"{YELLOW}Проверка правил: {e}{RESET}")
+
+            # Запускаем планировщик с передачей app
+            start_sync_scheduler(interval_minutes=15, app=app)
+            atexit.register(stop_sync_scheduler)
+
+            print(f"{GREEN}Планировщик успешно запущен!{RESET}")
+
+        except Exception as e:
+            print(f"{RED}ОШИБКА запуска планировщика: {e}{RESET}")
+            import traceback
+            traceback.print_exc()
+    else:
+        print(f"{YELLOW}Пропуск запуска планировщика (reloader process){RESET}")
+
+
+    # ── Глобальная защита: требование авторизации ─────────────
+    @app.before_request
+    def require_login():
+        from flask import request, session, render_template
+
+        # Разрешённые маршруты (без авторизации)
+        allowed_endpoints = {
+            'auth.login',
+            'auth.steam_login',
+            'auth.steam_callback',
+            'auth.logout',
+            'static',
+        }
+
+        # Разрешённые пути (regex-подобная проверка)
+        allowed_paths = [
+            '/',
+            '/news/',
+
+            '/login',
+            '/login/steam',
+            '/static/',
+        ]
+
+        # Проверяем endpoint
+        if request.endpoint in allowed_endpoints:
+            return None
+
+        # Проверяем путь (для статических файлов и edge cases)
+        path = request.path
+        for allowed_path in allowed_paths:
+            if path.startswith(allowed_path):
+                return None
+
+        # Если пользователь не авторизован — показываем заглушку
+        user = session.get("user")
+        if not user or not user.get("steam_id"):
+            return render_template("auth_required.html"), 401
+
+        return None
+
+
+    # ── BB-фильтр для форматированного текста ────────────────
+    import re as _re
+    from markupsafe import escape as _escape, Markup as _Markup
+
+    @app.template_filter('bb')
+    def bb_filter(text):
+        """Безопасно преобразует BB-коды в HTML."""
+        if not text:
+            return ""
+
+        s = str(_escape(text))  # защита от XSS
+
+        # Блочные теги
+        s = _re.sub(
+            r'\[quote\](.*?)\[/quote\]',
+            lambda m: '<blockquote class="bb-quote">' + m.group(1) + '</blockquote>',
+            s, flags=_re.S | _re.I
+        )
+        s = _re.sub(
+            r'\[code\](.*?)\[/code\]',
+            lambda m: '<pre class="bb-code">' + m.group(1) + '</pre>',
+            s, flags=_re.S | _re.I
+        )
+
+        # Списки
+        def list_repl(m):
+            items = _re.findall(r'\[\*\]\s*(.*?)(?=\[\*\]|\Z)', m.group(1), flags=_re.S)
+            return '<ul class="bb-list">' + ''.join(f'<li>{i.strip()}</li>' for i in items) + '</ul>'
+
+        s = _re.sub(r'\[list\](.*?)\[/list\]', list_repl, s, flags=_re.S | _re.I)
+
+        # Строчные теги
+        s = _re.sub(r'\[b\](.*?)\[/b\]', r'<strong>\1</strong>', s, flags=_re.S | _re.I)
+        s = _re.sub(r'\[i\](.*?)\[/i\]', r'<em>\1</em>', s, flags=_re.S | _re.I)
+        s = _re.sub(r'\[u\](.*?)\[/u\]', r'<u>\1</u>', s, flags=_re.S | _re.I)
+        s = _re.sub(r'\[s\](.*?)\[/s\]', r'<s>\1</s>', s, flags=_re.S | _re.I)
+
+        # Переносы строк
+        s = s.replace('\n', '<br>')
+
+        return _Markup(s)
+    @app.template_filter('moscow_time')
+    def moscow_time_filter(dt, fmt='%d.%m.%Y %H:%M'):
+        """Отображает datetime как московское время (БД - 5 часов).
+        Не трогает данные в БД — только корректирует отображение."""
+        if dt is None:
+            return '—'
+        from datetime import timedelta
+        return (dt - timedelta(hours=5)).strftime(fmt)
+
+
+    @app.route("/")
+    def home():
+        """Главная: авторизованные -> /news/, остальные -> /login."""
+        from flask import session, redirect, url_for
+        user = session.get("user")
+        if user and user.get("steam_id"):
+            return redirect(url_for("news.index"))
+        return redirect(url_for("auth.login"))
+
+    return app
+
+
+
+
+app = create_app()
+
+
+
+
+@app.before_request
+def check_ban_on_every_request():
+    """Забаненный пользователь не может пользоваться сайтом."""
+    from flask import session, request, render_template
+    
+    user = session.get("user")
+    if not user or not user.get("steam_id"):
+        return None
+
+    ep = request.endpoint or ""
+    if ep.startswith("auth.") or ep == "static" or ep.startswith("info."):
+        return None
+
+    try:
+        from auth.roles import is_user_banned, get_user_ban_info
+        if is_user_banned(user["steam_id"]):
+            ban_info = get_user_ban_info(user["steam_id"])
+            session.clear()
+            return render_template("auth/banned.html", ban=ban_info), 403
+    except Exception:
+        pass
+    return None
+
+
+
+# ── Синхронизация логов истории с FTP (каждые 5 минут) ──────────────
+from history_sync import start_history_scheduler as _start_history_sync
+_start_history_sync(300)
+try:
+    from news_sync import start_news_sync as _start_news_sync
+    print("[main.py] попытка запуска news-sync...")
+    _start_news_sync()
+    print("[main.py] news-sync запущен успешно")
+except Exception as e:
+    print(f"[main.py] ОШИБКА запуска news-sync: {e}")
+    import traceback
+    traceback.print_exc()
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", "8000"))
+    debug = os.getenv("FLASK_DEBUG", "0") == "1"
+
+    print(f"\n{GREEN}{'='*60}{RESET}")
+    print(f"{GREEN}ЗАПУСК САЙТА ECHO OF CHERNOBYL{RESET}")
+    print(f"{GREEN}{'='*60}{RESET}")
+    print(f"{BLUE}Порт: {port}{RESET}")
+    print(f"{BLUE}Debug: {debug}{RESET}")
+    print(f"{BLUE}Локальная БД: {LOCAL_DB_PATH}{RESET}")
+    print(f"{BLUE}.env: {ENV_PATH}{RESET}")
+    print(f"{BLUE}.env существует: {ENV_PATH is not None}{RESET}")
+    print(f"{GREEN}{'='*60}{RESET}\n")
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=False,
+    )

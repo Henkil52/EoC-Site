@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Создать обращение{% endblock %}
+
+{% block body_class %}page page-appeals page-appeals-create{% endblock %}
+
+{% block content %}
+    <h1>➕ Создать обращение</h1>
+
+    <a class="back-link" href="{{ url_for('appeals.index') }}">← Мои обращения</a>
+
+    <form method="POST" class="appeal-form">
+        <label>
+            Категория:
+            <select name="category" required>
+                {% for code, name in categories.items() %}
+                    <option value="{{ code }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Тема:
+            <input type="text" name="subject" maxlength="200" required
+                   placeholder="Кратко опиши суть">
+        </label>
+
+        <label>
+            Описание:
+            <textarea class="rich-editor"  name="content" rows="8" required
+                      placeholder="Подробно опиши проблему или вопрос"></textarea>
+        </label>
+
+        <label>
+            На кого жалоба (Steam ID, опционально):
+            <input type="text" name="target_steam_id"
+                   placeholder="76561198XXXXXXXXX">
+        </label>
+
+        <label>
+            Приоритет:
+            <select name="priority">
+                {% for code in player_priorities %}
+                    <option value="{{ code }}">{{ priorities.get(code) }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Добавить участников (Steam ID через запятую, опционально):
+            <input type="text" name="participants"
+                   placeholder="76561198XXX, 76561198YYY">
+        </label>
+
+        <button type="submit" class="btn">Отправить</button>
+    </form>
+{% endblock %}

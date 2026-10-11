@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Управление правилами{% endblock %}
+
+{% block body_class %}page page-rules page-rules-admin{% endblock %}
+
+{% block content %}
+    <h1>⚙️ Управление правилами</h1>
+
+    <a href="{{ url_for('rules.index') }}">← К правилам</a>
+
+    <div class="rules-admin-warning">
+        <p>
+            ⚠️ Каждое изменение (добавление, правка, удаление) автоматически:
+            создаёт новость «Изменение правил #N», записывается в журнал
+            и логируется в файл.
+        </p>
+    </div>
+
+    {# ── Создание раздела ──────────────────────────────────── #}
+    <form method="POST" action="{{ url_for('rules.section_create') }}" class="inline-form section-create-form">
+        <input type="text" name="title" required placeholder="Название нового раздела">
+        <button type="submit" class="btn">➕ Добавить раздел</button>
+    </form>
+
+    {# ── Разделы и правила ─────────────────────────────────── #}
+    {% for data in sections_data %}
+        <section class="admin-rules-section">
+            <div class="section-header">
+                <h2>{{ data.section.title }}</h2>
+
+                <form method="POST" action="{{ url_for('rules.section_edit', section_id=data.section.id) }}" class="inline-form">
+                    <input type="text" name="title" value="{{ data.section.title }}">
+                    <button type="submit" class="btn btn-sm">✏️ Переименовать</button>
+                </form>
+
+                <form method="POST" action="{{ url_for('rules.section_delete', section_id=data.section.id) }}"
+                      onsubmit="return confirm('Удалить раздел и ВСЕ его правила?');">
+                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Удалить раздел</button>
+                </form>
+            </div>
+
+            <ul class="admin-rules-list">
+                {% for rule in data.rules %}
+                    <li class="admin-rule">
+                        <span class="admin-rule-text">{{ rule.text|bb }}</span>
+
+                        <form method="POST" action="{{ url_for('rules.rule_edit', rule_id=rule.id) }}" class="inline-form rule-edit-form">
+                            <textarea class="rich-editor"  name="text" rows="2">{{ rule.text|bb }}</textarea>
+                            <button type="submit" class="btn btn-sm">💾 Сохранить</button>
+                        </form>
+
+                        <form method="POST" action="{{ url_for('rules.rule_delete', rule_id=rule.id) }}"
+                              onsubmit="return confirm('Удалить правило?');">
+                            <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <form method="POST" action="{{ url_for('rules.rule_create', section_id=data.section.id) }}" class="inline-form">
+                <textarea class="rich-editor"  name="text" rows="2" required placeholder="Текст нового правила"></textarea>
+                <button type="submit" class="btn btn-sm">➕ Добавить правило</button>
+            </form>
+        </section>
+    {% endfor %}
+{% endblock %}

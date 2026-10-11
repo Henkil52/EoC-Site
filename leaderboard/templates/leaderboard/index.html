@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Таблица лидеров{% endblock %}
+
+{% block body_class %}page page-leaderboard{% endblock %}
+
+{% block content %}
+    <h1>🏆 Таблица лидеров</h1>
+
+    <p class="leaderboard-note">
+        ️ Лидер каждой категории автоматически получает бейдж в профиле.
+        При смене лидера бейдж переходит к новому игроку.
+    </p>
+
+    <div class="leaderboard-grid">
+        {% for code, board in leaderboards.items() %}
+            <section class="leaderboard-category"
+                     style="border-top: 4px solid {{ board.category.color }};">
+
+                <h2>
+                    {{ board.category.icon }}
+                    {{ board.category.title }}
+                </h2>
+                <p class="category-description">{{ board.category.description }}</p>
+
+                {% if board.leaders %}
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Игрок</th>
+                                <th>{{ board.category.description }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in board.leaders %}
+                                <tr class="{% if loop.index == 1 %}leader-row{% endif %}">
+                                    <td class="rank-cell">
+                                        {% if loop.index == 1 %}🥇
+                                        {% elif loop.index == 2 %}🥈
+                                        {% elif loop.index == 3 %}🥉
+                                        {% else %}{{ loop.index }}{% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('profile.view_profile', steam_id=entry.player.SteamID) }}">
+                                            {{ entry.player.Nickname or "Без ника" }}
+                                        </a>
+                                        {% if loop.index == 1 %}
+                                            <span class="leader-badge"
+                                                  style="color: {{ board.category.color }};">
+                                                {{ board.category.icon }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="value-cell">{{ entry.display }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>Пока никто не отличился в этой категории.</p>
+                {% endif %}
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,297 @@
+{
+    "76561198160108755": {
+        "SteamID": "76561198160108755",
+        "Name": "Henkil",
+        "FirstJoinDate": "2026-06-12 09:50:24",
+        "LastSeen": "2026-07-26 03:58:12",
+        "SessionCount": 39,
+        "TotalPlayTime": 55047.71484375,
+        "CurrentSessionStart": 26346.185546875,
+        "Kills": 17,
+        "Deaths": 2,
+        "NamesHistory": [
+            "Henkil"
+        ],
+        "KDRatio": 8.5,
+        "FavoriteWeapon": "AK-105",
+        "FavoriteWeaponKills": 13,
+        "WeaponKills": {
+            "MK II": 1,
+            "AK-74": 2,
+            "LE-MAS": 1,
+            "AK-105": 13
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 10,
+        "HeadshotRatio": 0.5882353186607361,
+        "TotalDistanceTraveled": 19272.515625,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            16589.314453125,
+            107.55500030517578,
+            2874.02587890625
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 3,
+        "AnimalKills": 6
+    },
+    "76561198062830811": {
+        "SteamID": "76561198062830811",
+        "Name": "[ren]kuba",
+        "FirstJoinDate": "2026-06-12 10:08:30",
+        "LastSeen": "2026-08-07 05:22:16",
+        "SessionCount": 79,
+        "TotalPlayTime": 165415.71875,
+        "CurrentSessionStart": 3252.781982421875,
+        "Kills": 2,
+        "Deaths": 13,
+        "NamesHistory": [
+            "[ren]kuba"
+        ],
+        "KDRatio": 0.1538461595773697,
+        "FavoriteWeapon": "Dosimeter DGB-60M",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "Dosimeter DGB-60M": 1,
+            "IJ-70": 1
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 1,
+        "HeadshotRatio": 0.5,
+        "TotalDistanceTraveled": 968651.0625,
+        "ItemsCrafted": 8,
+        "LastPosition": [
+            4998.96533203125,
+            101.48041534423828,
+            95.62039184570313
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID",
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 20,
+        "AnimalKills": 40
+    },
+    "76561198411457357": {
+        "SteamID": "76561198411457357",
+        "Name": "Radon",
+        "FirstJoinDate": "2026-07-21 10:02:39",
+        "LastSeen": "2026-07-27 09:30:26",
+        "SessionCount": 36,
+        "TotalPlayTime": 156195.34375,
+        "CurrentSessionStart": 10362.283203125,
+        "Kills": 0,
+        "Deaths": 9,
+        "NamesHistory": [
+            "Radon"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 981787.625,
+        "ItemsCrafted": 6,
+        "LastPosition": [
+            5127.95556640625,
+            98.79717254638672,
+            952.71826171875
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 0,
+        "AnimalKills": 16
+    },
+    "76561198397054325": {
+        "SteamID": "76561198397054325",
+        "Name": "bes",
+        "FirstJoinDate": "2026-06-16 23:18:45",
+        "LastSeen": "2026-06-25 08:42:14",
+        "SessionCount": 28,
+        "TotalPlayTime": 148545.6875,
+        "CurrentSessionStart": 85.4219970703125,
+        "Kills": 1,
+        "Deaths": 2,
+        "NamesHistory": [
+            "bes"
+        ],
+        "KDRatio": 0.5,
+        "FavoriteWeapon": "Кулак",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "Кулак": 1
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 1,
+        "HeadshotRatio": 1.0,
+        "TotalDistanceTraveled": 19064.861328125,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            1027.1143798828126,
+            107.55498504638672,
+            3169.072998046875
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 0,
+        "AnimalKills": 0
+    },
+    "76561198283713172": {
+        "SteamID": "76561198283713172",
+        "Name": "Vanguard",
+        "FirstJoinDate": "2026-06-15 05:20:28",
+        "LastSeen": "2026-08-08 05:43:04",
+        "SessionCount": 119,
+        "TotalPlayTime": 129332.71875,
+        "CurrentSessionStart": 565.0269775390625,
+        "Kills": 1,
+        "Deaths": 17,
+        "NamesHistory": [
+            "Vanguard"
+        ],
+        "KDRatio": 0.05882352963089943,
+        "FavoriteWeapon": "AK-74",
+        "FavoriteWeaponKills": 1,
+        "WeaponKills": {
+            "AK-74": 1
+        },
+        "BuildingsConstructed": 154,
+        "TrapCount": 0,
+        "HeadshotKills": 1,
+        "HeadshotRatio": 1.0,
+        "TotalDistanceTraveled": 994471.625,
+        "ItemsCrafted": 14,
+        "LastPosition": [
+            2653.685302734375,
+            137.73545837402345,
+            4032.894287109375
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 17,
+        "AnimalKills": 11
+    },
+    "76561198055555995": {
+        "SteamID": "76561198055555995",
+        "Name": "[VECTOR] Grinch",
+        "FirstJoinDate": "2026-07-16 10:56:23",
+        "LastSeen": "2026-07-27 10:34:28",
+        "SessionCount": 15,
+        "TotalPlayTime": 24517.046875,
+        "CurrentSessionStart": 922.0130004882813,
+        "Kills": 4,
+        "Deaths": 3,
+        "NamesHistory": [
+            "[VECTOR] Grinch"
+        ],
+        "KDRatio": 1.3333333730697632,
+        "FavoriteWeapon": "AK-50",
+        "FavoriteWeaponKills": 3,
+        "WeaponKills": {
+            "AK-50": 3,
+            "Кулак": 1
+        },
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 170076.40625,
+        "ItemsCrafted": 1,
+        "LastPosition": [
+            8873.69140625,
+            171.11212158203126,
+            15057.2421875
+        ],
+        "LastHumanKills": [
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID",
+            "Неизвестный SteamID"
+        ],
+        "ZombieKills": 3,
+        "AnimalKills": 22
+    },
+    "76561198062589102": {
+        "SteamID": "76561198062589102",
+        "Name": "Bogatirev Ivan",
+        "FirstJoinDate": "2026-06-23 13:00:45",
+        "LastSeen": "2026-07-16 17:09:40",
+        "SessionCount": 5,
+        "TotalPlayTime": 12538.51953125,
+        "CurrentSessionStart": 11745.462890625,
+        "Kills": 0,
+        "Deaths": 2,
+        "NamesHistory": [
+            "Bogatirev Ivan"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 41045.2890625,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            7598.53466796875,
+            102.55500030517578,
+            4139.62890625
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 4,
+        "AnimalKills": 30
+    },
+    "76561199380005504": {
+        "SteamID": "76561199380005504",
+        "Name": "Rjaviy",
+        "FirstJoinDate": "2026-07-21 10:02:39",
+        "LastSeen": "2026-08-08 08:39:46",
+        "SessionCount": 51,
+        "TotalPlayTime": 152427.359375,
+        "CurrentSessionStart": 5269.5400390625,
+        "Kills": 0,
+        "Deaths": 11,
+        "NamesHistory": [
+            "Kashtan",
+            "Rjaviy"
+        ],
+        "KDRatio": 0.0,
+        "FavoriteWeapon": "Нет",
+        "FavoriteWeaponKills": 0,
+        "WeaponKills": {},
+        "BuildingsConstructed": 0,
+        "TrapCount": 0,
+        "HeadshotKills": 0,
+        "HeadshotRatio": 0.0,
+        "TotalDistanceTraveled": 1271439.375,
+        "ItemsCrafted": 0,
+        "LastPosition": [
+            1026.6259765625,
+            110.6012191772461,
+            3203.803466796875
+        ],
+        "LastHumanKills": [],
+        "ZombieKills": 4,
+        "AnimalKills": 8
+    }
+}

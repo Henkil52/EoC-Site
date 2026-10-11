@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Личные сообщения{% endblock %}
+
+{% block body_class %}page page-messages{% endblock %}
+
+{% block content %}
+    <h1>💬 Личные сообщения</h1>
+
+    {# ── Новое сообщение ───────────────────────────────────── #}
+    <section class="settings-card">
+        <h2>✏️ Новое сообщение</h2>
+        <form method="POST" action="{{ url_for('messages.send') }}" class="new-message-form">
+            <input type="text" name="recipient" placeholder="Ник получателя..."
+                   data-user-picker="all" required>
+            <textarea class="rich-editor" name="content" rows="3" required
+                      placeholder="Текст сообщения..."></textarea>
+            <button type="submit" class="btn">📨 Отправить</button>
+        </form>
+    </section>
+
+    {# ── Мои чаты ──────────────────────────────────────────── #}
+    <section class="settings-card">
+        <h2>📬 Мои чаты ({{ chats|length }})</h2>
+
+        {% if chats %}
+            <ul class="chats-list">
+                {% for chat in chats %}
+                    <li>
+                        <a href="{{ url_for('messages.chat', steam_id=chat.user_id) }}"
+                           class="chat-item {% if chat.unread %}chat-unread{% endif %}">
+                            <span class="player-avatar-letter">{{ chat.nickname[:1] }}</span>
+                            <span class="chat-info">
+                                <span class="chat-name">
+                                    {{ chat.nickname }}
+                                    {% if chat.unread %}
+                                        <span class="unread-badge">{{ chat.unread }}</span>
+                                    {% endif %}
+                                </span>
+                                <span class="chat-preview">{{ chat.last.content|truncate(70) }}</span>
+                            </span>
+                            <span class="chat-time">{{ chat.last.created_at.strftime("%d.%m %H:%M") }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Чатов пока нет. Начни первую переписку выше!</p>
+        {% endif %}
+    </section>
+
+    <script>
+        window.SITE_USERS = {{ all_users|tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/user-picker.js') }}"></script>
+{% endblock %}

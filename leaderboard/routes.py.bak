@@ -1,0 +1,29 @@
+"""
+leaderboard/routes.py
+
+Таблица лидеров.
+"""
+
+from flask import Blueprint, render_template
+
+from leaderboard.service import get_leaderboards
+
+bp = Blueprint(
+    "leaderboard",
+    __name__,
+    url_prefix="/leaderboard",
+    template_folder="templates",
+)
+
+
+@bp.route("/")
+
+def index():
+    """Главная: авторизованные -> /news/, остальные -> /login."""
+    from flask import session, redirect, url_for
+    user = session.get("user")
+    if user and user.get("steam_id"):
+        return redirect(url_for("news.index"))
+    return redirect(url_for("auth.login"))
+
+

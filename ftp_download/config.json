@@ -1,0 +1,195 @@
+{
+    "SobrModsLogSettings": {
+        "КРАФТ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516017991572127834/bxmfLEIv9CS580jwaYXu-8A7sXKsw1c3eIgUQTuWNN07VFBYK5EdlIZOWqn1hAqRaKa9",
+            "UseWebhookOnly": 0
+        },
+        "МЕДИЦИНА": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516018138641338459/CdFDEQJTYuUl7cO-qr5biWN21bprpeTpu9Rfcoj7QjjIoti_y6QIIeplYzFXAuDimEg2",
+            "UseWebhookOnly": 0
+        },
+        "ПИТАНИЕ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516018275425714237/m5xU8cLH6ArjwaUReWZqjipNdaQlK2iMDfBkfodzdkSroTIN6iSykYydj9sFj8p-E_K4",
+            "UseWebhookOnly": 0
+        },
+        "ТРАНСПОРТ_УНИЧТОЖЕНИЕ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516018396888829983/hbP2zJ9Xxh4nE7PosSoTx-RyZaMLm1pVX7BF2-hEnyzuxf460h5FF-g4bFw4MuJhNRJB",
+            "UseWebhookOnly": 0
+        },
+        "ТРАНСПОРТ_ДВИГАТЕЛЬ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516018481542205550/G0j7lmzzJCa-0FFpYxuM-6iwKycVAJAh_p0DPak7ade50aRYTz8BbN-YEmBwAVDKR5Nr",
+            "UseWebhookOnly": 0
+        },
+        "АЛЕРТ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516018580804599849/m0qFOnrVKlBsnkSU_sxm8XRkb5ILDhJwihpaM1YnXk8cNqPI2lHVR160fi1LaFz3SYMN",
+            "UseWebhookOnly": 0
+        },
+        "ТРАНСПОРТ_УРОН": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516018663705022495/BFp9VzQ0py0DTThpZyD8Qh4wQ6AcZyZORS3w_zp3KD7vjlbDo1QGuAiBiD0Jky1r9ttR",
+            "UseWebhookOnly": 0
+        },
+        "ПОДКЛЮЧЕНИЕ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516019287150690364/RMWwZT8fR6gR4tsnVDlWiKBIiZY-fwzvUOr75Sq52G97pSSM4L27NRFIDRgf40g20oOl",
+            "UseWebhookOnly": 0
+        },
+        "ПРЕДМЕТ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516019398991675434/OWcFsr6PwmhbNko9RKDkxuIlhVEswdQhaE2a9pLw3waswhy9UyiJiWOKdPbeqYmmFNhZ",
+            "UseWebhookOnly": 0
+        },
+        "УБИЙСТВО": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516019501550800899/kEG3M3iYbE3SERXCtn0FyKtSDxnRUsLGS8eVTJlBAfxEtHIujOwdtMvsbNUByWliMjCr",
+            "UseWebhookOnly": 0
+        },
+        "ГЕНЕРАТОР": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516019591187529841/dbqIzxqpDZCZX3HZCFGRhTxXSxUtbkOTc88EnyHfMRV0D-ISfFieuvI9fR8m8CJcIRAp",
+            "UseWebhookOnly": 0
+        },
+        "ОТКЛЮЧЕНИЕ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516019670203895879/XR_M9-4QVpBTAR8viXfqrTtZ69nJMe-hsjOuj8rQd7NYpHP-3oDQDaNtlllGsRbRPGvK",
+            "UseWebhookOnly": 0
+        },
+        "ТАЙНИК": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516019772058505406/WRrrSuRvLC8ShgYQWkNNdZrmiykLRSGozQOwfv73WRcrQp3rtMYI1XQyYDBPGr0OTnAV",
+            "UseWebhookOnly": 0
+        },
+        "ДРОП": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020313874370682/GLisQb9Mu0p4irNfkRr8vh5sVNBhlSNXPGx-D6uiHPDjB3gV67hOAVqNwKh8A5a6n0Mk",
+            "UseWebhookOnly": 0
+        },
+        "ДОБЫЧА": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020391553011867/TbTjy-kb6NbTOXL4fPfQ4qPFoQ6eRYRDdWAxktDWRLWcNbWFm7G5XABIpHOR_Bn5_1S3",
+            "UseWebhookOnly": 0
+        },
+        "ТРАНСПОРТ_СТОЛКНОВЕНИЕ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020467872436305/Q7BTmLLPuVvUA4knnWoqTPs_zB1ONwMcPzUqpAytviq_2BUg33Sz5bTk3LBtoTGchdjo",
+            "UseWebhookOnly": 0
+        },
+        "ОГОРОД": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020571308167301/sssCcdc_PMDE8eSp5AQwZO0bSh2EOcgxMVzKLvDXK7lV0_5lXmQCIA3la1if8PEb_Oro",
+            "UseWebhookOnly": 0
+        },
+        "ТРАНСПОРТ_ГУДОК": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020659673763842/JKxRJhLuURjCgDxW6IV-UMkwMfsrR92XSV9sahSenwCVnGu5xvbFcRiPQOKvcaDmoaeS",
+            "UseWebhookOnly": 0
+        },
+        "ЛОВУШКА": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020736534384680/c99Xjez7q7tyieBiXDNs07ynmKSTs22OL_bI3zyczTaksh-gbjsWrSaChLPZFF_xgD8b",
+            "UseWebhookOnly": 0
+        },
+        "СТРОИТЕЛЬСТВО": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020817757208616/ii5RcvHGC7Y7RDb-0kSMKuxT1_C7C1M2VguuYCukZz0ZvldAhOA9pOg1jwh_--Yf7dVV",
+            "UseWebhookOnly": 0
+        },
+        "ХИТ": {
+            "Enabled": 1,
+            "WebhookURL": "https://discord.com/api/webhooks/1516020898354954341/kdSN3_w7fQJFUVwAwF53wN4x3xbUMG6nknLVWOvuk23JZaY-jufz2KwaXx9BhVmz0znQ",
+            "UseWebhookOnly": 0
+        }
+    },
+    "EnableInventoryLogging": 1,
+    "ShowHealthInfo": 1,
+    "EnablePlayerFolders": 0,
+    "UseClassNames": 0,
+    "MedicalItems": [
+        "PainkillerTablets",
+        "PurificationTablets",
+        "CharcoalTablets",
+        "VitaminBottle",
+        "TetracyclineAntibiotics",
+        "DisinfectantAlcohol",
+        "IodineTincture",
+        "DisinfectantSpray",
+        "ChelatingTablets"
+    ],
+    "FoodItems": [
+        "Apple",
+        "Pear",
+        "Plum",
+        "Tomato",
+        "GreenBellPepper",
+        "Zucchini",
+        "SlicedPumpkin",
+        "Potato",
+        "SambucusBerry",
+        "CaninaBerry",
+        "Cannabis",
+        "Sardines",
+        "TunaCan",
+        "PorkCan",
+        "Lunchmeat",
+        "SardinesCan",
+        "Honey",
+        "PowderedMilk",
+        "BoxCerealCrunchin",
+        "PeachesCan",
+        "Bread",
+        "PorkCan",
+        "SodaCan_Cola",
+        "SodaCan_Pipsi",
+        "SodaCan_Spite",
+        "SodaCan_Kvass",
+        "WaterBottle",
+        "Canteen",
+        "Chips",
+        "BakedBeansCan",
+        "SpaghettiCan",
+        "Marmalade",
+        "CatFoodCan",
+        "DogFoodCan",
+        "Vodka",
+        "WhiskeyBottle"
+    ],
+    "HarvestItems": [
+        "Mushroom_Base",
+        "MushroomBase",
+        "MacrolepiotaProcera",
+        "AgaricusMushroom",
+        "AmanitaMushroom",
+        "AuriculariaMushroom",
+        "BoletusMushroom",
+        "LactariusMushroom",
+        "MacrolepiotaMushroom",
+        "PleurotusMushroom",
+        "PsilocybeMushroom",
+        "Berry_Base",
+        "BerryBase",
+        "SambucusBerry",
+        "CaninaBerry",
+        "Apple",
+        "Pear",
+        "Plum",
+        "Stone",
+        "SmallStone",
+        "Firewood",
+        "LongWoodenStick",
+        "WoodenStick",
+        "Bark_Oak",
+        "Bark_Birch",
+        "CarpFilletMeat",
+        "MackerelFilletMeat",
+        "Carp",
+        "Mackerel",
+        "Sardines"
+    ],
+    "AdminSteamIDs": []
+}

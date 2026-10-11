@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Правила{% endblock %}
+
+{% block body_class %}page page-rules{% endblock %}
+
+{% block content %}
+    <h1>Правила</h1>
+
+    {% if is_admin %}
+        <p>
+            <a href="{{ url_for('rules.admin') }}" class="btn">⚙️ Управление правилами</a>
+        </p>
+    {% endif %}
+
+    <p class="rules-hint">Нажми на заголовок раздела, чтобы развернуть его. Одновременно открыт только один раздел.</p>
+
+    {% if sections_data %}
+        {% for data in sections_data %}
+            <section class="rules-section" id="section-{{ data.section.id }}">
+                <button type="button" class="rules-section-toggle" aria-expanded="false">
+                    <span class="rules-section-title">
+                        <span class="rules-chevron">▸</span>
+                        {{ data.section.title }}
+                    </span>
+                    <span class="rules-section-meta">
+                        <span class="rules-count">{{ data.rules|length }}</span>
+                        <span class="rules-section-date">🕒 {{ data.section.updated_at.strftime("%d.%m.%Y") }}</span>
+                    </span>
+                </button>
+
+                <div class="rules-section-body" hidden>
+                    {% if data.rules %}
+                        <ol>
+                            {% for rule in data.rules %}
+                                <li>
+                                    {{ rule.text|bb }}
+                                    <span class="rule-date">
+                                        (изменено: {{ rule.updated_at.strftime("%d.%m.%Y") }})
+                                    </span>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <p>В этом разделе пока нет правил.</p>
+                    {% endif %}
+                </div>
+            </section>
+        {% endfor %}
+    {% else %}
+        <p>Правил пока нет.</p>
+    {% endif %}
+
+    <script>
+    (function () {
+        "use strict";
+
+        function closeAll(except) {
+            document.querySelectorAll(".rules-section").forEach(function (sec) {
+                if (sec !== except) {
+                    sec.classList.remove("open");
+                    var body = sec.querySelector(".rules-section-body");
+                    var btn = sec.querySelector(".rules-section-toggle");
+                    if (body) body.hidden = true;
+                    if (btn) btn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+
+        document.querySelectorAll(".rules-section-toggle").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                var sec = btn.closest(".rules-section");
+                var body = sec.querySelector(".rules-section-body");
+                var wasOpen = sec.classList.contains("open");
+
+                closeAll(sec);
+
+                if (wasOpen) {
+                    sec.classList.remove("open");
+                    body.hidden = true;
+                    btn.setAttribute("aria-expanded", "false");
+                } else {
+                    sec.classList.add("open");
+                    body.hidden = false;
+                    btn.setAttribute("aria-expanded", "true");
+                }
+            });
+        });
+
+        /* Открытие раздела по якорю (#section-5) */
+        if (location.hash) {
+            var target = document.querySelector(location.hash);
+            if (target && target.classList.contains("rules-section")) {
+                target.classList.add("open");
+                var b = target.querySelector(".rules-section-body");
+                if (b) b.hidden = false;
+                var t = target.querySelector(".rules-section-toggle");
+                if (t) t.setAttribute("aria-expanded", "true");
+            }
+        }
+    })();
+    </script>
+{% endblock %}

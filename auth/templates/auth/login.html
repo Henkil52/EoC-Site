@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Вход — Echo of Chernobyl{% endblock %}
+
+{% block body_class %}page page-login{% endblock %}
+
+{% block content %}
+    <div class="login-wrap">
+        <section class="login-card">
+            <div class="login-logo">☢️</div>
+
+            <h1 class="login-title">Echo of Chernobyl</h1>
+            <p class="login-sub">| RP Project</p>
+
+            <p class="login-text">
+                Добро пожаловать, сталкер!<br>
+                Авторизуйся через Steam.
+            </p>
+
+            <a href="{{ url_for('auth.steam_login') }}" class="btn-steam">
+                🎮 Войти через Steam
+            </a>
+
+            <p class="login-hint">
+
+            </p>
+        </section>
+    </div>
+{% endblock %}

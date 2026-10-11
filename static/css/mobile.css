@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE.CSS v3 — адаптация до 1024px (телефоны + планшеты + узкие окна)
+   ═══════════════════════════════════════════════════════════════════ */
+
+img { max-width: 100%; }
+
+/* ── ВСЁ: телефоны, планшеты, узкие окна ── */
+@media (max-width: 1024px) {
+    html, body { overflow-x: hidden; }
+
+    .container { padding-left: 14px; padding-right: 14px; }
+
+    /* ── НАВБАР: строка 1 = лого + контролы, строка 2 = меню ── */
+    nav.main-nav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 8px 12px !important;
+        height: auto !important;
+    }
+    nav.main-nav > * { height: auto !important; }
+
+    a.nav-logo { order: 1; flex: 1 1 auto; min-width: 0; }
+    .nav-logo-sub { display: none; }
+    .nav-logo-main { font-size: 14px !important; letter-spacing: 1px; }
+
+    li.nav-theme {
+        order: 2;
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        position: static;
+    }
+    .profile-dropdown { order: 3; position: relative; }
+    .login-link { order: 3; }
+
+    ul.nav-list {
+        order: 4;
+        flex-basis: 100%;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px 8px;
+        margin: 4px 0 0 0;
+        padding: 0;
+        height: auto !important;
+    }
+    ul.nav-list li { list-style: none; }
+    ul.nav-list li a {
+        display: inline-block;
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+
+    .profile-button { padding: 6px 10px; }
+    .profile-name {
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ── Контент не вылезает ── */
+    p, li, td, th, dd, dt { overflow-wrap: break-word; }
+    .news-content a, .comment-content a, p a, td a { word-break: break-all; }
+    pre { overflow-x: auto; max-width: 100%; }
+    table { display: block; overflow-x: auto; max-width: 100%; }
+
+    .news-content p, .comment-content p, .settings-card p { line-height: 1.6; }
+
+    .settings-card, .player-card, .stat-card,
+    .news-card, .comment-card, .ach-card { padding: 14px; }
+
+    .admin-dashboard { grid-template-columns: 1fr 1fr; }
+    .player-info { grid-template-columns: 1fr !important; }
+
+    .btn { padding: 8px 14px; font-size: 13px; }
+    .editor-toolbar { flex-wrap: wrap; gap: 4px; }
+
+    .chat-panel {
+        width: 100vw; max-width: 100vw; height: 100vh;
+        right: 0; bottom: 0; border-radius: 0;
+    }
+    .bell-panel { width: calc(100vw - 24px); right: -70px; }
+    .news-meta { flex-wrap: wrap; gap: 6px 10px; font-size: 12px; }
+}
+
+/* ── Телефоны ── */
+@media (max-width: 768px) {
+    body { font-size: 14px; }
+    h1 { font-size: 22px !important; }
+    h2 { font-size: 18px !important; }
+    h3 { font-size: 16px !important; }
+}
+
+/* ── Узкие смартфоны ── */
+@media (max-width: 480px) {
+    body { font-size: 13px; }
+    h1 { font-size: 20px !important; }
+    .container { padding-left: 10px; padding-right: 10px; }
+
+    .admin-dashboard { grid-template-columns: 1fr; }
+    .achv-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .achv-img { width: 44px; height: 44px; }
+    .player-avatar { width: 72px; height: 72px; }
+    .nav-logo-main { font-size: 13px !important; }
+
+    .emoji-picker { max-height: 240px; }
+    .emoji-pick-btn img { width: 26px; height: 26px; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОБИЛЬНОЕ ПРОФИЛЬ-МЕНЮ: лист под шапкой (v4)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+    header.site-header,
+    nav.main-nav {
+        position: relative;
+    }
+
+    /* Меню цепляется к шапке, а не к кнопке */
+    .profile-dropdown {
+        position: static !important;
+    }
+
+    .profile-dropdown .profile-menu {
+        position: absolute !important;
+        top: calc(100% + 4px) !important;
+        left: 8px !important;
+        right: 8px !important;
+        width: auto !important;
+        min-width: 0 !important;
+        max-height: 70vh;
+        overflow-y: auto;
+        z-index: 900 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОБИЛЬНЫЙ ЧАТ: компактное плавающее окно (v5)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+    .chat-panel {
+        width: min(420px, calc(100vw - 20px)) !important;
+        max-width: calc(100vw - 20px) !important;
+        height: calc(100vh - 130px) !important;
+        max-height: calc(100vh - 130px) !important;
+        right: 10px !important;
+        bottom: 10px !important;
+        left: auto !important;
+        top: auto !important;
+        border-radius: 14px !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, .55) !important;
+    }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   МОБИЛЬНЫЙ ЧАТ v6: точный селектор по ID #chatPanel
+   ═══════════════════════════════════════════════════════════════════ */
+#chatPanel[hidden] { display: none !important; }
+
+@media (max-width: 1024px) {
+    #chatPanel {
+        position: fixed !important;
+        width: min(420px, calc(100vw - 20px)) !important;
+        max-width: calc(100vw - 20px) !important;
+        height: calc(100vh - 130px) !important;
+        max-height: calc(100vh - 130px) !important;
+        top: auto !important;
+        left: auto !important;
+        right: 10px !important;
+        bottom: 10px !important;
+        border-radius: 14px !important;
+        background: var(--card) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, .55) !important;
+        overflow: hidden !important;
+    }
+}
